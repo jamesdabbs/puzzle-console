@@ -6,3 +6,4 @@ dj-database-url==0.2.1
 psycopg2==2.4.5
 wsgiref==0.1.2
 git+git://github.com/jamesdabbs/django-bootstrap.git
+gunicorn==0.14.5

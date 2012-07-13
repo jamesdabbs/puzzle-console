@@ -1,0 +1,18 @@
+<!DOCTYPE HTML5>
+{% load bootstrap_tags %}
+<html>
+<head>
+    <title>{%  block title %}{% endblock %}</title>
+    {% bootstrap_css %}
+
+    {% jquery %}
+</head>
+<body>
+    <div class="container" id="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    {% block extra_scripts %}
+    {% endblock %}
+</body>
+</html>

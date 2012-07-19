@@ -2,14 +2,80 @@
 {% load bootstrap_tags %}
 <html>
 <head>
-    <title>{%  block title %}{% endblock %}</title>
+    <title>{%  block title %}Home{% endblock %} - Puzzle Party Console</title>
     {% bootstrap_css %}
 
     {% jquery %}
 </head>
-<body>
+<body style="padding:50px">{# Padding to work with fixed navbar #}
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="brand" href="#">
+                    APP5 Puzzle Console
+                </a>
+                {% block navlinks %}
+                <ul class="nav">
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Teams</a></li>
+                    <li><a href="#">Console</a></li>
+                </ul>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
     <div class="container" id="content">
-        {% block content %}{% endblock %}
+        {% block content %}
+            <div class="hero-unit" style="text-align:center;background:#aef;">
+                <h1 style="text-shadow:1px">Auburn Puzzle Party 5</h1>
+                <p>
+                    Welcome to the <strong>Puzzle Console</strong> for <strong>Auburn Puzzle Party 5</strong>. Using this website, you can create/join a Team for our <strong>puzzlehunt</strong> beginning on <strong>October 20, 2012</strong> at 10am and lasting until <strong>October 21, 2012</strong> at 1pm. <a href="#">(Wait, a puzzlewha?)</a>
+                </p>
+                <div class="row-fluid">
+                    <ul class="thumbnails">
+                        <li class="span4">
+                            <a href="#" class="thumbnail" style="background-color:#eff">
+                                <img src="http://i.imgur.com/TRpuD.png" alt="">
+                            </a>
+                        </li>
+                        <li class="span4">
+                            <a href="#" class="thumbnail" style="background-color:#eff">
+                                <img src="http://i.imgur.com/tB2sI.png" alt="">
+                            </a>
+                        </li>
+                        <li class="span4">
+                            <a href="#" class="thumbnail" style="background-color:#eff">
+                                <img src="http://i.imgur.com/hyWlA.png" alt="">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="offset1 span4">
+                    <h3>First time here? <small>Register for the site</small></h3>
+                    <form class="well">
+                        <label>Email</label>
+                        <input type="text" class="span3" placeholder="email@domain.org">
+                        <label>Password</label>
+                        <input type="password" class="span3" placeholder="********">
+                        <label>Confirm Password</label>
+                        <input type="password" class="span3" placeholder="********">
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </form>
+                </div>
+                <div class="offset2 span4">
+                    <h3>Welcome back! <small>Log in</small></h3>
+                    <form class="well">
+                        <label>Email</label>
+                        <input type="text" class="span3" placeholder="email@domain.org">
+                        <label>Password</label>
+                        <input type="password" class="span3" placeholder="********">
+                        <button type="submit" class="btn btn-primary">Log in</button>
+                    </form>
+                </div>
+            </div>
+        {% endblock %}
     </div>
 
     {% block extra_scripts %}

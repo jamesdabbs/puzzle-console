@@ -1,3 +1,5 @@
 env
 
 project/local
+
+*.pyc

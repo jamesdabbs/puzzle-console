@@ -13,6 +13,7 @@ class Team(models.Model):
     captain = models.ForeignKey('Player')
 
     name = models.CharField(max_length=255)
+    competitive = models.BooleanField()
 
     class Meta:
         unique_together = (('game', 'name'),)
@@ -31,4 +32,8 @@ class Membership(models.Model):
     game = models.ForeignKey(Game)
     player = models.ForeignKey(Player)
     team = models.ForeignKey(Team, null=True)
+
+    class Meta:
+        # A player can only be on one team per game
+        unique_together = (('game', 'player', 'team'),)
 

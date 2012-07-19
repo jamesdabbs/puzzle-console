@@ -1,6 +1,12 @@
 from django.conf.urls import patterns, url
-from django.views.generic.base import TemplateView
 
-urlpatterns = patterns('',
-    url(r'^$', TemplateView.as_view(template_name='console/base.html')),
+urlpatterns = patterns('console.views',
+    url(r'^$', 'home', name='home'),
+    url(r'^register/$', 'register_captain', name='register_captain'),
+    url(r'^register/team/$', 'register_team', name='register_team')
+)
+
+urlpatterns += patterns('django.contrib.auth.views',
+    url(r'^login/$', 'login', name='login'),
+    url(r'^logout/$', 'logout', name='logout')
 )

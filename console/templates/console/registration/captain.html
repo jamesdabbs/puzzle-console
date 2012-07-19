@@ -1,0 +1,28 @@
+{% extends "console/base.html" %}
+{% load bootstrap_tags %}
+
+{% block title %}Registration{% endblock %}
+
+{% block content %}
+    <div class="well">
+        <h1>Player Registration</h1>
+        <p>TODO:</p>
+        <ul>
+            <li>Style page</li>
+            <li>Add javascript to copy email into username box</li>
+            <li>Improve player selection widget (js filter)</li>
+        </ul>
+    </div>
+    <form action="" method="POST">
+        {%  csrf_token %}
+        {{ form.email|bootstrap }}
+        {{ form.username|bootstrap }}
+        {{ form.password1|bootstrap }}
+        {{ form.password2|bootstrap }}
+        <p>If you have participated in previous puzzle parties and would like
+           to associate this account with an existing player, please choose the
+           player from the list below:</p>
+        {{ form.player|bootstrap }}
+        <button class="btn btn-primary">Register</button>
+    </form>
+{% endblock %}

@@ -36,6 +36,7 @@
         </div>
     </div>
     <div class="container" id="content">
+        {% block messages %}{% bootstrap_messages %}{% endblock %}
         {% block content %}
             <div class="hero-unit" style="text-align:center;background:#aef;">
                 <h1 style="text-shadow:1px">Auburn Puzzle Party 5</h1>
@@ -63,25 +64,16 @@
                 </div>
             </div>
             <div class="row">
-                <div class="offset1 span4">
+                <div class="span7">
                     <h3>First time here? <small>Register for the site</small></h3>
-                    <form class="well">
-                        <label>Email</label>
-                        <input type="text" class="span3" placeholder="email@domain.org">
-                        <label>Password</label>
-                        <input type="password" class="span3" placeholder="********">
-                        <label>Confirm Password</label>
-                        <input type="password" class="span3" placeholder="********">
-                        <button type="submit" class="btn btn-primary">Register</button>
+                    <form action="{% url 'register_player' %}" method="POST" class="well">
+                        {% include 'console/forms/registration.html' %}
                     </form>
                 </div>
-                <div class="offset2 span4">
+                <div class="span5">
                     <h3>Welcome back! <small>Log in</small></h3>
-                    <form class="well">
-                        <label>Email</label>
-                        <input type="text" class="span3" placeholder="email@domain.org">
-                        <label>Password</label>
-                        <input type="password" class="span3" placeholder="********">
+                    <form action="{% url 'login' %}" method="POST" class="well">
+                        {{ login_form|bootstrap }}
                         <button type="submit" class="btn btn-primary">Log in</button>
                     </form>
                 </div>

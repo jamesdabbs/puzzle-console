@@ -1,0 +1,21 @@
+{% load bootstrap_tags %}
+
+{% csrf_token %}
+
+{% if user_form %}
+    {{ user_form.email|bootstrap }}
+    {{ user_form.username|bootstrap }}
+    {{ user_form.password1|bootstrap }}
+    {{ user_form.password2|bootstrap }}
+    <input type="hidden" name="create_user">
+{% endif %}
+
+{% if player_form %}
+    <p>If you have participated in previous puzzle parties and would like
+        to associate this account with an existing player, please choose the
+        player from the list below:</p>
+    {{ player_form.player|bootstrap }}
+    <input type="hidden" name="add_player">
+{% endif %}
+
+<button class="btn btn-primary">Register</button>

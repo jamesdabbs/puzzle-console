@@ -1,4 +1,5 @@
 {% extends "console/base.html" %}
+{% load url from future %}
 
 {% block title %}Teams{% endblock %}
 
@@ -16,7 +17,7 @@
                 </ul>
             </p>
         {% else %}
-            <a href="{% url 'claim_team' %}?id={{ team.id }}"
+            <a href="{% url 'claim_team' id=team.id %}"
                class="btn btn-mini">Claim team</a>
         {% endif %}
     </div>

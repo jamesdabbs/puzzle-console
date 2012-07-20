@@ -11,10 +11,13 @@ from .forms import UserRegistrationForm, PlayerAssignmentForm, \
     TeamRegistrationForm
 from .models import Team
 
+
 def home(request):
-    registration_form = UserRegistrationForm()
-    login_form = AuthenticationForm()
-    return TemplateResponse(request, 'console/base.html', locals())
+    return TemplateResponse(request, 'console/base.html', {
+        'user_form': UserRegistrationForm(),
+        'player_form': PlayerAssignmentForm(),
+        'login_form': AuthenticationForm()
+    })
 
 
 # Registration flow
@@ -44,11 +47,14 @@ def register_player(request):
         player_form = PlayerAssignmentForm(request.POST, user=request.user)
         if player_form.is_valid():
             player_form.save()
-            return redirect('teams')
     else:
         player_form = PlayerAssignmentForm()
 
-    return TemplateResponse(request, 'console/registration/captain.html', locals())
+    # TODO: redirect when done ("done" meaning that a user has been registered
+    #       and 'add_player' is in request.POST (meaning that the user has
+    #       had an opportunity to link with a user, even if they elected not to
+    #       do so).
+    return TemplateResponse(request, 'console/registration/player.html', locals())
 
 
 class RegisterTeam(FormView):
@@ -64,6 +70,11 @@ def teams(request):
     return TemplateResponse(request, 'console/teams.html', {
         'teams': Team.objects.all()
     })
+
+
+def team(request, id):
+    team = get_object_or_404(Team, id=id)
+    return TemplateResponse(request, 'console/team.html', locals())
 
 
 @login_required

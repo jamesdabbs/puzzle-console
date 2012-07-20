@@ -1,0 +1,24 @@
+{% extends "console/base.html" %}
+
+{% block title %}Teams{% endblock %}
+
+{% block content %}
+    {% for team in teams %}
+    <div>
+        <h3>{{ team.name }}</h3>
+        {% if team.captain %}
+            <p><b>Captain:</b> {{ team.captain }}</p>
+            <p><b>Players:</b>
+                <ul>
+                    {% for player in team.players %}
+                    <li>{{ player.name }}</li>
+                    {% endfor %}
+                </ul>
+            </p>
+        {% else %}
+            <a href="{% url 'claim_team' %}?id={{ team.id }}"
+               class="btn btn-mini">Claim team</a>
+        {% endif %}
+    </div>
+    {% endfor %}
+{% endblock %}

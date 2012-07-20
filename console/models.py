@@ -24,6 +24,10 @@ class Team(models.Model):
     def __unicode__(self):
         return self.name
 
+    @models.permalink
+    def get_absolute_url(self):
+        return 'team', (), {'id': self.id}
+
 
 class Player(models.Model):
     # A Player may or may not have a User attached. If not, the player may be

@@ -1,6 +1,6 @@
 import json
 from console.exceptions import TeamBuildingException
-from console.models import Player
+from console.models import Player, Game
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
@@ -37,18 +37,17 @@ def home(request):
 # 5) Captain can assigns/create-and-assigns other Players to the Team
 # (if the team is Competitive we need to make sure the 8 max and rookie/legend rules are met)
 def register_player(request):
-    # We may get to this page either by POSTing user data from the homepage
-    # or by navigating directly. We'll use a couple of hidden inputs to
-    # determine exactly what needs to be handled.
     if request.method == 'POST':
         user_form = UserRegistrationForm(request.POST)
         player_form = PlayerAssignmentForm(request.POST)
-        if user_form.is_valid():
+        if user_form.is_valid() and player_form.is_valid():
+            # Some javascript will set 'player_id' if we're linking with an
+            # existing player. If not, make a new one using the name.
             if 'player_id' in request.POST:
                 user = user_form.save(player_id=request.POST['player_id'])
             else:
                 user = user_form.save(player_name=request.POST.get('name'))
-            messages.success(request, 'New user created')
+            messages.success(request, 'New user created.')
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)
             return redirect('teams')
@@ -56,15 +55,6 @@ def register_player(request):
         user_form = UserRegistrationForm()
         player_form = PlayerAssignmentForm()
     return TemplateResponse(request, 'console/registration/player.html', locals())
-
-
-class RegisterTeam(FormView):
-    form_class = TeamRegistrationForm
-    template_name = 'console/registration/team.html'
-
-    def form_valid(self, form):
-        raise NotImplementedError()
-register_team = RegisterTeam.as_view()
 
 
 def teams(request):
@@ -109,4 +99,16 @@ def get_player(request):
         'id', 'name', 'wins', 'plays', 'organizations')]
     return JsonResponse(json.dumps(players))
 
-# TODO: login next and default locations
+
+@login_required
+def my_team(request):
+    game = Game.current()
+    try:
+        return redirect(Team.objects.get(
+            membership__player=request.user.get_profile(),
+            membership__game=game)
+        )
+    except Team.DoesNotExist:
+        messages.error(request,
+            'You have not yet joined a team for {}'.format(game))
+        return redirect('teams')

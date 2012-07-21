@@ -4,17 +4,11 @@
 <html>
 <head>
     <title>{%  block title %}Home{% endblock %} - Puzzle Party Console</title>
-    
     {% bootstrap_css %}
-    
-    <style type="text/css">
-body,section {padding-top:50px}
-.hero-unit {text-align:center;background:#aef;}
-    </style>
 
     {% jquery %}
 </head>
-<body>
+<body style="padding:50px">{# Padding to work with fixed navbar #}
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container">
@@ -26,6 +20,7 @@ body,section {padding-top:50px}
                     <li><a href="#">About</a></li>
                     <li><a href="#">Rules</a></li>
                     <li><a href="{% url 'teams' %}">Teams</a></li>
+                    <li><a href="{% url 'my_team' %}">My Team</a></li>
                     <li><a href="#">Puzzles</a></li>
                 </ul>
                 {% endblock %}
@@ -45,8 +40,8 @@ body,section {padding-top:50px}
     <div class="container" id="content">
         {% block messages %}{% bootstrap_messages %}{% endblock %}
         {% block content %}
-            <div class="hero-unit">
-                <h1>Auburn Puzzle Party 5</h1>
+            <div class="hero-unit" style="text-align:center;background:#aef;">
+                <h1 style="text-shadow:1px">Auburn Puzzle Party 5</h1>
                 <p>
                     Welcome to the <strong>Puzzle Console</strong> for <strong>Auburn Puzzle Party 5</strong>. Using this website, you can create/join a Team for our <strong>puzzlehunt</strong> beginning on <strong>October 20, 2012</strong> at 10am and lasting until <strong>October 21, 2012</strong> at 1pm. <a href="#">(Wait, a puzzlewha?)</a>
                 </p>
@@ -72,32 +67,27 @@ body,section {padding-top:50px}
             </div>
 
             {% if not user.is_authenticated %}
-                    <div class="row">
-                        <div class="span7">
-                            <h3>First time here? <small>Register for the site</small></h3>
-                            <form action="{% url 'register_player' %}" method="POST" class="well">
-                                {% csrf_token %}
-                                {% include 'console/forms/user_registration.html' %}
-                                {% include 'console/forms/player_registration.html' %}
-                                <button class="btn btn-primary">Register</button>
-                            </form>
-                        </div>
-                        <div class="span5">
-                            <h3>Welcome back! <small>Log in</small></h3>
-                            <form action="{% url 'login' %}" method="POST" class="well">
-                                {% csrf_token %}
-                                {{ login_form|bootstrap }}
-                                <button type="submit" class="btn btn-primary">Log in</button>
-                            </form>
-                        </div>
-                    </div>
-            {% else %}
-                <div class="row-fluid">
-                    <a href="#" class="btn span3">About</a>
-                    <a href="#" class="btn span3">Rules</a>
-                    <a href="{% url 'teams' %}" class="btn span3">Teams</a>
-                    <a href="#" class="btn span3">Puzzles</a>
+            <div class="row">
+                <div class="span7">
+                    <h3>First time here? <small>Register for the site</small></h3>
+                    <form action="{% url 'register_player' %}" method="POST" class="well">
+                        {% csrf_token %}
+                        {% include 'console/forms/player_registration.html' %}
+                        {% include 'console/forms/user_registration.html' %}
+                        <button class="btn btn-primary">Register</button>
+                    </form>
                 </div>
+                <div class="span5">
+                    <h3>Welcome back! <small>Log in</small></h3>
+                    <form action="{% url 'login' %}" method="POST" class="well">
+                        {% csrf_token %}
+                        {{ login_form|bootstrap }}
+                        <button type="submit" class="btn btn-primary">Log in</button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+                <!-- TODO: add some more visible navigation links for common tasks -->
             {% endif %}
         {% endblock %}
     </div>

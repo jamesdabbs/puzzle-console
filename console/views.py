@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import redirect, get_object_or_404
 from django.template.response import TemplateResponse
 from django.views.generic import TemplateView, FormView
@@ -66,9 +66,20 @@ def teams(request):
 
 def team(request, id):
     team = get_object_or_404(Team, id=id)
-    if request.user.get_profile() == team.captain:
+    UserPlayer = False
+    try:
+        UserPlayer = request.user.get_profile()
+    except AttributeError:
+        pass
+    if UserPlayer == team.captain:
+        if request.method == 'POST':
+            update_team_form = TeamUpdateForm(request.POST)
+            if update_team_form.is_valid():
+                update_team_form.save()
         team_form = TeamUpdateForm(instance=team)
+    
     return TemplateResponse(request, 'console/teams/team.html', locals())
+    
 
 
 @login_required

@@ -18,8 +18,8 @@ class Game(models.Model):
 
 
 class Team(models.Model):
-    game = models.ForeignKey(Game)
-    captain = models.ForeignKey('Player', null=True)
+    game = models.ForeignKey(Game,default=Game.current().id)
+    captain = models.ForeignKey('Player', null=True, blank=True)
 
     name = models.CharField(max_length=255)
     competitive = models.BooleanField()
@@ -53,9 +53,7 @@ class Player(models.Model):
     wins = models.IntegerField(default=0)
     organizations = models.IntegerField(default=0)
 
-    def __unicode__(self):
-        return self.name
-
+    @property
     def description(self):
         """ Displays a prettified description of the Player's type
         """
@@ -63,7 +61,10 @@ class Player(models.Model):
         return {
             0: 'Rookie',
             1: 'Hero'
-        }.get(self.wins, 'Legend')
+        }.get(self.wins, 'Legend - %s wins' % self.wins)
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.name, self.description)
 
     def teams(self):
         """ All teams that this Player is a member of """

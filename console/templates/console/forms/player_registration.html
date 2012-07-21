@@ -3,8 +3,22 @@
 
 {% if player_form %}
     <div id="player_form">
+        <div class="control-group">
+            <label class="control-label">Are you experienced?</label>
+            <div class="controls">
+                <label class="radio">
+                    <input type="radio" name="returning" value="y" checked="checked">
+                    I've played in an Auburn-area puzzle party before.
+                </label>
+                <label class="radio">
+                    <input type="radio" name="returning" value="n">
+                    This is my first time playing in an Auburn-area puzzle party!
+                </label>
+            </div>
+        </div>
         {{ player_form.name|bootstrap }}
-        <input type="hidden" name="add_player">
+        <input type="hidden" name="player_id">
+        <div id="player_form_alert" class="alert" style="display:none"></div>
     </div>
 
     {% comment %} See https://gist.github.com/1891669 {% endcomment %}
@@ -13,10 +27,12 @@
     $(function() {
         var players = {{ player_form.choices|safe }},
             input = $('#player_form input[name="name"]'),
-            message = $('<div class="alert alert-info"></div>').hide().insertAfter(input),
-            hidden = $('<input type="hidden" name="player_id">');
+            message = $('#player_form_alert'),
+            hidden = $('#player_form input[name="player_id"]');
 
         function check_name() {
+            // Checks the name input against existing players, giving some
+            // feedback on matches.
             var name = input.val();
             if (!name) {
                 message.hide();
@@ -39,13 +55,32 @@
                     'No previous players named "' + name +
                     '" were found. A new player account will be created.'
                 );
+                hidden.val('')
             }
         }
 
-        input.typeahead({
-            'source': players,
-            'onselect': check_name
-        }).keyup(check_name);
+        {% comment %} TODO: why doesn't chaining this w/ a .change() work? {% endcomment %}
+        function activate_typeahead() {
+            // Turns on the typeahead feature on the name box for returning players
+            input.typeahead({
+                'source': players,
+                'onselect': check_name
+            }).keyup(check_name);
+        }
+
+        $('#player_form input[name="returning"]').change(function() {
+            // Only do the type-ahead suggestions for returning players
+            if($(this).val() == 'y') {
+                activate_typeahead();
+                check_name();
+            } else {
+                input.off();
+                input.removeData('typeahead');
+                message.hide();
+                hidden.val('');
+            }
+        });
+        activate_typeahead();
 
     });
     </script>

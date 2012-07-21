@@ -1,9 +1,52 @@
 {% load bootstrap_tags %}
+{% load url from future %}
 
 {% if player_form %}
-    <p>If you have participated in previous puzzle parties and would like
-        to associate this account with an existing player, please choose the
-        player from the list below:</p>
-    {{ player_form.player|bootstrap }}
-    <input type="hidden" name="add_player">
+    <div id="player_form">
+        {{ player_form.name|bootstrap }}
+        <input type="hidden" name="add_player">
+    </div>
+
+    {% comment %} See https://gist.github.com/1891669 {% endcomment %}
+    <script type="text/javascript" src="https://raw.github.com/gist/1866577/dd58c66be9dcb5b770e7f51a6cff324bec856021/bootstrap-typeahead.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        var players = {{ player_form.choices|safe }},
+            input = $('#player_form input[name="name"]'),
+            message = $('<div class="alert alert-info"></div>').hide().insertAfter(input),
+            hidden = $('<input type="hidden" name="player_id">');
+
+        function check_name() {
+            var name = input.val();
+            if (!name) {
+                message.hide();
+            } else if (players.indexOf(name) != -1) {
+                message.show().attr('class', 'alert alert-success').html(
+                    'Found matching player. Loading data ...')
+                $.getJSON('{% url "get_player" %}', {'name': name}, function(data) {
+                    if (data.length == 1) {
+                        var wins = data[0]['wins'],
+                            plays = data[0]['plays'] + wins;
+                        message.html('Found existing player with ' + wins + ' wins in ' + plays + ' plays.');
+                        hidden.val(data[0]['id']);
+                    } else {
+                        // TODO
+                        alert('Allan, please add support for name collisions')
+                    }
+                });
+            } else {
+                message.show().attr('class', 'alert alert-info').html(
+                    'No previous players named "' + name +
+                    '" were found. A new player account will be created.'
+                );
+            }
+        }
+
+        input.typeahead({
+            'source': players,
+            'onselect': check_name
+        }).keyup(check_name);
+
+    });
+    </script>
 {% endif %}

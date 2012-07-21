@@ -107,6 +107,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'longerusername',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -164,6 +165,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 LOGIN_URL = reverse_lazy('login')
+LOGIN_REDIRECT_URL = reverse_lazy('home')
+
+MAX_USERNAME_LENGTH = 75
 
 try:
     from local.settings import *

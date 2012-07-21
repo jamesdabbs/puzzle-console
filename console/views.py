@@ -1,9 +1,11 @@
+import json
 from console.exceptions import TeamBuildingException
 from console.models import Player
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.template.response import TemplateResponse
 from django.views.generic import TemplateView, FormView
@@ -11,6 +13,12 @@ from django.views.generic import TemplateView, FormView
 from .forms import UserRegistrationForm, PlayerAssignmentForm, \
     TeamRegistrationForm
 from .models import Team
+
+
+class JsonResponse(HttpResponse):
+    def __init__(self, *args, **kwargs):
+        kwargs['mimetype'] = 'application/json'
+        super(JsonResponse, self).__init__(*args, **kwargs)
 
 
 def home(request):
@@ -32,30 +40,21 @@ def register_player(request):
     # We may get to this page either by POSTing user data from the homepage
     # or by navigating directly. We'll use a couple of hidden inputs to
     # determine exactly what needs to be handled.
-    if 'create_user' in request.POST:
+    if request.method == 'POST':
         user_form = UserRegistrationForm(request.POST)
+        player_form = PlayerAssignmentForm(request.POST)
         if user_form.is_valid():
-            user = user_form.save()
+            if 'player_id' in request.POST:
+                user = user_form.save(player_id=request.POST['player_id'])
+            else:
+                user = user_form.save(player_name=request.POST.get('name'))
             messages.success(request, 'New user created')
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)
-            # We'll redirect after the 'add_player' form
-    else:
-        user_form = UserRegistrationForm()
-
-    if 'add_player' in request.POST:
-        player_form = PlayerAssignmentForm(request.POST)
-        if player_form.is_valid() and request.user.is_authenticated():
-            player_form.save(user=request.user)
-            # We should redirect if the user has been registered and has at
-            # least seen this form. (They need not actually select a Player)
-            # TODO: If they don't select an existing player, do we need to
-            #       create a blank one? What about merging in an existing one
-            #       later?
             return redirect('teams')
     else:
+        user_form = UserRegistrationForm()
         player_form = PlayerAssignmentForm()
-
     return TemplateResponse(request, 'console/registration/player.html', locals())
 
 
@@ -88,3 +87,12 @@ def claim_team(request, id):
     except TeamBuildingException as e:
         messages.error(request, 'Cannot claim team: %s' % e.message)
     return redirect(team)
+
+
+def get_player(request):
+    name = request.GET.get('name', '')
+    players = [dict(d) for d in Player.objects.filter(name__iexact=name).values(
+        'id', 'name', 'wins', 'plays', 'organizations')]
+    return JsonResponse(json.dumps(players))
+
+# TODO: login next and default locations

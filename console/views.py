@@ -99,4 +99,3 @@ def get_player(request):
     return JsonResponse(json.dumps(players))
 
 # TODO: login next and default locations
->>>>>>> 34ad5dacc3911dfd3ef2d5bb2e88d7d7202eee2e

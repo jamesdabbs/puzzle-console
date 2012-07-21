@@ -1,0 +1,14 @@
+{% extends "console/base.html" %}
+{% load bootstrap_tags %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<form action="" method="POST" class="form form-horizontal">
+    {% csrf_token %}
+    {{ form|bootstrap }}
+    <div class="form-actions">
+        <button class="btn btn-primary">Login</button>
+    </div>
+</form>
+{% endblock %}

@@ -10,6 +10,7 @@ urlpatterns = patterns('console.views',
 )
 
 urlpatterns += patterns('django.contrib.auth.views',
-    url(r'^login/$', 'login', name='login'),
+    url(r'^login/$', 'login',
+        {'template_name': 'console/registration/login.html'}, name='login'),
     url(r'^logout/$', 'logout', name='logout')
 )

@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from .exceptions import TeamBuildingException
+
 
 class Game(models.Model):
     name = models.CharField(max_length=255)
@@ -9,6 +11,10 @@ class Game(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    @classmethod
+    def current(cls):
+        return Game.objects.get(name='Puzzle Patrol II')
 
 
 class Team(models.Model):
@@ -27,6 +33,9 @@ class Team(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return 'team', (), {'id': self.id}
+
+    def players(self):
+        return Player.objects.filter(membership__team=self)
 
 
 class Player(models.Model):
@@ -47,13 +56,33 @@ class Player(models.Model):
     def __unicode__(self):
         return self.name
 
-    # Meta-data formatting methods for Puzzle Patrol II
-    # This should be factored into swappable backend for reuse
     def description(self):
+        """ Displays a prettified description of the Player's type
+        """
+        # Puzzle Patrol II specific
         return {
             0: 'Rookie',
             1: 'Hero'
         }.get(self.wins, 'Legend')
+
+    def teams(self):
+        """ All teams that this Player is a member of """
+        return Team.objects.filter(membership__player=self)
+
+    def join(self, team):
+        """ Attempts to add this Player to the `team` """
+        if self.teams().filter(game=team.game).exists():
+            raise TeamBuildingException('You may only join one team per game')
+        Membership.objects.create(team=team, game=team.game, player=self)
+
+    def claim(self, team):
+        """ Joins the `team` as its captain """
+        if team.captain:
+            raise TeamBuildingException('This team already has a captain')
+        # Join the team and assign yourself as captain
+        self.join(team)
+        team.captain = self
+        team.save()
 
 
 class Membership(models.Model):

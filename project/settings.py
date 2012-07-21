@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse_lazy
 import os
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 
@@ -161,6 +162,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.request'
 )
+
+LOGIN_URL = reverse_lazy('login')
 
 try:
     from local.settings import *

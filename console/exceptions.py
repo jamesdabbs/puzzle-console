@@ -1,0 +1,2 @@
+class TeamBuildingException(Exception):
+    pass

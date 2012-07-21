@@ -1,3 +1,4 @@
+from console.exceptions import TeamBuildingException
 from console.models import Player
 from django.contrib import messages
 from django.contrib.auth import login
@@ -82,7 +83,8 @@ def team(request, id):
 def claim_team(request, id):
     team = get_object_or_404(Team, id=id, captain=None)
     player = get_object_or_404(Player, user=request.user)
-    # TODO: make sure a player is only on / captains one team
-    team.captain = player
-    team.save()
+    try:
+        player.claim(team)
+    except TeamBuildingException as e:
+        messages.error(request, e.message)
     return redirect(team)

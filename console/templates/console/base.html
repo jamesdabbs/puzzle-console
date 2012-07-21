@@ -63,10 +63,13 @@
                     </ul>
                 </div>
             </div>
+
+            {% if not user.is_authenticated %}
             <div class="row">
                 <div class="span7">
                     <h3>First time here? <small>Register for the site</small></h3>
                     <form action="{% url 'register_player' %}" method="POST" class="well">
+                        {% csrf_token %}
                         {% include 'console/forms/user_registration.html' %}
                         {% include 'console/forms/player_registration.html' %}
                         <button class="btn btn-primary">Register</button>
@@ -75,11 +78,15 @@
                 <div class="span5">
                     <h3>Welcome back! <small>Log in</small></h3>
                     <form action="{% url 'login' %}" method="POST" class="well">
+                        {% csrf_token %}
                         {{ login_form|bootstrap }}
                         <button type="submit" class="btn btn-primary">Log in</button>
                     </form>
                 </div>
             </div>
+            {% else %}
+                <!-- TODO: add some more visible navigation links for common tasks -->
+            {% endif %}
         {% endblock %}
     </div>
 

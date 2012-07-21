@@ -4,17 +4,6 @@
 {% block title %}Registration{% endblock %}
 
 {% block content %}
-    <div class="well">
-        <h1>Player Registration</h1>
-        <p>TODO:</p>
-        <ul>
-            <li>Style page</li>
-            <li>Add javascript to copy email into username box</li>
-            <li>Improve player selection widget (js filter)</li>
-            <li>Finish view</li>
-        </ul>
-    </div>
-
     <form action="" method="POST" class="form form-horizontal">
         {% csrf_token %}
         {% include 'console/forms/player_registration.html' %}

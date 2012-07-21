@@ -41,10 +41,11 @@ def register_player(request):
         user_form = UserRegistrationForm(request.POST)
         player_form = PlayerAssignmentForm(request.POST)
         if user_form.is_valid() and player_form.is_valid():
-            # Some javascript will set 'player_id' if we're linking with an
+            # The javascript will set 'player_id' if we're linking with an
             # existing player. If not, make a new one using the name.
-            if 'player_id' in request.POST:
-                user = user_form.save(player_id=int(request.POST['player_id']))
+            player_id = request.POST.get('player_id', '')
+            if player_id:
+                user = user_form.save(player_id=int(player_id))
             else:
                 user = user_form.save(player_name=request.POST.get('name'))
             messages.success(request, 'New user created.')

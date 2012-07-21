@@ -5,8 +5,8 @@
 
 {% block content %}
     {% for team in teams %}
-    <div>
-        <h3>{{ team.name }}</h3>
+    <div class="well">
+        <h3><a href="{{ team.get_absolute_url }}">{{ team.name }}</a></h3>
         {% if team.captain %}
             <p><b>Captain:</b> {{ team.captain }}</p>
             <p><b>Players:</b>

@@ -86,5 +86,5 @@ def claim_team(request, id):
     try:
         player.claim(team)
     except TeamBuildingException as e:
-        messages.error(request, e.message)
+        messages.error(request, 'Cannot claim team: %s' % e.message)
     return redirect(team)

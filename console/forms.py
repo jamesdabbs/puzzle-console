@@ -51,5 +51,5 @@ class TeamUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Team
-        fields = ('name', 'competitive', 'players')
+        exclude = ('captain', 'game',)
     

@@ -1,0 +1,17 @@
+{% extends "console/base.html" %}
+{% load bootstrap_tags %}
+
+{% block title %}{{ team }}{% endblock %}
+
+{% block content %}
+    <div class="page-header"><h1>{{ team }}</h1></div>
+    {% include "console/teams/team_detail.html" %}
+    <section>
+        {% if team_form %}
+            <div class="page-header"><h2>Manage your Team</h2></div>
+            <form class="form-horizontal">
+            {{ team_form|bootstrap }}
+            </form>
+        {% endif %}
+    </section>
+{% endblock %}

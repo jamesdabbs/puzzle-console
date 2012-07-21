@@ -165,6 +165,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 LOGIN_URL = reverse_lazy('login')
 
+AUTH_PROFILE_MODULE = 'console.Player'
+
 try:
     from local.settings import *
 except ImportError:

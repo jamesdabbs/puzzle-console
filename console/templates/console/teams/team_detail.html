@@ -1,0 +1,29 @@
+{% load url from future %}
+
+{% if team.captain %}
+    <div class="row"><div class="span12">
+        <p>
+            <b>Team Classification:</b>
+            {% if team.competitive %}
+                Competitive
+            {% else %}
+                Recreational
+            {% endif %}
+        </p>
+        <p><b>Captain:</b> {{ team.captain }} {% if request.user.get_profile == team.captain %}<span class="label label-success">You</span>{% endif %}</p>
+        <p><b>Players:</b>
+            <ul>
+                {% for player in team.players %}
+                <li>{{ player.name }} ({{ player.description }}) {% if request.user.get_profile == player %}<span class="label label-success">You</span>{% endif %}</li>
+                {% endfor %}
+            </ul>
+        </p>
+    </div></div>
+{% else %}
+    <p>This team has not yet been claimed!</p>
+    {% if request.user.is_authenticated %}
+        <a href="{% url 'claim_team' id=team.id %}" class="btn btn-mini">Claim this team as Captain</a>
+    {% else %}
+        <a href="{% url 'login' %}">Login</a> or <a href="{% url 'register_player' %}">Register</a> to become the Captain of this Team.
+    {% endif %}
+{% endif %}

@@ -1,0 +1,56 @@
+{% extends "console/base.html" %}
+{% load url from future %}
+
+{% block title %}Teams{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="span12">
+        <div class="page-header">
+            <h1>APP5 Teams</h1>
+        </div>
+        <p>
+            Teams for APP5 are subject to the following Team-building rules:
+        </p>
+        <div class="row"><div class="offset1 span10"><div class="alert alert-block alert-success">
+            <ul>
+                <li>
+                    Players are classified based on how many Trophies they have won at past Puzzle Parties:
+                    <ul>
+                        <li><strong>Rookies</strong> are Players who have won <strong>no Trophies</strong> at past parties, including those who have not played in any past parties.</li>
+                        <li><strong>Heroes</strong> are Players who have only won <strong>a single Trophy</strong> at past parties.</li>
+                        <li><strong>Legends</strong> are Players who have won <strong>two or more Trophies</strong> at past parties.</li>
+                        <li><em>Past players should have the appropriate classification associated with their name already on the Console. New players should be classified as Rookies when they are created on the Console. Email <a href="mailto:steven.clontz@gmail.com">Steven</a> with any errors.</em></li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Recreational Teams</strong> may have any number of players, regardless of classification. Recreational teams are only eligible for the "Best Recreational Team" award at the end of the game.
+                </li>
+                <li>
+                    <strong>Competitive Teams</strong> are eligible for every other award, but are subject to the following restrictions:
+                    <ul>
+                        <li>Each team may have at most <strong>eight players</strong>. <strong>Seven or eight players</strong> is strongly recommended.</li>
+                        <li>The number of <strong>Legends</strong> a Team can have is determined by the number of <strong>Rookies</strong> that have registered for that Team:
+                            <ul>
+                                <li>Any Team can have two Legends.</li>
+                                <li>Teams with at least two Rookies can have three Legends.</li>
+                                <li>Teams with four Rookies can have four Legends.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div></div></div>
+    </div>
+</div>
+<section>
+    {% for team in teams %}
+    <div class="well">
+        <div class="page-header">
+            <h2>{{ team.name }} <small><a href="{{ team.get_absolute_url }}">Go to this team's page &raquo;</a></small></h2>
+        </div>
+        {% include "console/teams/team_detail.html" %}
+    </div>
+    {% endfor %}
+</section>
+{% endblock %}

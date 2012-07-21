@@ -9,7 +9,7 @@ from django.template.response import TemplateResponse
 from django.views.generic import TemplateView, FormView
 
 from .forms import UserRegistrationForm, PlayerAssignmentForm, \
-    TeamRegistrationForm
+    TeamRegistrationForm, TeamUpdateForm
 from .models import Team
 
 
@@ -69,14 +69,16 @@ register_team = RegisterTeam.as_view()
 
 
 def teams(request):
-    return TemplateResponse(request, 'console/teams.html', {
+    return TemplateResponse(request, 'console/teams/teams.html', {
         'teams': Team.objects.all()
     })
 
 
 def team(request, id):
     team = get_object_or_404(Team, id=id)
-    return TemplateResponse(request, 'console/team.html', locals())
+    if request.user.get_profile() == team.captain:
+        team_form = TeamUpdateForm(instance=team)
+    return TemplateResponse(request, 'console/teams/team.html', locals())
 
 
 @login_required
@@ -87,4 +89,5 @@ def claim_team(request, id):
         player.claim(team)
     except TeamBuildingException as e:
         messages.error(request, 'Cannot claim team: %s' % e.message)
+        return redirect('teams')
     return redirect(team)

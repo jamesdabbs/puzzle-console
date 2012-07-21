@@ -33,3 +33,13 @@ class TeamRegistrationForm(forms.ModelForm):
     class Meta:
         model = Team
         sequence = ('name', 'competitive', 'captain')
+
+
+class TeamUpdateForm(forms.ModelForm):
+    players = forms.ModelMultipleChoiceField(
+        queryset=Player.objects.filter(user=None), required=False)
+
+    class Meta:
+        model = Team
+        fields = ('name', 'competitive', 'players')
+    

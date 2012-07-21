@@ -41,7 +41,7 @@ class Team(models.Model):
 class Player(models.Model):
     # A Player may or may not have a User attached. If not, the player may be
     # assigned to a Team by that Team's captain
-    user = models.ForeignKey(User, null=True)
+    user = models.OneToOneField(User, null=True)
     games = models.ManyToManyField(Game, through='Membership')
 
     name = models.CharField(max_length=255)

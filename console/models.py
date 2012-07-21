@@ -49,9 +49,9 @@ class Player(models.Model):
     # Metadata about previous plays
     # This should probably be moved to old game result objects and computed
     #   from that
-    plays = models.IntegerField()
-    wins = models.IntegerField()
-    organizations = models.IntegerField()
+    plays = models.IntegerField(default=0)
+    wins = models.IntegerField(default=0)
+    organizations = models.IntegerField(default=0)
 
     def __unicode__(self):
         return self.name

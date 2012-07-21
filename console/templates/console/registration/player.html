@@ -15,7 +15,16 @@
         </ul>
     </div>
 
-    <form action="" method="POST">
-        {% include 'console/forms/registration.html' %}
+    <form action="" method="POST" class="form form-horizontal">
+        {% csrf_token %}
+        {% if user.is_authenticated %}
+            <p>You are currently logged in as <strong>{{ user.email }}</strong></p>
+        {% else %}
+            {% include 'console/forms/user_registration.html' %}
+        {% endif %}
+        {% include 'console/forms/player_registration.html' %}
+        <div class="form-actions">
+            <button class="btn btn-primary">Continue to Teams</button>
+        </div>
     </form>
 {% endblock %}

@@ -67,7 +67,9 @@
                 <div class="span7">
                     <h3>First time here? <small>Register for the site</small></h3>
                     <form action="{% url 'register_player' %}" method="POST" class="well">
-                        {% include 'console/forms/registration.html' %}
+                        {% include 'console/forms/user_registration.html' %}
+                        {% include 'console/forms/player_registration.html' %}
+                        <button class="btn btn-primary">Register</button>
                     </form>
                 </div>
                 <div class="span5">

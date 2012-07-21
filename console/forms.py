@@ -19,15 +19,10 @@ class PlayerAssignmentForm(forms.Form):
     player = forms.ModelChoiceField(queryset=Player.objects.filter(user=None),
         empty_label="", required=False)
 
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
-        super(PlayerAssignmentForm, self).__init__(*args, **kwargs)
-        self.user = user
-
-    def save(self):
+    def save(self, user):
         player = self.cleaned_data.get('player')
         if player:
-            player.user = self.user
+            player.user = user
             player.save()
 
 

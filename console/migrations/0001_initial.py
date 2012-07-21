@@ -12,8 +12,8 @@ class Migration(SchemaMigration):
         db.create_table('console_game', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('start', self.gf('django.db.models.fields.DateTimeField')()),
-            ('end', self.gf('django.db.models.fields.DateTimeField')()),
+            ('start', self.gf('django.db.models.fields.DateTimeField')(null=True)),
+            ('end', self.gf('django.db.models.fields.DateTimeField')(null=True)),
         ))
         db.send_create_signal('console', ['Game'])
 
@@ -21,8 +21,9 @@ class Migration(SchemaMigration):
         db.create_table('console_team', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('game', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['console.Game'])),
-            ('captain', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['console.Player'])),
+            ('captain', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['console.Player'], null=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('competitive', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
         db.send_create_signal('console', ['Team'])
 
@@ -34,6 +35,9 @@ class Migration(SchemaMigration):
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('plays', self.gf('django.db.models.fields.IntegerField')()),
+            ('wins', self.gf('django.db.models.fields.IntegerField')()),
+            ('organizations', self.gf('django.db.models.fields.IntegerField')()),
         ))
         db.send_create_signal('console', ['Player'])
 
@@ -46,8 +50,14 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal('console', ['Membership'])
 
+        # Adding unique constraint on 'Membership', fields ['game', 'player', 'team']
+        db.create_unique('console_membership', ['game_id', 'player_id', 'team_id'])
+
 
     def backwards(self, orm):
+        # Removing unique constraint on 'Membership', fields ['game', 'player', 'team']
+        db.delete_unique('console_membership', ['game_id', 'player_id', 'team_id'])
+
         # Removing unique constraint on 'Team', fields ['game', 'name']
         db.delete_unique('console_team', ['game_id', 'name'])
 
@@ -96,13 +106,13 @@ class Migration(SchemaMigration):
         },
         'console.game': {
             'Meta': {'object_name': 'Game'},
-            'end': ('django.db.models.fields.DateTimeField', [], {}),
+            'end': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'start': ('django.db.models.fields.DateTimeField', [], {})
+            'start': ('django.db.models.fields.DateTimeField', [], {'null': 'True'})
         },
         'console.membership': {
-            'Meta': {'object_name': 'Membership'},
+            'Meta': {'unique_together': "(('game', 'player', 'team'),)", 'object_name': 'Membership'},
             'game': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['console.Game']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'player': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['console.Player']"}),
@@ -113,11 +123,15 @@ class Migration(SchemaMigration):
             'games': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['console.Game']", 'through': "orm['console.Membership']", 'symmetrical': 'False'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'null': 'True'})
+            'organizations': ('django.db.models.fields.IntegerField', [], {}),
+            'plays': ('django.db.models.fields.IntegerField', [], {}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'null': 'True'}),
+            'wins': ('django.db.models.fields.IntegerField', [], {})
         },
         'console.team': {
             'Meta': {'unique_together': "(('game', 'name'),)", 'object_name': 'Team'},
-            'captain': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['console.Player']"}),
+            'captain': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['console.Player']", 'null': 'True'}),
+            'competitive': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'game': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['console.Game']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'})

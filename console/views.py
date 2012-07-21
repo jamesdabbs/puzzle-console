@@ -38,22 +38,23 @@ def register_player(request):
             messages.success(request, 'New user created')
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)
-            # We only want to redirect if we've handled the
-            # PlayerAssignmentForm (or at least, had an opportunity to)
+            # We'll redirect after the 'add_player' form
     else:
         user_form = UserRegistrationForm()
 
     if 'add_player' in request.POST:
-        player_form = PlayerAssignmentForm(request.POST, user=request.user)
-        if player_form.is_valid():
-            player_form.save()
+        player_form = PlayerAssignmentForm(request.POST)
+        if player_form.is_valid() and request.user.is_authenticated():
+            player_form.save(user=request.user)
+            # We should redirect if the user has been registered and has at
+            # least seen this form. (They need not actually select a Player)
+            # TODO: If they don't select an existing player, do we need to
+            #       create a blank one? What about merging in an existing one
+            #       later?
+            return redirect('teams')
     else:
         player_form = PlayerAssignmentForm()
 
-    # TODO: redirect when done ("done" meaning that a user has been registered
-    #       and 'add_player' is in request.POST (meaning that the user has
-    #       had an opportunity to link with a user, even if they elected not to
-    #       do so).
     return TemplateResponse(request, 'console/registration/player.html', locals())
 
 
@@ -81,6 +82,7 @@ def team(request, id):
 def claim_team(request, id):
     team = get_object_or_404(Team, id=id, captain=None)
     player = get_object_or_404(Player, user=request.user)
+    # TODO: make sure a player is only on / captains one team
     team.captain = player
     team.save()
     return redirect(team)

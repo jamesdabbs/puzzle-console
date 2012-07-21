@@ -1,0 +1,14 @@
+{% extends "console/base.html" %}
+
+{% block title %}{{ team }}{% endblock %}
+
+{% block content %}
+<h2>{{ team }}</h2>
+<p>{% if not team.competitive %}Non-{% endif %}Competitive Team</p>
+<p><strong>Captain:</strong> {{ team.captain }}</p>
+<ul>
+    {% for player in team.players %}
+    <li>{{ player }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

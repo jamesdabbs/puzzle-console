@@ -20,12 +20,8 @@ class Game(models.Model):
         return Game.objects.get(name='Puzzle Patrol II')
 
 
-def get_current_game():
-    return Game.current().id
-
-
 class Team(models.Model):
-    game = models.ForeignKey(Game, default=get_current_game())
+    game = models.ForeignKey(Game)
     captain = models.ForeignKey('Player', null=True, blank=True)
 
     name = models.CharField(max_length=255)
@@ -40,6 +36,12 @@ class Team(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return 'team', (), {'id': self.id}
+
+    def save(self, *args, **kwargs):
+        """ Sets the default Game, if needed """
+        if not self.game:
+            self.game = Game.current()
+        super(Team, self).save(*args, **kwargs)
 
     @property
     def players(self):

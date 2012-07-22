@@ -20,8 +20,12 @@ class Game(models.Model):
         return Game.objects.get(name='Puzzle Patrol II')
 
 
+def get_current_game():
+    return Game.current().id
+
+
 class Team(models.Model):
-    game = models.ForeignKey(Game,default=Game.current().id)
+    game = models.ForeignKey(Game, default=get_current_game())
     captain = models.ForeignKey('Player', null=True, blank=True)
 
     name = models.CharField(max_length=255)

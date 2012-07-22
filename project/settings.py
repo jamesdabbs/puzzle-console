@@ -1,5 +1,8 @@
-from django.core.urlresolvers import reverse_lazy
 import os
+
+from django.core.urlresolvers import reverse_lazy
+
+
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 DEBUG = os.environ.get('DEBUG') == 'True'
@@ -7,7 +10,8 @@ TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
-    ('James Dabbs', 'james.dabbs@gmail.com')
+    ('James Dabbs', 'james.dabbs@gmail.com'),
+    ('Steven Clontz', 'steven.clontz@gmail.com')
 )
 
 MANAGERS = ADMINS
@@ -170,6 +174,13 @@ LOGIN_REDIRECT_URL = reverse_lazy('home')
 MAX_USERNAME_LENGTH = 75
 
 AUTH_PROFILE_MODULE = 'console.Player'
+
+# TODO: set up email
+EMAIL_HOST = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = ''
+EMAIL_PORT = 25 # default
+EMAIL_SUBJECT_PREFIX = '[APP5] '
 
 try:
     from local.settings import *

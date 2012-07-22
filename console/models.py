@@ -93,8 +93,7 @@ class Team(models.Model):
         if self.competitive:
             if len(players) > 8:
                 raise TeamBuildingException('Sorry, competitive teams cannot have more than eight players.')
-            counts = Counter(p.status() for p in players)
-            rookies, legends = counts['R'], counts['L']
+            rookies, legends = self.rookes.count(), self.legends.count()
             if legends > 4:
                 raise TeamBuildingException(
                     'Sorry, competitive teams cannot have {} Legends.'.format(legends)
@@ -113,8 +112,7 @@ class Team(models.Model):
 
 
 class Player(models.Model):
-    # A Player may or may not have a User attached. If not, the player may be
-    # assigned to a Team by that Team's captain
+    # A Player may or may not have a User attached.
     user = models.OneToOneField(User, null=True)
     games = models.ManyToManyField(Game, through='Membership')
 

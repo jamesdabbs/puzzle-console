@@ -20,7 +20,6 @@
                     {% alert_message 'error' e %}
                 {% endfor %}
                 {{ form|bootstrap }}
-                {% comment %} TODO: add js to hide extra fields when not needed {% endcomment %}
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Save changes</button>
                 </div>
@@ -55,9 +54,6 @@ $(function(){
         }
         return false;
     }).click();
-    {% comment %} TODO: remove button when all have been displayed. {% endcomment %}
-
-
 })
 </script>
 {% endblock %}

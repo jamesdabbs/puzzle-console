@@ -48,7 +48,6 @@ def teams(request):
 def team_(request, id):
     """ Displays a particular team, and allows its captain to edit it """
     # TODO: A captain currently has no way to abandon a team
-    # TODO: Allow creation of new players for this team
     team = get_object_or_404(Team, id=id)
     if request.user == team.captain.user:
         if request.method == 'POST':

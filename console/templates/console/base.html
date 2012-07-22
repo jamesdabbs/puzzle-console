@@ -4,10 +4,9 @@
 <html>
 <head>
     <title>{%  block title %}Home{% endblock %} - Puzzle Party Console</title>
-    {% bootstrap_css %}
-    <!-- TODO: fix bootstrap css problems (with inputs). Stop hotlinking things -->
 
-    <link rel="stylesheet" href="http://harvesthq.github.com/chosen/chosen/chosen.css">
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/css/chosen.css" rel="stylesheet">
     {% block extra_styles %}{% endblock %}
 
     {% jquery %}
@@ -105,7 +104,8 @@
         {% endblock %}
     </div>
 
-    <script type="text/javascript" src="http://harvesthq.github.com/chosen/chosen/chosen.jquery.js"></script>
+    <script type="text/javascript" src="/static/js/chosen.jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap-alert.js"></script>
     {% block extra_scripts %}
     {% endblock %}
 </body>

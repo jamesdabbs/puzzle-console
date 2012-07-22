@@ -3,6 +3,10 @@
 
 {% if player_form %}
     <div id="player_form">
+        <legend>Tell us your Name</legend>
+        <p>
+            Players who have participated in an Auburn-area puzzlehunt before can select their name below, and new Players can type their name.
+        </p>
         {% for e in player_form.non_field_errors %}
             {% alert_message 'error' e %}
         {% endfor %}

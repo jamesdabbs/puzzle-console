@@ -63,8 +63,23 @@ class TeamUpdateForm(forms.ModelForm):
         if 'instance' in kwargs:
             self.fields['players'] = forms.ModelMultipleChoiceField(
                 queryset=self.instance.available_players(),
-                initial=self.instance.players()
+                initial=self.instance.players,
+                label='Existing Players'
             )
+            # Also add 'New Player' fields for the creation of new players
+            max_length = Player._meta.get_field('name').max_length
+            for i in range(1, self.instance.player_cap()):
+                field = forms.CharField(
+                    label='New Players' if i == 1 else '',
+                    max_length=max_length,
+                    required=False
+                )
+                self.fields['new_player_{}'.format(i)] = field
+
+    def new_players(self):
+        # TODO: can we hook in the new players with the pre-save form validation?
+        #       Imagine a new team saving 3 existing legends and 2 new rookies
+        return [v for k,v in self.cleaned_data.items() if v and k.startswith('new_player_')]
 
     def clean(self):
         data = self.cleaned_data
@@ -77,5 +92,9 @@ class TeamUpdateForm(forms.ModelForm):
 
     def save(self):
         team = super(TeamUpdateForm, self).save()
-        team.assign(self.cleaned_data.get('players', []))
+        # Create the new players
+        new_players = [Player.objects.create(name=name) for name in self.new_players()]
+        # And assign all the Players to the Team
+        players = list(self.cleaned_data.get('players', [])) + new_players
+        team.assign(players)
         return team

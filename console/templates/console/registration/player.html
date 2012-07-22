@@ -1,19 +1,20 @@
 {% extends "console/base.html" %}
 {% load bootstrap_tags %}
+{% load url from future %}
 
 {% block title %}Registration{% endblock %}
 
 {% block content %}
-    <form action="" method="POST" class="form form-horizontal">
-        {% csrf_token %}
-        {% include 'console/forms/player_registration.html' %}
-        {% if user.is_authenticated %}
-            <p>You are currently logged in as <strong>{{ user.email }}</strong></p>
-        {% else %}
+    {% if user.is_authenticated %}    
+        <p>You are currently logged in as <strong>{{ user.email }}</strong>. <a href="{% url 'teams' %}">Go to Teams page</a> or <a href="{% url 'logout' %}?next={{ request.path }}">log out to register a new user</a>.</p>
+    {% else %}
+        <form action="" method="POST" class="form form-horizontal">
+            {% csrf_token %}
+            {% include 'console/forms/player_registration.html' %}
             {% include 'console/forms/user_registration.html' %}
-        {% endif %}
-        <div class="form-actions">
-            <button class="btn btn-primary">Continue to Teams</button>
-        </div>
-    </form>
+            <div class="form-actions">
+                <button class="btn btn-primary">Continue to Teams</button>
+            </div>
+        </form>
+    {% endif %}
 {% endblock %}

@@ -40,6 +40,37 @@ class Team(models.Model):
     def players(self):
         """ Returns the players on this team """
         return Player.objects.filter(membership__team=self)
+    
+    @property
+    def player_count(self):
+        """ Returns the number of players on this team """
+        return Player.objects.filter(membership__team=self).count()
+    
+    @property
+    def player_remaining_count(self):
+        """ Returns the number of players allowed to be added to this team """
+        return 8 - self.player_count
+    
+    @property
+    def legend_count(self):
+        """ Returns the number of Legends on this team """
+        return Player.objects.filter(membership__team=self,wins__gte=2).count()
+        
+    @property
+    def allowed_legend_count(self):
+        """ Returns how many legends can be on this team if competitive based on how many rookies are on the team """
+        rookie_count = Player.objects.filter(membership__team=self,wins=0).count()
+        if rookie_count < 2:
+            return 2
+        elif rookie_count < 4:
+            return 3
+        else:
+            return 4
+    
+    @property
+    def legend_remaining_count(self):
+        """ Returns the number of Legends allowed to be added to this team """
+        return self.allowed_legend_count - self.legend_count
 
     def available_players(self):
         """ Returns the players this team could recruit - that is, players not
@@ -59,18 +90,20 @@ class Team(models.Model):
             raise TeamBuildingException('Please assign a captain')
         if self.captain not in players:
             raise TeamBuildingException(
-                'The captain ({}) must be on the team'.format(self.captain))
+                'You cannot remove the team captain - {}.'.format(self.captain))
         # TODO: swappable backend for validating teams
         if self.competitive:
             if len(players) > 8:
-                raise TeamBuildingException('Competitive teams may have at '
-                                            'most 8 players')
+                raise TeamBuildingException('Sorry, competitive teams cannot have more than eight players.')
             counts = Counter(p.status() for p in players)
             rookies, legends = counts['R'], counts['L']
-            if rookies < 2*legends - 4:
+            if legends > 4:
                 raise TeamBuildingException(
-                    'Competitive teams with {} Legends must have at least {} '
-                    'Rookies'.format(legends, 2*legends-4)
+                    'Sorry, competitive teams cannot have {} Legends.'.format(legends)
+                )
+            elif rookies < 2*legends - 4:
+                raise TeamBuildingException(
+                    'Sorry, competitive teams cannot have {} Legends without also having at least {} Rookies.'.format(legends, 2*legends-4)
                 )
         if commit:
             # This just flushes and re-adds the members

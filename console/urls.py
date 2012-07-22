@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, url
+from django.views.generic import TemplateView
 
 urlpatterns = patterns('console.views',
     url(r'^$', 'home', name='home'),
@@ -12,5 +13,9 @@ urlpatterns = patterns('console.views',
 urlpatterns += patterns('django.contrib.auth.views',
     url(r'^login/$', 'login',
         {'template_name': 'console/registration/login.html'}, name='login'),
-    url(r'^logout/$', 'logout', name='logout')
+    url(r'^logout/$', 'logout',{'next_page': '/'}, name='logout')
+)
+
+urlpatterns += patterns('',
+    url(r'^about/', TemplateView.as_view(template_name="console/app5/about.html"), name='about'),
 )

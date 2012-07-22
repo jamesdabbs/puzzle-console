@@ -6,8 +6,7 @@ from .models import Player, Team
 
 
 class UserRegistrationForm(UserCreationForm):
-    username = forms.EmailField(label='Email', max_length=75,
-        help_text = 'This will double as your username')
+    username = forms.EmailField(label='Email', max_length=75)
 
     def save(self):
         """ Saves the User as usual, but also adds their email address """
@@ -21,22 +20,27 @@ class UserRegistrationForm(UserCreationForm):
 class PlayerAssignmentForm(forms.ModelForm):
     existing_player = forms.ModelChoiceField(
         queryset=Player.objects.filter(user=None),
+        required=False,
+        label = "Existing Player"
+    )
+    name = forms.CharField(
+        max_length=255,
+        label="New Player",
         required=False
     )
+    
     class Meta:
         model = Player
-        fields = ('name',)
+        fields = ('existing_player', 'name')
 
     def clean(self):
         data = self.cleaned_data
         old = getattr(data.get('existing_player', None), 'name', '')
         new = data.get('name', '')
         if not (old or new):
-            raise forms.ValidationError('Input your name or select an '
-                                        'existing player.')
+            raise forms.ValidationError('Please either select an existing player or tell us your name.')
         if old and new and (old.lower() != new.lower()):
-            raise forms.ValidationError('Names do not match. (You may leave '
-                'the name field blank to use "{}")'.format(old))
+            raise forms.ValidationError('You cannot both select an existing player and write a name for a new player.'.format(old))
         return data
 
 

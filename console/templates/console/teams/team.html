@@ -35,6 +35,25 @@
 <script type="text/javascript">
 $(function(){
     $('#id_players').chosen();
+
+    var visible = 0,
+        more_button = $(
+            '<div class="control-group">' +
+                '<div class="controls">' +
+                    '<button class="btn">Add More</button>' +
+                '</div>' +
+            '</div>'
+        ).insertBefore('.form-actions');
+
+    $('input[name^="new_player"]').closest('.control-group').hide();
+    more_button.click(function() {
+        visible += 1;
+        $('input[name="new_player_' + visible + '"]').closest('.control-group').show();
+        return false;
+    }).click();
+    {% comment %} TODO: remove button when all have been displayed. {% endcomment %}
+
+
 })
 </script>
 {% endblock %}

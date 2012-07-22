@@ -2,6 +2,10 @@
 
 {% if user_form %}
     <div id="user_registration_form">
+        <legend>Make an Account</legend>
+        <p>
+            Tell us an email you use often, and create a new password for use on this site. You will use this email/password combination in order to access the Puzzle Console on the day of the game, and we will contact you using this email.
+        </p>
         {{ user_form.username|bootstrap }}
         {{ user_form.password1|bootstrap }}
         {{ user_form.password2|bootstrap }}

@@ -37,35 +37,32 @@ class Team(models.Model):
     def get_absolute_url(self):
         return 'team', (), {'id': self.id}
 
+    @property
     def players(self):
-        """ Returns the players on this team """
+        """ Gets the players on this team """
         return Player.objects.filter(membership__team=self)
-    
+
     @property
-    def player_remaining_count(self):
-        """ Returns the number of players allowed to be added to this team """
-        return 8 - self.players().count()
-    
+    def rookies(self):
+        """ Gets players on the team that are Rookies (0 wins) """
+        return self.players.filter(wins=0)
+
     @property
-    def legend_count(self):
-        """ Returns the number of Legends on this team """
-        return Player.objects.filter(membership__team=self,wins__gte=2).count()
-        
-    @property
-    def allowed_legend_count(self):
-        """ Returns how many legends can be on this team if competitive based on how many rookies are on the team """
-        rookie_count = Player.objects.filter(membership__team=self,wins=0).count()
-        if rookie_count < 2:
-            return 2
-        elif rookie_count < 4:
-            return 3
-        else:
-            return 4
-    
-    @property
-    def legend_remaining_count(self):
-        """ Returns the number of Legends allowed to be added to this team """
-        return self.allowed_legend_count - self.legend_count
+    def legends(self):
+        """ Gets the players on the team that are Legends (>1 win) """
+        return self.players.filter(wins__gte=2)
+
+    def player_cap(self):
+        return 8
+
+    def player_slots(self):
+        return self.player_cap() - self.players.count()
+
+    def legend_cap(self):
+        return min(self.rookies.count()/2 + 2, 4)
+
+    def legend_slots(self):
+        return self.legend_cap() - self.legends.count()
 
     def available_players(self):
         """ Returns the players this team could recruit - that is, players not

@@ -77,24 +77,20 @@
             <div class="row">
                 <div class="span7">
                     <h3>First time here? <small>Register for the site</small></h3>
-                    <form action="{% url 'register_player' %}" method="POST" class="well">
+                    <form action="{% url 'register_player' %}" method="POST" class="form form-horizontal well">
                         {% csrf_token %}
-                        <legend>Tell us your Name</legend>
-                        <p>
-                            Players who have participated in an Auburn-area puzzlehunt before can select their name below, and new Players can type their name.
-                        </p>
                         {% include 'console/forms/player_registration.html' %}
-                        <legend>Make an Account</legend>
-                        <p>
-                            Tell us an email you use often, and create a new password for use on this site. You will use this email/password combination in order to access the Puzzle Console on the day of the game, and we will contact you using this email.
-                        </p>
                         {% include 'console/forms/user_registration.html' %}
-                        <button class="btn btn-primary">Register</button>
+                        <div class="control-group">
+                            <div class="controls">
+                                <button class="btn btn-primary">Register</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <div class="span5">
                     <h3>Welcome back! <small>Log in</small></h3>
-                    <form action="{% url 'login' %}" method="POST" class="well">
+                    <form action="{% url 'login' %}" method="POST" class="form well">
                         {% csrf_token %}
                         {{ login_form|bootstrap }}
                         <button type="submit" class="btn btn-primary">Log in</button>

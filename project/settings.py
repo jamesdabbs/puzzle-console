@@ -175,11 +175,11 @@ MAX_USERNAME_LENGTH = 75
 
 AUTH_PROFILE_MODULE = 'console.Player'
 
-# TODO: set up email
-EMAIL_HOST = ''
-EMAIL_HOST_PASSWORD = ''
-EMAIL_HOST_USER = ''
-EMAIL_PORT = 25 # default
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'app5873969@heroku.com'
+EMAIL_HOST_PASSWORD = 'nbyh5ayr'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 EMAIL_SUBJECT_PREFIX = '[APP5] '
 
 try:

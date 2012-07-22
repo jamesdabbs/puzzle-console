@@ -1,26 +1,18 @@
-import json
-from console.exceptions import TeamBuildingException
-from console.models import Player, Game
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.db.utils import IntegrityError
-from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.template.response import TemplateResponse
 
+from .exceptions import TeamBuildingException
 from .forms import UserRegistrationForm, PlayerAssignmentForm, TeamUpdateForm
-from .models import Team
-
-
-class JsonResponse(HttpResponse):
-    def __init__(self, *args, **kwargs):
-        kwargs['mimetype'] = 'application/json'
-        super(JsonResponse, self).__init__(*args, **kwargs)
+from .models import Team, Player, Game
 
 
 def home(request):
+    """ Renders the homepage """
     return TemplateResponse(request, 'console/base.html', {
         'user_form': UserRegistrationForm(),
         'player_form': PlayerAssignmentForm(),
@@ -28,14 +20,8 @@ def home(request):
     })
 
 
-# Registration flow
-# 1) Create account (either from home or registration page)
-# 2) Account must select/create a Player to associate with it
-# 3) Once account has a Player, that Player may pick a vacant team to Captain
-# 4) Captain selects whether the Team is Competitive or Recreational
-# 5) Captain can assigns/create-and-assigns other Players to the Team
-# (if the team is Competitive we need to make sure the 8 max and rookie/legend rules are met)
 def register_player(request):
+    """ Allows a user to register and associate a pre-existing Player """
     if request.method == 'POST':
         user_form = UserRegistrationForm(request.POST)
         player_form = PlayerAssignmentForm(request.POST)
@@ -53,12 +39,14 @@ def register_player(request):
 
 
 def teams(request):
+    """ Displays a list of all teams """
     return TemplateResponse(request, 'console/teams/teams.html', {
         'teams': Team.objects.all()
     })
 
 
 def team_(request, id):
+    """ Displays a particular team, and allows its captain to edit it """
     team = get_object_or_404(Team, id=id)
     if request.user == team.captain.user:
         if request.method == 'POST':
@@ -67,7 +55,7 @@ def team_(request, id):
                 try:
                     form.save()
                     messages.success(request, 'Team updated')
-                except IntegrityError as e:
+                except (TeamBuildingException, IntegrityError) as e:
                     messages.error(request, 'Error saving team: {}'.format(e))
                 return redirect(team)
         else:
@@ -76,9 +64,11 @@ def team_(request, id):
     return TemplateResponse(request, 'console/teams/team.html', locals())
     
 
-
 @login_required
 def claim_team(request, id):
+    """ Hook to allow a user to claim an empty, uncaptained team and become
+        its captain.
+    """
     team = get_object_or_404(Team, id=id, captain=None)
     player = get_object_or_404(Player, user=request.user)
     try:
@@ -87,13 +77,6 @@ def claim_team(request, id):
         messages.error(request, 'Cannot claim team: %s' % e.message)
         return redirect('teams')
     return redirect(team)
-
-
-def get_player(request):
-    name = request.GET.get('name', '')
-    players = [dict(d) for d in Player.objects.filter(name__iexact=name).values(
-        'id', 'name', 'wins', 'plays', 'organizations')]
-    return JsonResponse(json.dumps(players))
 
 
 @login_required

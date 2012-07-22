@@ -1,3 +1,4 @@
+from collections import Counter
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -14,6 +15,8 @@ class Game(models.Model):
 
     @classmethod
     def current(cls):
+        """ Gets the currently active / default game """
+        # TODO: add support for multiple active games
         return Game.objects.get(name='Puzzle Patrol II')
 
 
@@ -35,11 +38,47 @@ class Team(models.Model):
         return 'team', (), {'id': self.id}
 
     def players(self):
+        """ Returns the players on this team """
         return Player.objects.filter(membership__team=self)
 
     def available_players(self):
+        """ Returns the players this team could recruit - that is, players not
+            on any competing team.
+        """
+        # TODO: should we also filter out people with no team who have created
+        #       User accounts?
         competitors = Team.objects.filter(game=self.game).exclude(id=self.id)
         return Player.objects.exclude(membership__team__in=competitors)
+
+    def assign(self, players, commit=True):
+        """ Sets the team players to exactly the given list of players if the
+            resulting team would be legal, and throws a TeamBuildingException
+            otherwise.
+        """
+        if not self.captain:
+            raise TeamBuildingException('Please assign a captain')
+        if self.captain not in players:
+            raise TeamBuildingException(
+                'The captain ({}) must be on the team'.format(self.captain))
+        # TODO: swappable backend for validating teams
+        if self.competitive:
+            if len(players) > 8:
+                raise TeamBuildingException('Competitive teams may have at '
+                                            'most 8 players')
+            counts = Counter(p.status() for p in players)
+            rookies, legends = counts['R'], counts['L']
+            if rookies < 2*legends - 4:
+                raise TeamBuildingException(
+                    'Competitive teams with {} Legends must have at least {} '
+                    'Rookies'.format(legends, 2*legends-4)
+                )
+        if commit:
+            # This just flushes and re-adds the members
+            # If we start tracking timestamps or anything extra on Membership,
+            #   this may need to leave existing members in place
+            Membership.objects.filter(team=self).delete()
+            Membership.objects.bulk_create([Membership(team=self,
+                game=self.game, player=p) for p in players])
 
 
 class Player(models.Model):
@@ -57,18 +96,25 @@ class Player(models.Model):
     wins = models.IntegerField(default=0)
     organizations = models.IntegerField(default=0)
 
+    def __unicode__(self):
+        return "%s (%s)" % (self.name, self.description)
+
     @property
     def description(self):
-        """ Displays a prettified description of the Player's type
-        """
-        # Puzzle Patrol II specific
+        """ Displays a prettified description of the Player's type """
         return {
             0: 'Rookie',
             1: 'Hero'
         }.get(self.wins, 'Legend - %s wins' % self.wins)
 
-    def __unicode__(self):
-        return "%s (%s)" % (self.name, self.description)
+    def status(self):
+        """ Determines the Players' status, as it pertains to team building """
+        return {
+            0: 'R',
+            1: 'H'
+        }.get(self.wins, 'L')  # This method is used in counting the number of
+                               # Legends on a team and needs to assign the same
+                               # code to all Legends (unlike `description`)
 
     def teams(self):
         """ All teams that this Player is a member of """
@@ -99,3 +145,11 @@ class Membership(models.Model):
         # A player can only be on one team per game
         unique_together = (('game', 'player', 'team'),)
 
+    def save(self, *args, **kwargs):
+        """ Sets `game` based off `team` (note that `game` is not redundant
+            though, since a Player may be signed up for a Game but not yet on a
+            particular Team).
+        """
+        if self.team and not self.game:
+            self.game = self.team.game
+        super(Membership, self).save(*args, **kwargs)

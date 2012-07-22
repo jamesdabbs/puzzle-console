@@ -4,19 +4,29 @@
 {% block title %}{{ team }}{% endblock %}
 
 {% block content %}
-    <div class="page-header"><h1>{{ team }}</h1></div>
-    {% include "console/teams/team_detail.html" %}
     {% if form %}
-        <section>
-            <div class="page-header"><h2>Manage your Team</h2></div>
-            <form class="form-horizontal" action="" method="POST">
+    <div class="row">
+        <div class="span6">
+    {% endif %}
+            <div class="page-header"><h1>{{ team }}</h1></div>
+            {% include "console/teams/team_detail.html" %}
+    {% if form %}
+        </div>
+        <div class="span6">
+            <div class="page-header"><h1>Manage your Team</h1></div>
+            <form class="form-horizontal well" action="" method="POST">
                 {% csrf_token %}
-                {{ form|bootstrap }}
+                {% for e in form.non_field_errors %}
+                    {% alert_message 'error' e %}
+                {% endfor %}
+                {{ form.name|bootstrap }}
+                {{ form.competitive|bootstrap }}
+                {{ form.players|bootstrap }}
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Save changes</button>
                 </div>
             </form>
-        </section>
+        </div>
     {% endif %}
 {% endblock %}
 

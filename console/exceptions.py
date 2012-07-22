@@ -1,4 +1,2 @@
-from django.db.utils import IntegrityError
-
-class TeamBuildingException(IntegrityError):
+class TeamBuildingException(Exception):
     pass

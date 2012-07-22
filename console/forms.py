@@ -1,8 +1,8 @@
-import json
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from console.models import Player, Team, Membership
+from .exceptions import TeamBuildingException
+from .models import Player, Team
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -62,19 +62,16 @@ class TeamUpdateForm(forms.ModelForm):
                 initial=self.instance.players()
             )
 
+    def clean(self):
+        data = self.cleaned_data
+        team, players = self.instance, data.get('players', [])
+        try:
+            team.assign(players, commit=False)
+        except TeamBuildingException as e:
+            raise forms.ValidationError(e.message)
+        return data
+
     def save(self):
         team = super(TeamUpdateForm, self).save()
-        # Add added players
-        for player in self.cleaned_data.get('players'):
-            Membership.objects.get_or_create(
-                team=team, game=team.game, player=player)
-        # Delete deleted players
-        for player in team.players():
-            if player not in self.cleaned_data.get('players'):
-                try:
-                    Membership.objects.get(team=team, player=player).delete()
-                except Membership.DoesNotExist:
-                    pass
-        # TODO: handle deletion of captain more gracefully
-        # TODO: check team-building rules for competitive teams
+        team.assign(self.cleaned_data.get('players', []))
         return team

@@ -7,7 +7,6 @@ urlpatterns = patterns('console.views',
     url(r'^teams/mine/$', 'my_team', name='my_team'),
     url(r'^teams/(?P<id>\d+)/$', 'team_', name='team'),
     url(r'^teams/(?P<id>\d+)/claim/$', 'claim_team', name='claim_team'),
-    url(r'^player/by_name/$', 'get_player', name='get_player')
 )
 
 urlpatterns += patterns('django.contrib.auth.views',

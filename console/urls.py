@@ -18,4 +18,5 @@ urlpatterns += patterns('django.contrib.auth.views',
 
 urlpatterns += patterns('',
     url(r'^about/', TemplateView.as_view(template_name="console/app5/about.html"), name='about'),
+    url(r'^rules/', TemplateView.as_view(template_name="console/app5/rules.html"), name='rules'),
 )

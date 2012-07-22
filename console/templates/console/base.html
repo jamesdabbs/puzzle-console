@@ -21,10 +21,12 @@
                 </a>
                 {% block navlinks %}
                 <ul class="nav">
-                    <li><a href="{% url 'home' %}">About</a></li>
-                    <!-- <li><a href="#">Rules</a></li> -->
+                    <li><a href="{% url 'about' %}">About</a></li>
+                    <li><a href="{% url 'rules' %}">Rules</a></li>
                     <li><a href="{% url 'teams' %}">Teams</a></li>
+                    {% if request.user.is_authenticated %}
                     <li><a href="{% url 'my_team' %}">My Team</a></li>
+                    {% endif %}
                     <!-- <li><a href="#">Puzzles</a></li> -->
                 </ul>
                 {% endblock %}
@@ -50,7 +52,7 @@
                     Welcome to the <strong>Puzzle Console</strong> for <strong>Auburn Puzzle Party 5</strong>.
                     Using this website, you can create/join a Team for our <strong>puzzlehunt</strong>
                     beginning on <strong>October 20, 2012</strong> at 10am and lasting until <strong>October 21, 2012</strong>
-                    at 1pm. <a href="http://auburnpuzzleparty.wikia.com/wiki/Home">(Wait, a puzzlewha?)</a>
+                    at 1pm. <a href="{% url 'about' %}">(Wait, a puzzlewha?)</a>
                 </p>
                 <div class="row-fluid">
                     <ul class="thumbnails">

@@ -69,6 +69,8 @@ def claim_team(request, id):
     """ Hook to allow a user to claim an empty, uncaptained team and become
         its captain.
     """
+    # TODO: Do we want a similar join team hook or should we leave team
+    #       construction to the captains?
     team = get_object_or_404(Team, id=id, captain=None)
     player = get_object_or_404(Player, user=request.user)
     try:
@@ -81,6 +83,7 @@ def claim_team(request, id):
 
 @login_required
 def my_team(request):
+    """ Redirects a Player to their Team (if possible, to all teams if not) """
     game = Game.current()
     try:
         return redirect(Team.objects.get(

@@ -3,28 +3,7 @@
 {% if user_form %}
     <div id="user_registration_form">
         {{ user_form.email|bootstrap }}
-        {{ user_form.username|bootstrap }}
         {{ user_form.password1|bootstrap }}
         {{ user_form.password2|bootstrap }}
     </div>
-
-    <script type="text/javascript">
-        $(function() {
-            var username = $('#user_registration_form input[name="username"]'),
-                    email = $('#user_registration_form input[name="email"]');
-
-            function sync_inputs() {
-                // If the email and (partial) username strings agree, use the
-                // (first 30 characters of) the email as the username
-                // TODO: should we also enforce that we'll only delete one character at a time (to prevent accidental blanking)?
-                var len = Math.min(email.val().length, username.val().length)
-                if (email.val().substring(0, len) == username.val().substring(0, len)) {
-                    username.val(email.val().substring(0, 30))
-                }
-            }
-
-            email.keyup(sync_inputs);
-            email.blur(sync_inputs);  // For tab-autocomplete workflow
-        })
-    </script>
 {% endif %}

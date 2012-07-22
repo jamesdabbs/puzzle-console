@@ -5,8 +5,8 @@
 <head>
     <title>{%  block title %}Home{% endblock %} - Puzzle Party Console</title>
 
-    <link href="/static/css/bootstrap.css" rel="stylesheet">
-    <link href="/static/css/chosen.css" rel="stylesheet">
+    {% bootstrap_css %}
+    <link rel="stylesheet" href="http://harvesthq.github.com/chosen/chosen/chosen.css">
     {% block extra_styles %}{% endblock %}
 
     {% jquery %}
@@ -104,8 +104,8 @@
         {% endblock %}
     </div>
 
-    <script type="text/javascript" src="/static/js/chosen.jquery.min.js"></script>
-    <script type="text/javascript" src="/static/js/bootstrap-alert.js"></script>
+    <script type="text/javascript" src="http://harvesthq.github.com/chosen/chosen/chosen.jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap-alert.js"><</script>
     {% block extra_scripts %}
     {% endblock %}
 </body>

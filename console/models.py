@@ -37,6 +37,10 @@ class Team(models.Model):
     def players(self):
         return Player.objects.filter(membership__team=self)
 
+    def available_players(self):
+        competitors = Team.objects.filter(game=self.game).exclude(id=self.id)
+        return Player.objects.exclude(membership__team__in=competitors)
+
 
 class Player(models.Model):
     # A Player may or may not have a User attached. If not, the player may be
@@ -44,7 +48,7 @@ class Player(models.Model):
     user = models.OneToOneField(User, null=True)
     games = models.ManyToManyField(Game, through='Membership')
 
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, blank=True)
 
     # Metadata about previous plays
     # This should probably be moved to old game result objects and computed

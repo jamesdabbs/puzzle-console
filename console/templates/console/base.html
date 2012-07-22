@@ -6,6 +6,9 @@
     <title>{%  block title %}Home{% endblock %} - Puzzle Party Console</title>
     {% bootstrap_css %}
 
+    <link rel="stylesheet" href="http://harvesthq.github.com/chosen/chosen/chosen.css">
+    {% block extra_styles %}{% endblock %}
+
     {% jquery %}
 </head>
 <body style="padding:50px">{# Padding to work with fixed navbar #}
@@ -17,7 +20,7 @@
                 </a>
                 {% block navlinks %}
                 <ul class="nav">
-                    <li><a href="#">About</a></li>
+                    <li><a href="{% url 'home' %}">About</a></li>
                     <li><a href="#">Rules</a></li>
                     <li><a href="{% url 'teams' %}">Teams</a></li>
                     <li><a href="{% url 'my_team' %}">My Team</a></li>
@@ -92,6 +95,7 @@
         {% endblock %}
     </div>
 
+    <script type="text/javascript" src="http://harvesthq.github.com/chosen/chosen/chosen.jquery.js"></script>
     {% block extra_scripts %}
     {% endblock %}
 </body>

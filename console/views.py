@@ -5,13 +5,12 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from django.http import HttpResponse, Http404
+from django.db.utils import IntegrityError
+from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.template.response import TemplateResponse
-from django.views.generic import TemplateView, FormView
 
-from .forms import UserRegistrationForm, PlayerAssignmentForm, \
-    TeamRegistrationForm, TeamUpdateForm
+from .forms import UserRegistrationForm, PlayerAssignmentForm, TeamUpdateForm
 from .models import Team
 
 
@@ -41,13 +40,8 @@ def register_player(request):
         user_form = UserRegistrationForm(request.POST)
         player_form = PlayerAssignmentForm(request.POST)
         if user_form.is_valid() and player_form.is_valid():
-            # The javascript will set 'player_id' if we're linking with an
-            # existing player. If not, make a new one using the name.
-            player_id = request.POST.get('player_id', '')
-            if player_id:
-                user = user_form.save(player_id=int(player_id))
-            else:
-                user = user_form.save(player_name=request.POST.get('name'))
+            user = user_form.save()
+            player_form.save(user=user)
             messages.success(request, 'New user created.')
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)
@@ -64,19 +58,20 @@ def teams(request):
     })
 
 
-def team(request, id):
+def team_(request, id):
     team = get_object_or_404(Team, id=id)
-    UserPlayer = False
-    try:
-        UserPlayer = request.user.get_profile()
-    except AttributeError:
-        pass
-    if UserPlayer == team.captain:
+    if request.user == team.captain.user:
         if request.method == 'POST':
-            update_team_form = TeamUpdateForm(request.POST)
-            if update_team_form.is_valid():
-                update_team_form.save()
-        team_form = TeamUpdateForm(instance=team)
+            form = TeamUpdateForm(request.POST, instance=team)
+            if form.is_valid():
+                try:
+                    form.save()
+                    messages.success(request, 'Team updated')
+                except IntegrityError as e:
+                    messages.error(request, 'Error saving team: {}'.format(e))
+                return redirect(team)
+        else:
+            form = TeamUpdateForm(instance=team)
     
     return TemplateResponse(request, 'console/teams/team.html', locals())
     

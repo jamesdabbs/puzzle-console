@@ -3,85 +3,19 @@
 
 {% if player_form %}
     <div id="player_form">
-        <div class="control-group">
-            <label class="control-label">Are you experienced?</label>
-            <div class="controls">
-                <label class="radio">
-                    <input type="radio" name="returning" value="y" checked="checked">
-                    I've played in an Auburn-area puzzle party before.
-                </label>
-                <label class="radio">
-                    <input type="radio" name="returning" value="n">
-                    This is my first time playing in an Auburn-area puzzle party!
-                </label>
-            </div>
-        </div>
+        {% for e in player_form.non_field_errors %}
+            {% alert_message 'error' e %}
+        {% endfor %}
+        {{ player_form.existing_player|bootstrap }}
         {{ player_form.name|bootstrap }}
         <input type="hidden" name="player_id">
         <div id="player_form_alert" class="alert" style="display:none"></div>
     </div>
 
     {% comment %} See https://gist.github.com/1891669 {% endcomment %}
-    <script type="text/javascript" src="https://raw.github.com/gist/1866577/dd58c66be9dcb5b770e7f51a6cff324bec856021/bootstrap-typeahead.js"></script>
     <script type="text/javascript">
     $(function() {
-        var players = {{ player_form.choices|safe }},
-            input = $('#player_form input[name="name"]'),
-            message = $('#player_form_alert'),
-            hidden = $('#player_form input[name="player_id"]');
-
-        function check_name() {
-            // Checks the name input against existing players, giving some
-            // feedback on matches.
-            var name = input.val();
-            if (!name) {
-                message.hide();
-            } else if (players.indexOf(name) != -1) {
-                message.show().attr('class', 'alert alert-success').html(
-                    'Found matching player. Loading data ...')
-                $.getJSON('{% url "get_player" %}', {'name': name}, function(data) {
-                    if (data.length == 1) {
-                        var wins = data[0]['wins'],
-                            plays = data[0]['plays'] + wins;
-                        message.html('Found existing player with ' + wins + ' wins in ' + plays + ' plays.');
-                        hidden.val(data[0]['id']);
-                    } else {
-                        // TODO
-                        alert('Allan, please add support for name collisions')
-                    }
-                });
-            } else {
-                message.show().attr('class', 'alert alert-info').html(
-                    'No previous players named "' + name +
-                    '" were found. A new player account will be created.'
-                );
-                hidden.val('')
-            }
-        }
-
-        {% comment %} TODO: why doesn't chaining this w/ a .change() work? {% endcomment %}
-        function activate_typeahead() {
-            // Turns on the typeahead feature on the name box for returning players
-            input.typeahead({
-                'source': players,
-                'onselect': check_name
-            }).keyup(check_name);
-        }
-
-        $('#player_form input[name="returning"]').change(function() {
-            // Only do the type-ahead suggestions for returning players
-            if($(this).val() == 'y') {
-                activate_typeahead();
-                check_name();
-            } else {
-                input.off();
-                input.removeData('typeahead');
-                message.hide();
-                hidden.val('');
-            }
-        });
-        activate_typeahead();
-
+        $('#id_existing_player').chosen();
     });
     </script>
 {% endif %}

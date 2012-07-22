@@ -18,7 +18,7 @@
                 {% endfor %}
             </ul>
         </p>
-        <p><b>Total number of Players:</b><br /> {{ team.player_count }}</p>
+        <p><b>Total number of Players:</b><br /> {{ team.players.count }}</p>
         {% if team.competitive %}
         <p><b>Number of Players that may be added:</b><br /> {{ team.player_remaining_count }}</p>
         <p><b>Total number of Legends:</b><br /> {{ team.legend_count }}</p>

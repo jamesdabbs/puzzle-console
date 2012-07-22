@@ -42,14 +42,9 @@ class Team(models.Model):
         return Player.objects.filter(membership__team=self)
     
     @property
-    def player_count(self):
-        """ Returns the number of players on this team """
-        return Player.objects.filter(membership__team=self).count()
-    
-    @property
     def player_remaining_count(self):
         """ Returns the number of players allowed to be added to this team """
-        return 8 - self.player_count
+        return 8 - self.players().count()
     
     @property
     def legend_count(self):

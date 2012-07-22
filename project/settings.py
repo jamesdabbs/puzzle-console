@@ -181,6 +181,7 @@ EMAIL_HOST_PASSWORD = 'nbyh5ayr'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_SUBJECT_PREFIX = '[APP5] '
+SEND_BROKEN_LINK_EMAILS = True
 
 try:
     from local.settings import *

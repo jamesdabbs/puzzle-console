@@ -49,6 +49,10 @@ $(function(){
     more_button.click(function() {
         visible += 1;
         $('input[name="new_player_' + visible + '"]').closest('.control-group').show();
+        // Hide this button if there are no more inputs to use
+        if ($('input[name="new_player_' + (visible + 1) + '"]').length == 0) {
+            more_button.hide();
+        }
         return false;
     }).click();
     {% comment %} TODO: remove button when all have been displayed. {% endcomment %}

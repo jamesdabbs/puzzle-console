@@ -19,6 +19,13 @@ class Game(models.Model):
         # TODO: add support for multiple active games
         return Game.objects.get(name='Puzzle Patrol II')
 
+    def free_players(self):
+        """ Gets Players interested in this Game who have not signed up for a
+            particular team.
+        """
+        return Player.objects.filter(
+            membership__game=self, membership__team=None)
+
 
 class Team(models.Model):
     game = models.ForeignKey(Game)
@@ -79,19 +86,19 @@ class Team(models.Model):
         competitors = Team.objects.filter(game=self.game).exclude(id=self.id)
         return Player.objects.exclude(membership__team__in=competitors)
 
-    def assign(self, players, commit=True):
+    def assign(self, roster, commit=True):
         """ Sets the team players to exactly the given list of players if the
             resulting team would be legal, and throws a TeamBuildingException
             otherwise.
         """
         if not self.captain:
             raise TeamBuildingException('Please assign a captain.')
-        if self.captain not in players:
+        if self.captain not in roster:
             raise TeamBuildingException(
                 'You cannot remove the team captain - {}.'.format(self.captain))
         # TODO: swappable backend for validating teams
         if self.competitive:
-            if len(players) > 8:
+            if len(roster) > 8:
                 raise TeamBuildingException('Sorry, competitive teams cannot have more than eight players.')
             rookies, legends = self.rookies.count(), self.legends.count()
             if legends > 4:
@@ -103,12 +110,16 @@ class Team(models.Model):
                     'Sorry, competitive teams cannot have {} Legends without also having at least {} Rookies.'.format(legends, 2*legends-4)
                 )
         if commit:
-            # This just flushes and re-adds the members
-            # If we start tracking timestamps or anything extra on Membership,
-            #   this may need to leave existing members in place
-            Membership.objects.filter(team=self).delete()
-            Membership.objects.bulk_create([Membership(team=self,
-                game=self.game, player=p) for p in players])
+            # We want to add the added players and remove the removed ones
+            # without changing the membership of old players that are staying
+
+            # Remove players from the team that aren't on the new roster
+            Membership.objects.filter(team=self).exclude(
+                player__in=roster).update(team=None)
+            # And add the new ones
+            for player in roster:
+                if player not in self.players:
+                    player.join(self)
 
 
 class Player(models.Model):
@@ -153,7 +164,14 @@ class Player(models.Model):
         """ Attempts to add this Player to the `team` """
         if self.teams().filter(game=team.game).exists():
             raise TeamBuildingException('You are already a member of a Team.')
-        Membership.objects.create(team=team, game=team.game, player=self)
+        # We can't just .create the Membership, because we want to allow for
+        # the possibility of a player who has joined a Game without a Team
+        try:
+            membership = Membership.objects.get(game=team.game, player=self)
+        except Membership.DoesNotExist:
+            membership = Membership(game=team.game, player=self)
+        membership.team = team
+        membership.save()
 
     def claim(self, team):
         """ Joins the `team` as its captain """

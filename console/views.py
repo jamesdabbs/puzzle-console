@@ -1,3 +1,4 @@
+from console.models import Membership
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
@@ -38,19 +39,20 @@ def register_player(request):
             )
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)
-            return redirect('teams')
+            return redirect(request.GET.get('next', 'teams'))
     else:
         user_form = UserRegistrationForm()
         player_form = PlayerAssignmentForm()
     return TemplateResponse(request, 'console/registration/player.html', locals())
 
 
-def teams(request):
+def teams_(request):
     """ Displays a list of all teams """
-    # TODO: add 'no team' option to join game without having a team
-    return TemplateResponse(request, 'console/teams/teams.html', {
-        'teams': Team.objects.all()
-    })
+    game = Game.current()
+    teams = Team.objects.filter(game=game)
+    joined = request.user.is_authenticated() and Membership.objects.filter(
+        player__user=request.user, game=game).exists()
+    return TemplateResponse(request, 'console/teams/teams.html', locals())
 
 
 def team_(request, id):
@@ -88,6 +90,17 @@ def claim_team(request, id):
         messages.error(request, 'Cannot claim team: %s' % e.message)
         return redirect('teams')
     return redirect(team)
+
+
+@login_required
+def join_game(request, id=None):
+    """ Joins the Game without specifying a team (adding the user to the pool
+        of interested players)
+    """
+    game = get_object_or_404(Game, id=id) if id else Game.current()
+    player = get_object_or_404(Player, user=request.user)
+    Membership.objects.get_or_create(game=game, player=player)
+    return redirect('teams')
 
 
 @login_required

@@ -1,4 +1,5 @@
 {% extends "console/base.html" %}
+{% load bootstrap_tags %}
 {% load url from future %}
 
 {% block title %}Teams{% endblock %}
@@ -19,6 +20,23 @@
     </div>
 </div>
 <section>
+    <div class="well">
+        {% if not joined %}
+        <p>
+            <strong>Looking for teammates?</strong>
+            <a href="{% url 'join_game' %}" class="btn btn-primary">Join the Game</a>
+            to be added to the pool of available, interested players.
+        </p>
+        {% endif %}
+        {% if game.free_players %}
+            {% alert_message 'info' 'The following players are looking for a team.' %}
+            <ul>
+                {% for p in game.free_players %}
+                <li>{{ p }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
     {% for team in teams %}
     <div class="well">
         <div class="page-header">

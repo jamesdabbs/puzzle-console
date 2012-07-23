@@ -9,9 +9,7 @@ DEBUG = os.environ.get('DEBUG') == 'True'
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
-    ('James Dabbs', 'james.dabbs@gmail.com'),
-    ('Steven Clontz', 'steven.clontz@gmail.com')
+    ('James Dabbs', 'james.dabbs+app5@gmail.com'),
 )
 
 MANAGERS = ADMINS

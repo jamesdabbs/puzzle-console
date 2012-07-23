@@ -85,7 +85,7 @@ class Team(models.Model):
             otherwise.
         """
         if not self.captain:
-            raise TeamBuildingException('Please assign a captain')
+            raise TeamBuildingException('Please assign a captain.')
         if self.captain not in players:
             raise TeamBuildingException(
                 'You cannot remove the team captain - {}.'.format(self.captain))
@@ -93,7 +93,7 @@ class Team(models.Model):
         if self.competitive:
             if len(players) > 8:
                 raise TeamBuildingException('Sorry, competitive teams cannot have more than eight players.')
-            rookies, legends = self.rookes.count(), self.legends.count()
+            rookies, legends = self.rookies.count(), self.legends.count()
             if legends > 4:
                 raise TeamBuildingException(
                     'Sorry, competitive teams cannot have {} Legends.'.format(legends)
@@ -152,17 +152,20 @@ class Player(models.Model):
     def join(self, team):
         """ Attempts to add this Player to the `team` """
         if self.teams().filter(game=team.game).exists():
-            raise TeamBuildingException('You may only join one team per game')
+            raise TeamBuildingException('You are already a member of a Team.')
         Membership.objects.create(team=team, game=team.game, player=self)
 
     def claim(self, team):
         """ Joins the `team` as its captain """
         if team.captain:
-            raise TeamBuildingException('This team already has a captain')
+            raise TeamBuildingException('This Team already has a captain.')
         # Join the team and assign yourself as captain
         self.join(team)
         team.captain = self
         team.save()
+        
+    class Meta:
+        ordering = ['name']
 
 
 class Membership(models.Model):

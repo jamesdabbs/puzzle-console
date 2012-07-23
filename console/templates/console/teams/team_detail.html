@@ -22,10 +22,7 @@
         {% if team.competitive %}
         <p><b>Number of Players that may be added:</b> {{ team.player_slots }}</p>
         <p><b>Total number of Legends:</b> {{ team.legends.count }}</p>
-        {% comment %}
-        TODO: isn't this misleading (at least, without saying something about adding rookies)?
-        <p><b>Number of Legends that may be added:</b><br /> {{ team.legend_slots }}</p>
-        {% endcomment %}
+        <p><b>Number of Legends that may be added (without adding more Rookies):</b> {{ team.legend_slots }}</p>
         {% endif %}
     </div></div>
 {% else %}

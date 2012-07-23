@@ -1,8 +1,11 @@
 from django.conf.urls import patterns, url
 from django.views.generic import TemplateView
+from django.views.generic.base import RedirectView
 
 urlpatterns = patterns('console.views',
     url(r'^$', 'home', name='home'),
+    url(r'^favicon.ico', RedirectView.as_view(
+        url='https://s3.amazonaws.com/app5/favicon.ico', permanent=True)),
     url(r'^register/$', 'register_player', name='register_player'),
     url(r'^teams/$', 'teams', name='teams'),
     url(r'^teams/mine/$', 'my_team', name='my_team'),

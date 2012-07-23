@@ -47,6 +47,7 @@ def register_player(request):
 
 def teams(request):
     """ Displays a list of all teams """
+    # TODO: add 'no team' option to join game without having a team
     return TemplateResponse(request, 'console/teams/teams.html', {
         'teams': Team.objects.all()
     })
@@ -56,7 +57,7 @@ def team_(request, id):
     """ Displays a particular team, and allows its captain to edit it """
     # TODO: A captain currently has no way to abandon a team
     team = get_object_or_404(Team, id=id)
-    if request.user == team.captain.user:
+    if request.user == getattr(team.captain, 'user', None):
         if request.method == 'POST':
             form = TeamUpdateForm(request.POST, instance=team)
             if form.is_valid():

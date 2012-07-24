@@ -82,7 +82,7 @@ def claim_team(request, id):
     """
     # TODO: Do we want a similar join team hook or should we leave team
     #       construction to the captains?
-    team = get_object_or_404(Team, id=id, captain=None)
+    team = get_object_or_404(Team, id=id)
     player = get_object_or_404(Player, user=request.user)
     try:
         player.claim(team)

@@ -8,3 +8,4 @@ wsgiref==0.1.2
 git+git://github.com/jamesdabbs/django-bootstrap.git
 gunicorn==0.14.5
 longerusername==0.4
+Markdown==2.2.0

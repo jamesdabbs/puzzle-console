@@ -11,7 +11,8 @@ urlpatterns = patterns('console.views',
     url(r'^teams/mine/$', 'my_team', name='my_team'),
     url(r'^teams/(?P<id>\d+)/$', 'team_', name='team'),
     url(r'^teams/(?P<id>\d+)/claim/$', 'claim_team', name='claim_team'),
-    url(r'^game/join/$', 'join_game', name='join_game')
+    url(r'^game/join/$', 'join_game', name='join_game'),
+    url(r'^staff/(?P<id>\d+)/$', 'game_staff_overview', name='game_staff_overview')
 )
 
 urlpatterns += patterns('django.contrib.auth.views',

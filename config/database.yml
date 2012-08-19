@@ -1,0 +1,8 @@
+development: 
+    adapter: postgresql
+    encoding: utf8
+    database: console
+    username: console
+    port: 5432 
+    password: pass
+    host: localhost

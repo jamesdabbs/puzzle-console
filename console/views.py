@@ -10,7 +10,7 @@ from django.template.response import TemplateResponse
 
 from .exceptions import TeamBuildingException
 from .forms import UserRegistrationForm, PlayerAssignmentForm, TeamUpdateForm
-from .models import Team, Player, Game
+from .models import Team, Player, Game, Puzzle
 
 
 def home(request):
@@ -116,3 +116,9 @@ def my_team(request):
         messages.error(request,
             'You have not yet joined a team for {}'.format(game))
         return redirect('teams')
+
+@login_required
+def game_staff_overview(request, id):
+    game = Game.current()
+    puzzles = Puzzle.objects.filter(game=game)
+    return TemplateResponse(request, 'console/staff/overview.html', locals())

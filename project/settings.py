@@ -123,7 +123,9 @@ INSTALLED_APPS = (
     'gunicorn',
     'south',
     'django-bootstrap',
-    'console'
+    'console',
+    # requires Markdown be installed
+    'django.contrib.markup'
 )
 
 # A sample logging configuration. The only tangible logging

@@ -34,10 +34,13 @@ class Team(models.Model):
     name = models.CharField(max_length=255)
     competitive = models.BooleanField()
     
+    number = models.IntegerField(default=0)
+    
     staff = models.BooleanField(default=False) #Set to True for staffers so that they can see admin tools
 
     class Meta:
-        unique_together = (('game', 'name'),)
+        unique_together = (('game', 'name'))
+        ordering = ['number']
 
     def __unicode__(self):
         return self.name
@@ -50,6 +53,9 @@ class Team(models.Model):
         """ Sets the default Game, if needed """
         if not self.game:
             self.game = Game.current()
+        if self.number == 0:
+            top_team = Team.objects.filter(game=self.game).order_by('-number')[0]
+            self.number = top_team.number + 1
         super(Team, self).save(*args, **kwargs)
 
     @property
@@ -139,7 +145,10 @@ class Player(models.Model):
     organizations = models.IntegerField(default=0)
 
     def __unicode__(self):
-        return "%s (%s)" % (self.name, self.description)
+        if self.is_claimed:
+            return "%s (%s) <%s>" % (self.name, self.description, self.email)
+        else:
+            return "%s (%s)" % (self.name, self.description)
 
     @property
     def description(self):
@@ -148,6 +157,17 @@ class Player(models.Model):
             0: 'Rookie',
             1: 'Hero'
         }.get(self.wins, 'Legend - %s wins' % self.wins)
+    
+    @property
+    def is_claimed(self):
+        return User.objects.filter(player=self).exists()
+    
+    @property
+    def email(self):
+        if self.is_claimed:
+            return self.user
+        else:
+            return ''
 
     def status(self):
         """ Determines the Players' status, as it pertains to team building """

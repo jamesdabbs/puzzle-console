@@ -14,7 +14,7 @@
         <p><b>Players:</b>
             <ul>
                 {% for player in team.players %}
-                <li>{{ player.name }} ({{ player.description }}) {% if request.user.get_profile == player %}<span class="label label-success">You</span>{% endif %}</li>
+                <li>{{ player }} {% if request.user.get_profile == player %}<span class="label label-success">You</span>{% endif %}</li>
                 {% endfor %}
             </ul>
         </p>
@@ -22,7 +22,7 @@
         {% if team.competitive %}
         <p><b>Number of Players that may be added:</b> {{ team.player_slots }}</p>
         <p><b>Total number of Legends:</b> {{ team.legends.count }}</p>
-        <p><b>Number of Legends that may be added (without adding more Rookies):</b> {{ team.legend_slots }}</p>
+        <p><b>Number of Legends that may be added<br /> (without adding more Rookies):</b> {{ team.legend_slots }}</p>
         {% endif %}
     </div></div>
 {% else %}

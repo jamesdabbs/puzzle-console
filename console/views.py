@@ -1,4 +1,3 @@
-from console.models import Membership
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
@@ -7,11 +6,13 @@ from django.core.mail import send_mail
 from django.db.utils import IntegrityError
 from django.shortcuts import redirect, get_object_or_404
 from django.template.response import TemplateResponse
+from django.http import Http404
 
 from .exceptions import TeamBuildingException
 from .forms import UserRegistrationForm, PlayerAssignmentForm, TeamUpdateForm
-from .models import Team, Player, Game, Puzzle
+from .models import Team, Player, Game, Puzzle, Membership
 
+from .utils import check_staff
 
 def home(request):
     """ Renders the homepage """
@@ -119,6 +120,8 @@ def my_team(request):
 
 @login_required
 def game_staff_overview(request, id):
-    game = Game.current()
+    game = get_object_or_404(Game, id=id)
+    if not check_staff(request.user, game):
+        raise Http404
     puzzles = Puzzle.objects.filter(game=game)
     return TemplateResponse(request, 'console/staff/overview.html', locals())

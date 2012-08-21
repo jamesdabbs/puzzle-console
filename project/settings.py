@@ -165,7 +165,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
-    'django.core.context_processors.request'
+    'django.core.context_processors.request',
+    'console.context_processors.current_game'
 )
 
 LOGIN_URL = reverse_lazy('login')

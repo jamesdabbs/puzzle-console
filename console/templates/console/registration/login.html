@@ -8,12 +8,19 @@
 <div class="page-header">
     <h1>Log in</h1>
 </div>
-<p>Don't have an account? <a href="{% url 'register_player' %}?next={{ next }}">Register now</a>.</p>
-<form action="" method="POST" class="form form-horizontal">
-    {% csrf_token %}
-    {{ form|bootstrap }}
-    <div class="form-actions">
-        <button class="btn btn-primary">Login</button>
-    </div>
-</form>
+{% if not request.user.is_authenticated %}
+    <p>Don't have an account? <a href="{% url 'register_player' %}?next={{ next }}">Register now</a>.</p>
+    <form action="" method="POST" class="form form-horizontal">
+        {% csrf_token %}
+        {{ form|bootstrap }}
+        <div class="form-actions">
+            <button class="btn btn-primary">Login</button>
+        </div>
+    </form>
+{% else %}
+    <p>Looks like you're already logged in!</p>
+{% endif %}
+
+<h5>Change password</h5>
+<p>Visit <a href="{% url 'password_reset' %}">our password reset page</a> to change your password.</p>
 {% endblock %}

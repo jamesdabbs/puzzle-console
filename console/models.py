@@ -25,6 +25,10 @@ class Game(models.Model):
         """
         return Player.objects.filter(
             membership__game=self, membership__team=None)
+    
+    def staffers(self):
+        """ Grabs Players on teams which are marked as Staff teams"""
+        return Player.objects.filter(membership__game=self, membership__team__staff=True)
 
 
 class Team(models.Model):

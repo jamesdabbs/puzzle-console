@@ -18,7 +18,7 @@
         <div class="navbar-inner">
             <div class="container">
                 <a class="brand" href="{% url 'home' %}">
-                    APP5 Puzzle Console
+                    {{ current_game }}
                 </a>
                 {% block navlinks %}
                 <ul class="nav">
@@ -28,13 +28,16 @@
                     {% if request.user.is_authenticated %}
                     <li><a href="{% url 'my_team' %}">My Team</a></li>
                     {% endif %}
+                    {% if request.user.player in current_game.staffers %}
+                    <li><a href="{% url 'game_staff_overview' current_game.id %}">Manage {{ current_game }}</a></li>
+                    {% endif %}
                     <!-- <li><a href="#">Puzzles</a></li> -->
                 </ul>
                 {% endblock %}
 
                 <ul class="nav pull-right">
                     {% if user.is_authenticated %}
-                    <li><a href="#">{{ user }}</a></li>
+                    <li><a href="{% url 'login' %}">{{ user }}</a></li>
                     <li><a href="{% url 'logout' %}?next={{ request.path }}">Logout</a></li>
                     {% else %}
                     <li><a href="{% url 'login' %}?next={{ request.path }}">Login</a></li>

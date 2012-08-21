@@ -1,0 +1,17 @@
+{% extends "console/base.html" %}
+{% load bootstrap_tags %}
+{% load url from future %}
+
+{% block title %}Enter New Password{% endblock %}
+
+{% block content %}
+<h3>Enter new password</h3>
+<p>Please enter your new password twice so we can verify you typed it in correctly.</p>
+
+<form action="" method="POST">{% csrf_token %}
+    {{ form|bootstrap }}
+    <div class="actions">
+        <input type="submit" class="btn primary" value="Change password"/>
+    </div>
+</form>
+{% endblock %}

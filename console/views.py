@@ -125,3 +125,4 @@ def game_staff_overview(request, id):
         raise Http404
     puzzles = Puzzle.objects.filter(game=game)
     return TemplateResponse(request, 'console/staff/overview.html', locals())
+

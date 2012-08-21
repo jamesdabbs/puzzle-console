@@ -1,0 +1,11 @@
+{% extends 'console/base.html' %}
+{% block content %}
+{% load url from future %}
+
+<div class="page-header">
+    <h4>Password change request sent</h4>
+</div>
+
+<p><a href="{% url 'home' %}">Return to the main page.</a></p>
+
+{% endblock %}

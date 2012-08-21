@@ -18,8 +18,21 @@ urlpatterns = patterns('console.views',
 urlpatterns += patterns('django.contrib.auth.views',
     url(r'^login/$', 'login',
         {'template_name': 'console/registration/login.html'}, name='login'),
-    url(r'^logout/$', 'logout',{'next_page': '/'}, name='logout')
+    url(r'^logout/$', 'logout',{'next_page': '/'}, name='logout'),
+    url(r'^account/password/reset/$', 'password_reset', {
+        'template_name': 'console/registration/password/reset.html',
+        'email_template_name': 'console/registration/password/reset_email.html',
+    }, name='password_reset'),
+    url(r'^account/password/reset/sent/$', 'password_reset_done', {
+        'template_name': 'console/registration/password/reset_done.html'}),
+    url(r'^account/password/reset/confirm/(?P<uidb36>[-\w]*)/(?P<token>[-\w]*)/$', 
+        'password_reset_confirm', 
+        {'template_name': 'console/registration/password/reset_confirm.html'},
+        name='password_reset_confirm'),
+    url(r'^account/password/reset/complete/', 'password_reset_complete', 
+        {'template_name': 'console/registration/password/reset_complete.html'})
 )
+
 
 urlpatterns += patterns('',
     url(r'^about/', TemplateView.as_view(template_name="console/app5/about.html"), name='about'),

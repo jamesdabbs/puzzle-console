@@ -1,0 +1,10 @@
+{% comment %}
+Note that the subject line is automatically set to "Password reset on <site name>" so we need to be sure we have the site set correctly.
+{% endcomment %}
+
+{% load url from future %}
+You are receiving this email because someone (hopefully you) requested a password reset for your Puzzle Console account with email {{ email }}. Follow the link below to reset your password:
+
+http://app5.jdabbs.com{% url 'password_reset_confirm' uidb36=uid token=token %}
+
+If you did not request a password reset, you do not need to take any action, but if you continue to receive these notifications please contact Steven at steven.clontz+app5@gmail.com.

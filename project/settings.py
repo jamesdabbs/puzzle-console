@@ -6,8 +6,6 @@ from django.core.urlresolvers import reverse_lazy
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 DEBUG = os.environ.get('DEBUG') == 'True'
-#temporary
-DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (

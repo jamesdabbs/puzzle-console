@@ -30,6 +30,17 @@ puzzles = Puzzles that are a part of this game
         <p style="background:black;color:black">
         {% for player in puzzle.designers.all %}
             {{ player }}{% if not forloop.last %},{% endif %}
+        {% empty %}
+            <em>none</em>
+        {% endfor %}
+        </p>
+        
+        <h4>Playtester(s):</h4>
+        <p>
+        {% for player in puzzle.playtesters.all %}
+            {{ player }}{% if not forloop.last %},{% endif %}
+        {% empty %}
+            <em>none</em>
         {% endfor %}
         </p>
         

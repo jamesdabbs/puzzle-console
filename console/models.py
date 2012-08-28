@@ -234,7 +234,7 @@ class Membership(models.Model):
 class Puzzle(models.Model):
     game = models.ForeignKey(Game)
     designers = models.ManyToManyField(Player, related_name='puzzles_designed')
-    playtesters = models.ManyToManyField(Player, related_name='puzzles_playtested')
+    playtesters = models.ManyToManyField(Player, related_name='puzzles_playtested', null=True, blank=True)
     number = models.IntegerField()
     title = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)

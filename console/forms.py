@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
 from .exceptions import TeamBuildingException
-from .models import Player, Team
+from .models import Player, Team, Puzzle
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -98,3 +98,7 @@ class TeamUpdateForm(forms.ModelForm):
         players = list(self.cleaned_data.get('players', [])) + new_players
         team.assign(players)
         return team
+        
+class PuzzleForm(forms.ModelForm):
+    class Meta:
+        model = Puzzle

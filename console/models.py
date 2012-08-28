@@ -233,12 +233,29 @@ class Membership(models.Model):
 
 class Puzzle(models.Model):
     game = models.ForeignKey(Game)
-    designers = models.ManyToManyField(Player)
+    designers = models.ManyToManyField(Player, related_name='puzzles_designed')
+    playtesters = models.ManyToManyField(Player, related_name='puzzles_playtested')
     number = models.IntegerField()
     title = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     attachment_url = models.URLField(null=True, blank=True)
     solution = models.TextField(null=True, blank=True)
+    
+    
+    PROPOSAL = 'pr'
+    DRAFT = 'dr'
+    PLAYTEST = 'pl'
+    FINALIZING = 'f'
+    COMPLETE = 'c'
+    COMPLETION_CHOICES = (
+        (PROPOSAL, 'Proposal'),
+        (DRAFT, 'Draft'),
+        (PLAYTEST, 'Playtest'),
+        (FINALIZING, 'Finalizing'),
+        (COMPLETE, 'Complete'),
+    )
+    
+    completion = models.CharField(max_length=2, default=PROPOSAL, choices=COMPLETION_CHOICES)
     
     code = models.OneToOneField('UniqueRandom')
     

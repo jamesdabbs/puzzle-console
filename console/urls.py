@@ -12,7 +12,9 @@ urlpatterns = patterns('console.views',
     url(r'^teams/(?P<id>\d+)/$', 'team_', name='team'),
     url(r'^teams/(?P<id>\d+)/claim/$', 'claim_team', name='claim_team'),
     url(r'^game/join/$', 'join_game', name='join_game'),
-    url(r'^staff/(?P<id>\d+)/$', 'game_staff_overview', name='game_staff_overview')
+    url(r'^staff/(?P<id>\d+)/$', 'game_staff_overview', name='game_staff_overview'),
+    url(r'^staff/(?P<game_id>\d+)/puzzle/new$', 'puzzle_edit', name='puzzle_edit'),
+    url(r'^staff/(?P<game_id>\d+)/puzzle/(?P<puzzle_id>\d+)$', 'puzzle_edit', name='puzzle_edit'),
 )
 
 urlpatterns += patterns('django.contrib.auth.views',

@@ -22,7 +22,7 @@ puzzles = Puzzles that are a part of this game
 <p>Here are a list of the puzzles for {{ game }}.</p>
 
 {% for puzzle in puzzles %}
-<div class="well">
+<div class="well" id="puzzle-{{ puzzle.number }}">
     <h3>Puzzle {{ puzzle.number }}: {{ puzzle }} <small>{{ puzzle.get_completion_display }}</small></h3>
     
     <div class="row"><div class="offset1 span10">

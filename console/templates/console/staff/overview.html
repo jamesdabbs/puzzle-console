@@ -22,14 +22,16 @@ puzzles = Puzzles that are a part of this game
 <p>Here are a list of the puzzles for {{ game }}.</p>
 
 {% for puzzle in puzzles %}
-<div class="well" id="puzzle-{{ puzzle.number }}">
+<section id="puzzle-{{ puzzle.number }}" style="padding-top:50px">
+<div class="well">
+    <a href="#puzzle-{{ puzzle.number }}" class="pull-right">Link</a>
     <h3>Puzzle {{ puzzle.number }}: {{ puzzle }} <small>{{ puzzle.get_completion_display }}</small></h3>
     
-    <p><a href="#puzzle-{{ puzzle.number }}">Link</a></p> <hr />
+    <hr />
     
     <div class="row"><div class="offset1 span10">
         <h4>Designer(s):</h4>
-        <p style="background:black;color:black">
+        <p>
         {% for player in puzzle.designers.all %}
             {{ player }}{% if not forloop.last %},{% endif %}
         {% empty %}
@@ -55,14 +57,22 @@ puzzles = Puzzles that are a part of this game
         <hr />
         
         <h4>Solution</h4>
-        <div  style='background:black;color:black;'>
-        {{ puzzle.solution|markdown|default:"<p><i>No given solution</i></p>" }}
-        </div>
+        
+        <p>
+        <button type="button" class="btn btn-inverted btn-success" data-toggle="collapse" data-target="#solution-{{ puzzle.number }}" data-toggle="button">
+            Reveal/Hide Solution
+        </button>
+        </p>
+ 
+        <div id="solution-{{ puzzle.number }}" class="collapse"><div class="alert alert-success alert-block">
+            {{ puzzle.solution|markdown|default:"<p><i>No given solution</i></p>" }}
+        </div></div>
         
         <h4>Puzzle Patrol Badge Code</h4>
         <p>{{ puzzle.code.code }}</p>
     </div></div>
 </div>
+</section>
 {% endfor %}
 
 {% endblock %}

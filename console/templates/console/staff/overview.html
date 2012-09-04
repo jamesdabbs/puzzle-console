@@ -7,6 +7,7 @@ Variables required:
 
 game = Game to describe
 puzzles = Puzzles that are a part of this game
+players = All players registered on the site
 {% endcomment %}
 
 {% block title %}{{ game }} Staff Overview{% endblock %}
@@ -74,5 +75,21 @@ puzzles = Puzzles that are a part of this game
 </div>
 </section>
 {% endfor %}
+
+<h5>Player Email List</h5>
+
+<h6>Registered for {{ game.name }}</h6>
+<p>
+{% for player in game.player_set.all %}{% if player.email %}
+{{ player.email }}{% if not forloop.last %},{% endif %}
+{% endif %}{% endfor %}
+</p>
+
+<h6>All Players</h6>
+<p>
+{% for player in players %}{% if player.email %}
+{{ player.email }}{% if not forloop.last %},{% endif %}
+{% endif %}{% endfor %}
+</p>
 
 {% endblock %}

@@ -50,7 +50,8 @@ def register_player(request):
 def teams_(request):
     """ Displays a list of all teams """
     game = Game.current()
-    teams = Team.objects.filter(game=game)
+    teams = Team.objects.filter(game=game,staff=False)
+    staff_teams = Team.objects.filter(game=game,staff=True)
     joined = request.user.is_authenticated() and Membership.objects.filter(
         player__user=request.user, game=game).exists()
     return TemplateResponse(request, 'console/teams/teams.html', locals())
@@ -124,6 +125,7 @@ def game_staff_overview(request, id):
     if not check_staff(request.user, game):
         raise Http404
     puzzles = Puzzle.objects.filter(game=game)
+    players = Player.objects.all()
     return TemplateResponse(request, 'console/staff/overview.html', locals())
 
 @login_required

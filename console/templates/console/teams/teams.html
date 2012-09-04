@@ -2,6 +2,16 @@
 {% load bootstrap_tags %}
 {% load url from future %}
 
+{% comment %}
+Variables needed:
+
+game = current game
+joined = True if the user has a player who is a part of a team
+teams = teams in the current game not including staff teams
+staff_teams = teams in the current game marked as staff
+
+{% endcomment %}
+
 {% block title %}Teams{% endblock %}
 
 {% block content %}
@@ -21,7 +31,10 @@
 </div>
 <section>
     <div class="well"> 
-        <h3>Players without a Team</h3>       
+        <h3>Players without a Team</h3> 
+        <p>
+            These players are considering playing, but haven't yet joined a team yet.
+        </p>      
         <ul>
             {% for p in game.free_players %}
             <li>{{ p }}</li>
@@ -30,24 +43,44 @@
             {% endfor %}
         </ul>
         {% if not joined %}
+        <h5>You haven't joined yet!</h5>
         <p>
-            <strong>Looking for teammates?</strong>
-            <a href="{% url 'join_game' %}" class="btn btn-primary">Click here</a>
-            to be added to the pool of available, interested players.
+            If you think you might play in this game, but aren't ready to join a team yet, <a href="{% url 'join_game' %}" class="btn btn-success">click here</a>
+            so you'll receive updates on the event!
         </p>
         {% endif %}
-            {% comment %}{% alert_message 'info' 'The following players are looking for a team.' %}{% endcomment %}
     </div>
-    <div class="row">
     {% for team in teams %}
-    <div class="span12"><div class="well">
-        <div class="page-header">
-            <h2>Team {{ team.number }} <small>{{ team.name }}</small></h2>
-            <a href="{{ team.get_absolute_url }}">Go to this team's page &raquo;</a>
+        {% if forloop.counter0|divisibleby:"2" %}{# begin row #}
+        <div class="row">
+        {% endif %}
+        <div class="span6" style="overflow:hidden"><div class="well">
+            <div class="page-header">
+                <h2>Team {{ team.number }} <small>{{ team.name }}</small></h2>
+                <a href="{{ team.get_absolute_url }}">Go to this team's page &raquo;</a>
+            </div>
+            {% include "console/teams/team_detail.html" %}
+        </div></div>
+        {% if forloop.counter|divisibleby:"2" %}{# end row #}
         </div>
-        {% include "console/teams/team_detail.html" %}
-    </div></div>
+        {% endif %}
     {% endfor %}
-    </div>
 </section>
+
+{% if staff_teams %}
+<h3>{{ game.name }} Staff:</h3>
+<p>
+    Staff Team page(s):
+    {% for team in staff_teams %}
+        {% if not forloop.first %}/{% endif %}
+        <a href="{{ team.get_absolute_url }}">{{ team.name }}</a>    
+    {% endfor %}
+</p>
+<ul>
+    {% for team in staff_teams %}{% for player in team.players %}
+    <li>{{ player }}</li>
+    {% endfor %}{% endfor %}
+</ul>
+{% endif %}
+
 {% endblock %}

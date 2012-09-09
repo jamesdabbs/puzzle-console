@@ -40,3 +40,8 @@ urlpatterns += patterns('console.views',
     url(r'^about/', 'about', name='about'),
     url(r'^rules/', 'rules', name='rules'),
 )
+
+
+urlpatterns += patterns('',
+    url(r'^dashmock/', TemplateView.as_view(template_name="console/game/dashboard.html"))
+)

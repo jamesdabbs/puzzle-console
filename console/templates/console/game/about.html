@@ -1,0 +1,29 @@
+{% extends 'console/base.html' %}
+{% load markup %}
+
+{% block title %}
+About {{ game.name }}
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ game.name }}</h1>
+    <h2>About and FAQ</h2>
+</div>
+
+{{ about|default:"No about recorded!"|markdown }}
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+

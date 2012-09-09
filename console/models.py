@@ -9,6 +9,8 @@ class Game(models.Model):
     name = models.CharField(max_length=255)
     start = models.DateTimeField(null=True)
     end = models.DateTimeField(null=True)
+    rules = models.TextField(null=True, blank=True)
+    about = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -17,7 +19,7 @@ class Game(models.Model):
     def current(cls):
         """ Gets the currently active / default game """
         # TODO: add support for multiple active games
-        return Game.objects.get(name='Puzzle Patrol II')
+        return Game.objects.get(id=18)
 
     def free_players(self):
         """ Gets Players interested in this Game who have not signed up for a

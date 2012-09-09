@@ -1,0 +1,30 @@
+{% extends 'console/base.html' %}
+{% load url from future %}
+{% load markup %}
+
+{% block title %}
+{{ game.name }} Rules
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ game.name }}</h1>
+    <h2>Rules and Details</h2>
+</div>
+
+{{ rules|default:"No rules recorded!"|markdown }}
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+

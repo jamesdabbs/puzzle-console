@@ -160,7 +160,15 @@ def puzzle_edit(request, **kwargs):
                 raise Http404
     return TemplateResponse(request, 'console/staff/puzzle.html', locals())
 
+def rules(request):
+    game = Game.current()
+    rules = game.rules
+    return TemplateResponse(request, 'console/game/rules.html', locals())
 
+def about(request):
+    game = Game.current()
+    about = game.about
+    return TemplateResponse(request, 'console/game/about.html', locals())
 
 
 

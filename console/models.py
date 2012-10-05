@@ -222,6 +222,9 @@ class Membership(models.Model):
     class Meta:
         # A player can only be on one team per game
         unique_together = (('game', 'player', 'team'),)
+    
+    def __unicode__(self):
+        return "%s on %s for %s" % (self.player, self.team, self.game)
 
     def save(self, *args, **kwargs):
         """ Sets `game` based off `team` (note that `game` is not redundant

@@ -6,19 +6,20 @@ from console.models import Game, Membership, Player
 
 class Team(models.Model):
     game = models.ForeignKey('console.Game')
-    captain = models.ForeignKey('console.Player', null=True, blank=True)
+    number = models.IntegerField(default=0)
+    staff = models.BooleanField(default=False)
 
+    captain = models.ForeignKey('console.Player', null=True, blank=True)
     name = models.CharField(max_length=255)
     competitive = models.BooleanField()
 
-    number = models.IntegerField(default=0)
-
-    staff = models.BooleanField(default=False) #Set to True for staffers so that they can see admin tools
+    puzzles = models.ManyToManyField('console.Puzzle', through='console.PuzzleProgress')
+    log = models.TextField()
 
     class Meta:
         app_label = 'console'
         ordering = ['number']
-        unique_together = (('game', 'name'))
+        unique_together = (('game', 'name'),)
 
     def __unicode__(self):
         return self.name
@@ -106,3 +107,9 @@ class Team(models.Model):
             for player in roster:
                 if player not in self.players:
                     player.join(self)
+
+    def visible_puzzles(self):
+        self.puzzle_set.filter(puzzle_progress__status__neq=PuzzleProgress.INVISIBLE)
+
+    def achievements(self):
+        self.log.split(LOG_DELIMITER)

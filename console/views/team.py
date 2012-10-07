@@ -12,8 +12,8 @@ from console.models import Game, Membership, Team
 def teams_(request):
     """ Displays a list of all teams """
     game = Game.current()
-    teams = Team.objects.filter(game=game,staff=False)
-    staff_teams = Team.objects.filter(game=game,staff=True)
+    teams = Team.objects.filter(game=game, staff=False)
+    staff_teams = Team.objects.filter(game=game, staff=True)
     joined = request.user.is_authenticated() and Membership.objects.filter(
         player__user=request.user, game=game).exists()
     return TemplateResponse(request, 'console/teams/teams.html', locals())

@@ -3,5 +3,6 @@ from .player import Player
 
 from .game import Game
 from .puzzle import Puzzle
+from .puzzle_progress import PuzzleProgress
 from .team import Team
 from .unique_random import UniqueRandom

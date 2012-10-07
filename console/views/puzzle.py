@@ -9,17 +9,11 @@ from console.utils import check_staff
 
 
 @login_required
-def edit(request, **kwargs): 
-    #did we provide a game id?
-    game_id = kwargs.get('game_id', None)
-    #if not 404
-    if game_id is None:
-        raise Http404
-    #if this isn't a game 404
+def edit(request, game_id, **kwargs): 
     game = get_object_or_404(Game, id=game_id)
-    #if user isn't a staffer 404
     if not check_staff(request.user, game):
         raise Http404
+
     #if POST then submit the form
     if request.method == 'POST':
         form = PuzzleForm(request.POST)

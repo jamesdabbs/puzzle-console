@@ -1,0 +1,53 @@
+{% extends 'console/base.html' %}
+{% load markup %}
+
+{% block title %}
+About {{ game.name }}
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ game.name|default:"Unknown Game" }}</h1>
+    <h3>Dashboard</h3>
+</div>
+
+<section><div class="row">
+
+<div class="span8">
+    {% for p in team.visible_puzzles %}
+    <div class="well well-large">
+        <h3>Puzzle {{ p.number }}: {{ p.name }} <small>{{ p.status }}</small></h3>
+        <p>{{ puzzle.description|linebreaks }}</p>
+        {# TODO: time handling #}
+        <h5>Time remaining <small>60% | 2hr 29min</small></h5>
+        <div class="progress">
+            <div class="bar" style="width: 60%;"></div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="span4">
+    <div>
+        <p>Enter code:</p>
+        <p style="text-align:center"><input type="text" class="span2" /></p>
+    </div>
+    <div class="well well-small">
+        <b>Points</b><br />
+        29393919
+    </div>
+    <div class="well" style="height:300px;overflow:auto">
+        <h4>Achievements</h4>
+        <p>Earned 1400 points for Puzzle 1</p>
+        <hr />
+        <p>Earned 1200 points for Puzzle 2</p>
+        <hr />
+        <p>Earned 1200 points for Puzzle 2</p>
+        <hr />
+        <p>Earned 1200 points for Puzzle 2</p>
+    </div>
+</div>
+
+</div></section>
+
+{% endblock %}

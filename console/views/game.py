@@ -6,8 +6,9 @@ from django.template.response import TemplateResponse
 from console.models import Game, Player, Puzzle, Membership
 from console.utils import check_staff
 
+
 @login_required
-def join_game(request, id=None):
+def join(request, id=None):
     """ Joins the Game without specifying a team (adding the user to the pool
         of interested players)
     """
@@ -16,8 +17,9 @@ def join_game(request, id=None):
     Membership.objects.get_or_create(game=game, player=player)
     return redirect('teams')
 
+
 @login_required
-def game_staff_overview(request, id):
+def staff_overview(request, id):
     game = get_object_or_404(Game, id=id)
     if not check_staff(request.user, game):
         raise Http404
@@ -25,10 +27,12 @@ def game_staff_overview(request, id):
     players = Player.objects.all()
     return TemplateResponse(request, 'console/staff/overview.html', locals())
 
+
 def rules(request):
     game = Game.current()
     rules = game.rules
     return TemplateResponse(request, 'console/game/rules.html', locals())
+
 
 def about(request):
     game = Game.current()

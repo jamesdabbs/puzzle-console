@@ -9,7 +9,7 @@ from console.utils import check_staff
 
 
 @login_required
-def puzzle_edit(request, **kwargs): 
+def edit(request, **kwargs): 
     #did we provide a game id?
     game_id = kwargs.get('game_id', None)
     #if not 404

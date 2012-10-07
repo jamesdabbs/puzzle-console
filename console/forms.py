@@ -98,7 +98,8 @@ class TeamUpdateForm(forms.ModelForm):
         players = list(self.cleaned_data.get('players', [])) + new_players
         team.assign(players)
         return team
-        
+
+
 class PuzzleForm(forms.ModelForm):
     class Meta:
         model = Puzzle

@@ -6,15 +6,30 @@ urlpatterns = patterns('console.views',
     url(r'^$', 'home', name='home'),
     url(r'^favicon.ico', RedirectView.as_view(
         url='https://s3.amazonaws.com/app5/favicon.ico', permanent=True)),
-    url(r'^register/$', 'register_player', name='register_player'),
+)
+
+urlpatterns += patterns('console.views.game',
+    url(r'^join/$', 'join', name='join_game'),
+    url(r'^about/$', 'about', name='about'),
+    url(r'^rules/$', 'rules', name='rules'),
+    url(r'^staff/(?P<id>\d+)/$', 'staff_overview', name='game_staff_overview')
+)
+
+urlpatterns += patterns('console.views.player',
+    url(r'^register/$', 'register', name='register_player'),
+)
+
+urlpatterns += patterns('console.views.puzzle',
+    url(r'^staff/(?P<game_id>\d+)/puzzle/new$', 'edit'),
+    url(r'^staff/(?P<game_id>\d+)/puzzle/(?P<puzzle_id>\d+)$', 'edit', name='puzzle_edit'),
+)
+
+urlpatterns += patterns('console.views.team',
+    url(r'^dashboard/$', 'dashboard', name='dashboard'),
     url(r'^teams/$', 'teams_', name='teams'),
     url(r'^teams/mine/$', 'my_team', name='my_team'),
     url(r'^teams/(?P<id>\d+)/$', 'team_', name='team'),
-    url(r'^teams/(?P<id>\d+)/claim/$', 'claim_team', name='claim_team'),
-    url(r'^game/join/$', 'join_game', name='join_game'),
-    url(r'^staff/(?P<id>\d+)/$', 'game_staff_overview', name='game_staff_overview'),
-    url(r'^staff/(?P<game_id>\d+)/puzzle/new$', 'puzzle_edit', name='puzzle_edit'),
-    url(r'^staff/(?P<game_id>\d+)/puzzle/(?P<puzzle_id>\d+)$', 'puzzle_edit', name='puzzle_edit'),
+    url(r'^teams/(?P<id>\d+)/claim/$', 'claim', name='claim_team'),
 )
 
 urlpatterns += patterns('django.contrib.auth.views',
@@ -35,13 +50,7 @@ urlpatterns += patterns('django.contrib.auth.views',
         {'template_name': 'console/registration/password/reset_complete.html'})
 )
 
-
-urlpatterns += patterns('console.views',
-    url(r'^about/', 'about', name='about'),
-    url(r'^rules/', 'rules', name='rules'),
-)
-
-
+# TODO: remove when dashboard is complete
 urlpatterns += patterns('',
     url(r'^dashmock/', TemplateView.as_view(template_name="console/game/dashboard.html"))
 )

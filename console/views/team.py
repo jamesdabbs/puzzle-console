@@ -37,10 +37,10 @@ def team_(request, id):
             form = TeamUpdateForm(instance=team)
     
     return TemplateResponse(request, 'console/teams/team.html', locals())
-    
+
 
 @login_required
-def claim_team(request, id):
+def claim(request, id):
     """ Hook to allow a user to claim an empty, uncaptained team and become
         its captain.
     """
@@ -65,6 +65,21 @@ def my_team(request):
             membership__player=request.user.get_profile(),
             membership__game=game)
         )
+    except Team.DoesNotExist:
+        messages.error(request,
+            'You have not yet joined a team for {}'.format(game))
+        return redirect('teams')
+
+
+@login_required
+def dashboard(request):
+    game = Game.current()
+    try:
+        team = Team.objects.get(
+            membership__player__user=request.user,
+            membership__game=game)
+        )
+        return TemplateResponse(request, 'console/team/dashboard.html', locals())
     except Team.DoesNotExist:
         messages.error(request,
             'You have not yet joined a team for {}'.format(game))

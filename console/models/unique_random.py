@@ -13,9 +13,7 @@ UR_LENGTH = 6
 UR_MAX_TRIES = 2048
 
 
-# TODO: move this on to the puzzle model as a helper
 class UniqueRandom(models.Model):
-    
     code = models.CharField(max_length=UR_LENGTH, editable=False, unique=True)
     
     class Meta:

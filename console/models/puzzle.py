@@ -28,7 +28,6 @@ class Puzzle(models.Model):
     description = models.TextField(blank=True)
     attachment_url = models.URLField(blank=True)
     solution = models.TextField(blank=True)
-    solution_code = models.CharField()
     code = models.OneToOneField('console.UniqueRandom')
 
     designers = models.ManyToManyField('console.Player', 
@@ -41,7 +40,7 @@ class Puzzle(models.Model):
     class Meta:
         app_label = 'console'
         ordering = ('game', 'number')
-        unique_together = (("game", "number"),("game", "solution_code"))
+        unique_together = (("game", "number"),)
     
     def __unicode__(self):
         return self.title

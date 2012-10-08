@@ -3,7 +3,10 @@ from .player import *
 from .puzzle import *
 from .team import *
 
+from django.template.response import TemplateResponse
+
 from longerusername.forms import AuthenticationForm
+
 from console.forms import UserRegistrationForm, PlayerAssignmentForm
 
 

@@ -1,6 +1,7 @@
 from datetime import datetime
 from django.db import models
 
+
 class PuzzleProgress(models.Model):
     CLOSED = 'C'
     OPENED = 'O'

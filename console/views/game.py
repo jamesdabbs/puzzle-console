@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 
 from console.models import Game, Player, Membership
-from console.utils import find_team
+from console.utils import find_team, JsonResponse
 
 
 __all__ = ('join', 'staff_overview', 'rules', 'about', 'solve')

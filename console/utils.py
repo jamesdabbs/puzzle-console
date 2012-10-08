@@ -1,21 +1,24 @@
+import json
 from random import randrange
+
 from django.contrib import messages
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import redirect
 
 from .models import Game, Team
 
 
-def JsonResponse(HttpResponse):
-    raise NotImplementedError
-    # TODO
+class JsonResponse(HttpResponse):
+    def __init__(self, data):
+        super(JsonResponse, self).__init__(
+            json.dumps(data), mimetype='application/json')
+
 
 def generate_code(game):
     CHARSET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ'
     LENGTH = 6
     RETRIES = 2048
 
-    # TODO - one query
     taken = set(p.solution_code for p in game.puzzle_set.all())
     for loop in range(0, RETRIES):
         code = ''

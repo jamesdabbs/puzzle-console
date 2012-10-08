@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.aggregates import Sum
 
 from console.exceptions import TeamBuildingException
 from console.models import Game, Membership, Player
@@ -123,10 +124,7 @@ class Team(models.Model):
             return 1
 
     def points(self):
-        # TODO - one query
-        sum([p.points for p in self.puzzle_progress_set.all()])
+        self.puzzle_progress_set.all().aggregate(Sum('points'))['points__sum']
 
     def status_hash(self):
-        status = '%s|%s' % (self.points, self.status.join('|'))
-        # TODO - hash function
-        raise NotImplementedError
+        hash('%s|%s' % (self.points, self.status.join('|')))

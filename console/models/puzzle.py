@@ -1,4 +1,8 @@
+from datetime import datetime
+
 from django.db import models
+
+from console.utils import generate_code
 
 
 class Puzzle(models.Model):
@@ -21,9 +25,10 @@ class Puzzle(models.Model):
     close = models.DateTimeField()
 
     title = models.CharField(max_length=255)
-    description = models.TextField(null=True, blank=True)
-    attachment_url = models.URLField(null=True, blank=True)
-    solution = models.TextField(null=True, blank=True)
+    description = models.TextField(blank=True)
+    attachment_url = models.URLField(blank=True)
+    solution = models.TextField(blank=True)
+    solution_code = models.CharField()
     code = models.OneToOneField('console.UniqueRandom')
 
     designers = models.ManyToManyField('console.Player', 
@@ -35,8 +40,16 @@ class Puzzle(models.Model):
 
     class Meta:
         app_label = 'console'
-        ordering = ['game', 'number']
-        unique_together = (("game", "number"),)
+        ordering = ('game', 'number')
+        unique_together = (("game", "number"),("game", "solution_code"))
     
     def __unicode__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.solution_code:
+            self.solution_code = generate_code()
+        super(Puzzle, self).save(*args, **kwargs)
+
+    def available(self):
+        self.open <= datetime.now() <= self.close

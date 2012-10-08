@@ -7,8 +7,8 @@ class Game(models.Model):
     name = models.CharField(max_length=255)
     start = models.DateTimeField(null=True)
     end = models.DateTimeField(null=True)
-    rules = models.TextField(null=True, blank=True)
-    about = models.TextField(null=True, blank=True)
+    rules = models.TextField(blank=True)
+    about = models.TextField(blank=True)
 
     class Meta:
         app_label = 'console'
@@ -18,7 +18,6 @@ class Game(models.Model):
 
     @classmethod
     def current(cls):
-        """ Gets the currently active / default game """
         # TODO: add support for multiple active games
         return cls.objects.get(id=18)
 
@@ -37,3 +36,6 @@ class Game(models.Model):
     def validate(self, team):
         # TODO: validate the team based on the validation rules for this game
         raise NotImplementedError()
+
+    def team_for(self, user):
+        return self.team_set.get(membership__player__user=user)

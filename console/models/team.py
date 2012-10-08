@@ -2,6 +2,7 @@ from django.db import models
 
 from console.exceptions import TeamBuildingException
 from console.models import Game, Membership, Player
+from console.models.puzzle import Puzzle
 
 
 class Team(models.Model):
@@ -14,7 +15,8 @@ class Team(models.Model):
     competitive = models.BooleanField()
 
     puzzles = models.ManyToManyField('console.Puzzle', through='console.PuzzleProgress')
-    log = models.TextField()
+    log = ListField()
+    extra_points = models.IntegerField()
 
     class Meta:
         app_label = 'console'
@@ -109,7 +111,22 @@ class Team(models.Model):
                     player.join(self)
 
     def visible_puzzles(self):
-        self.puzzle_set.filter(puzzle_progress__status__neq=PuzzleProgress.INVISIBLE)
+        return [p for p in self.puzzle_set.all() if p.available()]
 
-    def achievements(self):
-        self.log.split(LOG_DELIMITER)
+    def solve(self, code):
+        try:
+            puzzle = self.game.puzzle_set.get(code=code)
+            puzzle.puzzle_progress_set.get(team=self).solve()
+            return 0
+        except Puzzle.DoesNotExist:
+            self.log.append('Tried invalid code: %s' % code)
+            return 1
+
+    def points(self):
+        # TODO - one query
+        sum([p.points for p in self.puzzle_progress_set.all()])
+
+    def status_hash(self):
+        status = '%s|%s' % (self.points, self.status.join('|'))
+        # TODO - hash function
+        raise NotImplementedError

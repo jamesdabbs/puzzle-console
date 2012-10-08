@@ -1,16 +1,13 @@
+from datetime import datetime
 from django.db import models
 
 class PuzzleProgress(models.Model):
-    INVISIBLE = 'I'
-    LOCKED = 'L'
-    UNLOCKED = 'U'
+    CLOSED = 'C'
     OPENED = 'O'
     SOLVED = 'S'
     FAILED = 'F'
     STATUS_CHOICES = (
-        (INVISIBLE, 'Invisible'),
-        (LOCKED, 'Locked'),
-        (UNLOCKED, 'Unlocked'),
+        (CLOSED, 'Closed'),
         (OPENED, 'Opened'),
         (SOLVED, 'Solved'),
         (FAILED, 'Failed')
@@ -18,9 +15,33 @@ class PuzzleProgress(models.Model):
 
     team = models.ForeignKey('console.Team')
     puzzle = models.ForeignKey('console.Puzzle')
-    points = models.IntegerField()
+    time_opened = models.DateTimeField(null=True, blank=True)
+    time_solved = models.DateTimeField(null=True, blank=True)
+    points = models.IntegerField(default=0)
     last_updated = models.DateTimeField(auto_now=True)
-    log = models.TextField()
 
     class Meta:
         app_label = 'console'
+
+    def open(self):
+        if (self.status != self.CLOSED) or not self.puzzle.available(): return
+        self.status = self.OPENED
+        self.time_opened = datetime.now()
+        self.team.log.append(
+            'Opened "%s" @ %s.' % 
+            (self.puzzle.name, self.time_opened))
+        self.save()
+
+    def solve(self):
+        if (self.status != self.OPENED) or not self.puzzle.available(): return
+        self.status = self.SOLVED
+        self.points = points = 500 + 1000 * self.time_remaining()
+        self.team.log.append(
+            'Solved "%s" @ %s. %s points' % 
+            (self.puzzle.name, datetime.now(), points))
+        self.save()
+
+    def time_remaining(self):
+        window = (self.puzzle.close - self.time_opened).seconds
+        elapsed = (datetime.now() - self.time_opened).seconds
+        return (100 * elapsed) / window

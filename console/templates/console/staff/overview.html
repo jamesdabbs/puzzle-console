@@ -6,7 +6,6 @@
 Variables required:
 
 game = Game to describe
-puzzles = Puzzles that are a part of this game
 players = All players registered on the site
 {% endcomment %}
 
@@ -22,7 +21,7 @@ players = All players registered on the site
 
 <p>Here are a list of the puzzles for {{ game }}.</p>
 
-{% for puzzle in puzzles %}
+{% for puzzle in game.puzzle_set.all %}
 <section id="puzzle-{{ puzzle.number }}" style="padding-top:50px">
 <div class="well">
     <a href="#puzzle-{{ puzzle.number }}" class="pull-right">Link</a>

@@ -11,43 +11,75 @@ About {{ game.name }}
     <h3>Dashboard</h3>
 </div>
 
-<section><div class="row">
+<section>
 
-<div class="span8">
-    {% for p in team.visible_puzzles %}
-    <div class="well well-large">
-        <h3>Puzzle {{ p.number }}: {{ p.name }} <small>{{ p.status }}</small></h3>
-        <p>{{ puzzle.description|linebreaks }}</p>
-        {# TODO: time handling #}
-        <h5>Time remaining <small>60% | 2hr 29min</small></h5>
-        <div class="progress">
-            <div class="bar" style="width: 60%;"></div>
+<div class="row">
+    <div class="span8">
+        {% for p in team.visible_puzzles %}
+        <div class="well well-large">
+            <h3>Puzzle {{ p.number }}: {{ p.name }} <small>{{ p.status }}</small></h3>
+            <p>{{ puzzle.description|markdown }}</p>
+            {# TODO: time handling #}
+            <h5>Time remaining <small>60% | 2hr 29min</small></h5>
+            <div class="progress">
+                <div class="bar" style="width: 60%;"></div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="span4">
+        <div>
+            <p>Enter code:</p>
+            <p style="text-align:center"><input type="text" class="span2" /></p>
+        </div>
+        <div class="well well-small">
+            <b>Points</b><br />
+            {{ team.points }}
+        </div>
+        <div class="well" id="achievements" style="height:300px;overflow:auto">
+            <h4>Achievements</h4>
+            {% for a in team.achievements|slice:":5" %}
+            <p>{{ a.description }}</p>
+            <hr />
+            {% empty %}
+            <p>Nothing yet. Get to puzzling!</p>
+            {% endfor %}
         </div>
     </div>
-    {% endfor %}
 </div>
 
-<div class="span4">
-    <div>
-        <p>Enter code:</p>
-        <p style="text-align:center"><input type="text" class="span2" /></p>
-    </div>
-    <div class="well well-small">
-        <b>Points</b><br />
-        29393919
-    </div>
-    <div class="well" style="height:300px;overflow:auto">
-        <h4>Achievements</h4>
-        <p>Earned 1400 points for Puzzle 1</p>
-        <hr />
-        <p>Earned 1200 points for Puzzle 2</p>
-        <hr />
-        <p>Earned 1200 points for Puzzle 2</p>
-        <hr />
-        <p>Earned 1200 points for Puzzle 2</p>
-    </div>
-</div>
+</section>
+{% endblock %}
 
-</div></section>
+{% block extra_scripts %}
+<script type="text/javascript">
+$(function() {
 
+    var update_time_remaining = function() {
+        // TODO
+    };
+
+    var status_hash = '',
+        check_for_updates = function() {
+            $.ajax({
+                // TODO
+                success: function(new_status) {
+                    if (status_hash) {
+                        if (status_hash != new_status) {
+                            status_update();
+                        }
+                    } else {
+                        status_hash = new_status;
+                    }
+                }
+            })
+    }
+
+    var status_update = function() {
+        // TODO: alert message? or jQuery.load in stuff?
+    }
+
+});
+</script>
 {% endblock %}

@@ -1,5 +1,4 @@
 from django.conf.urls import patterns, url
-from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
 
 urlpatterns = patterns('console.views',
@@ -12,7 +11,7 @@ urlpatterns += patterns('console.views.game',
     url(r'^join/$', 'join', name='join_game'),
     url(r'^about/$', 'about', name='about'),
     url(r'^rules/$', 'rules', name='rules'),
-    url(r'^staff/(?P<id>\d+)/$', 'staff_overview', name='game_staff_overview')
+    url(r'^staff/(?P<id>\d+)/$', 'staff_overview', name='staff_overview')
 )
 
 urlpatterns += patterns('console.views.player',
@@ -26,9 +25,8 @@ urlpatterns += patterns('console.views.puzzle',
 
 urlpatterns += patterns('console.views.team',
     url(r'^dashboard/$', 'dashboard', name='dashboard'),
-    url(r'^teams/$', 'teams_', name='teams'),
-    url(r'^teams/mine/$', 'my_team', name='my_team'),
-    url(r'^teams/(?P<id>\d+)/$', 'team_', name='team'),
+    url(r'^teams/$', 'index', name='teams'),
+    url(r'^teams/(?P<id>\d+)/$', 'show', name='team'),
     url(r'^teams/(?P<id>\d+)/claim/$', 'claim', name='claim_team'),
 )
 
@@ -48,9 +46,4 @@ urlpatterns += patterns('django.contrib.auth.views',
         name='password_reset_confirm'),
     url(r'^account/password/reset/complete/', 'password_reset_complete', 
         {'template_name': 'console/registration/password/reset_complete.html'})
-)
-
-# TODO: remove when dashboard is complete
-urlpatterns += patterns('',
-    url(r'^dashmock/', TemplateView.as_view(template_name="console/game/dashboard.html"))
 )

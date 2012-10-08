@@ -11,7 +11,7 @@ About {{ game.name }}
     <h2>About and FAQ</h2>
 </div>
 
-{{ about|default:"No about recorded!"|markdown }}
+{{ game.about|default:"No about recorded!"|markdown }}
 
 {% endblock %}
 

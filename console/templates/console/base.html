@@ -29,12 +29,11 @@
                     <li><a href="{% url 'rules' %}">Rules</a></li>
                     <li><a href="{% url 'teams' %}">Teams</a></li>
                     {% if request.user.is_authenticated %}
-                    <li><a href="{% url 'my_team' %}">My Team</a></li>
+                    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
                     {% endif %}
                     {% if request.user.player in current_game.staffers %}
-                    <li><a href="{% url 'game_staff_overview' current_game.id %}">Staff Page</a></li>
+                    <li><a href="{% url 'staff_overview' current_game.id %}">Staff Page</a></li>
                     {% endif %}
-                    <!-- <li><a href="#">Puzzles</a></li> -->
                 </ul>
                 {% endblock %}
 

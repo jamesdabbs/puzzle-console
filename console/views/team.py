@@ -6,10 +6,14 @@ from django.template.response import TemplateResponse
 
 from console.exceptions import TeamBuildingException
 from console.forms import TeamUpdateForm
-from console.models import Game, Membership, Team
+from console.models import Game, Membership, Player, Team
+from console.utils import find_team
 
 
-def teams_(request):
+__all__ = ('index', 'show', 'claim', 'dashboard')
+
+
+def index(request):
     """ Displays a list of all teams """
     game = Game.current()
     teams = Team.objects.filter(game=game, staff=False)
@@ -19,7 +23,7 @@ def teams_(request):
     return TemplateResponse(request, 'console/teams/teams.html', locals())
 
 
-def team_(request, id):
+def show(request, id):
     """ Displays a particular team, and allows its captain to edit it """
     # TODO: A captain currently has no way to abandon a team
     team = get_object_or_404(Team, id=id)
@@ -56,31 +60,6 @@ def claim(request, id):
     return redirect(team)
 
 
-@login_required
-def my_team(request):
-    """ Redirects a Player to their Team (if possible, to all teams if not) """
-    game = Game.current()
-    try:
-        return redirect(Team.objects.get(
-            membership__player=request.user.get_profile(),
-            membership__game=game)
-        )
-    except Team.DoesNotExist:
-        messages.error(request,
-            'You have not yet joined a team for {}'.format(game))
-        return redirect('teams')
-
-
-@login_required
-def dashboard(request):
-    game = Game.current()
-    try:
-        team = Team.objects.get(
-            membership__player__user=request.user,
-            membership__game=game)
-        )
-        return TemplateResponse(request, 'console/team/dashboard.html', locals())
-    except Team.DoesNotExist:
-        messages.error(request,
-            'You have not yet joined a team for {}'.format(game))
-        return redirect('teams')
+@find_team
+def dashboard(request, game, team):
+    return TemplateResponse(request, 'console/teams/dashboard.html', locals())

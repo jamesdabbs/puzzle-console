@@ -2,8 +2,12 @@ from django.db import models
 from django.db.models.aggregates import Sum
 
 from console.exceptions import TeamBuildingException
-from console.models import Game, Membership, Player, Puzzle
-from console.models.fields import ListField
+
+from .fields import ListField
+from .game import Game
+from .membership import Membership
+from .player import Player
+from .puzzle import Puzzle
 
 
 class Team(models.Model):
@@ -35,7 +39,7 @@ class Team(models.Model):
         """ Sets the default Game, if needed """
         if not self.game:
             self.game = Game.current()
-        if self.number == 0:
+        if not self.number:
             top_team = Team.objects.filter(game=self.game).order_by('-number')[0]
             self.number = top_team.number + 1
         super(Team, self).save(*args, **kwargs)

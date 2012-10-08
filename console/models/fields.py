@@ -5,7 +5,6 @@ from django.db import models
 
 class ListField(models.TextField):
     __metaclass__ = models.SubfieldBase
-    description = "Stores a python list"
 
     def __init__(self, *args, **kwargs):
         super(ListField, self).__init__(*args, **kwargs)

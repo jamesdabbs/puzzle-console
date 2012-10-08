@@ -1,5 +1,4 @@
 import json
-from random import randrange
 
 from django.contrib import messages
 from django.http import Http404, HttpResponse
@@ -12,21 +11,6 @@ class JsonResponse(HttpResponse):
     def __init__(self, data):
         super(JsonResponse, self).__init__(
             json.dumps(data), mimetype='application/json')
-
-
-def generate_code(game):
-    CHARSET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ'
-    LENGTH = 6
-    RETRIES = 2048
-
-    taken = set(p.solution_code for p in game.puzzle_set.all())
-    for loop in range(0, RETRIES):
-        code = ''
-        for i in xrange(LENGTH):
-            code += CHARSET[randrange(0, len(CHARSET))]
-        if not code in taken:
-            return code
-    raise ValueError("Failed to produce unique code in %s tries" % RETRIES)
 
 
 def find_team(require_staff=False):

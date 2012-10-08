@@ -2,7 +2,8 @@ from django.contrib.auth.models import User
 from django.db import models
 
 from console.exceptions import TeamBuildingException
-from console.models import Membership
+
+from .membership import Membership
 
 
 class Player(models.Model):

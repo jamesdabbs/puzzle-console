@@ -3,8 +3,7 @@ from random import randrange
 
 from django.db import models
 
-from console.models import Puzzle
-
+from .puzzle import Puzzle
 
 # Example set is Crockford's encoding:
 # http://www.crockford.com/wrmg/base32.html

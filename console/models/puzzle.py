@@ -2,8 +2,6 @@ from datetime import datetime
 
 from django.db import models
 
-from console.utils import generate_code
-
 
 class Puzzle(models.Model):
     PROPOSAL = 'pr'
@@ -44,11 +42,6 @@ class Puzzle(models.Model):
     
     def __unicode__(self):
         return self.title
-
-    def save(self, *args, **kwargs):
-        if not self.solution_code:
-            self.solution_code = generate_code()
-        super(Puzzle, self).save(*args, **kwargs)
 
     def available(self):
         self.open <= datetime.now() <= self.close

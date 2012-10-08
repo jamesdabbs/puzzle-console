@@ -2,8 +2,8 @@ from django.db import models
 from django.db.models.aggregates import Sum
 
 from console.exceptions import TeamBuildingException
-from console.models import Game, Membership, Player
-from console.models.puzzle import Puzzle
+from console.models import Game, Membership, Player, Puzzle
+from console.models.fields import ListField
 
 
 class Team(models.Model):

@@ -2,6 +2,12 @@ import ast
 
 from django.db import models
 
+try:
+    from south.modelsinspector import add_introspection_rules
+    add_introspection_rules([], ["^console\.models\.fields\.ListField"])
+except ImportError:
+    pass
+
 
 class ListField(models.TextField):
     __metaclass__ = models.SubfieldBase

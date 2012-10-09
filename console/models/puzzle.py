@@ -19,12 +19,12 @@ class Puzzle(models.Model):
 
     game = models.ForeignKey('console.Game')
     number = models.IntegerField()
-    open = models.DateTimeField()
-    close = models.DateTimeField()
+    open = models.DateTimeField(null=True, blank=True)
+    close = models.DateTimeField(null=True, blank=True)
 
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    attachment_url = models.URLField(blank=True)
+    attachment_url = models.URLField(null=True, blank=True)
     solution = models.TextField(blank=True)
     code = models.OneToOneField('console.UniqueRandom')
 

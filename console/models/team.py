@@ -20,8 +20,8 @@ class Team(models.Model):
     competitive = models.BooleanField()
 
     puzzles = models.ManyToManyField('console.Puzzle', through='console.PuzzleProgress')
-    log = ListField()
-    extra_points = models.IntegerField()
+    log = ListField(default=[])
+    extra_points = models.IntegerField(default=0)
 
     class Meta:
         app_label = 'console'
@@ -128,6 +128,7 @@ class Team(models.Model):
             return 1
 
     def points(self):
+        self.extra_points + \
         self.puzzle_progress_set.all().aggregate(Sum('points'))['points__sum']
 
     def status_hash(self):

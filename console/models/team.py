@@ -11,7 +11,7 @@ from .puzzle import Puzzle
 
 
 class Team(models.Model):
-    game = models.ForeignKey('console.Game')
+    game = models.ForeignKey('console.Game', related_name='teams')
     number = models.IntegerField(default=0)
     staff = models.BooleanField(default=False)
 
@@ -66,7 +66,7 @@ class Team(models.Model):
         return self.player_cap() - self.players.count()
 
     def legend_cap(self):
-        return min(self.rookies.count()/2 + 2, 4)
+        return min(self.rookies.count() / 2 + 2, 4)
 
     def legend_slots(self):
         return self.legend_cap() - self.legends.count()
@@ -99,9 +99,11 @@ class Team(models.Model):
                 raise TeamBuildingException(
                     'Sorry, competitive teams cannot have {} Legends.'.format(legends)
                 )
-            elif rookies < 2*legends - 4:
+            elif rookies < 2 * legends - 4:
                 raise TeamBuildingException(
-                    'Sorry, competitive teams cannot have {} Legends without also having at least {} Rookies.'.format(legends, 2*legends-4)
+                    'Sorry, competitive teams cannot have %s ' % legends + \
+                    'Legends without also having at least ' + \
+                    '%s Rookies' % (2 * legends - 4)
                 )
         if commit:
             # We want to add the added players and remove the removed ones
@@ -116,20 +118,20 @@ class Team(models.Model):
                     player.join(self)
 
     def visible_puzzles(self):
-        return [p for p in self.puzzle_set.all() if p.available()]
+        return [p for p in self.puzzles.all() if p.available()]
 
     def solve(self, code):
         try:
-            puzzle = self.game.puzzle_set.get(code=code)
-            puzzle.puzzle_progress_set.get(team=self).solve()
+            puzzle = self.game.puzzles.get(code=code)
+            puzzle.puzzleprogress_set.get(team=self).solve()
             return 0
         except Puzzle.DoesNotExist:
             self.log.append('Tried invalid code: %s' % code)
             return 1
 
     def points(self):
-        self.extra_points + \
-        self.puzzle_progress_set.all().aggregate(Sum('points'))['points__sum']
+        agg = self.puzzleprogress_set.all().aggregate(Sum('points'))
+        return self.extra_points + (agg.get('points__sum') or 0)
 
     def status_hash(self):
-        hash('%s|%s' % (self.points, self.status.join('|')))
+        return hash('%s|%s' % (self.points, self.status.join('|')))

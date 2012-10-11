@@ -3,13 +3,13 @@ from django.template.response import TemplateResponse
 
 from console.forms import PuzzleForm
 from console.models import  Puzzle
-from console.utils import find_team
+from console.utils import require_staff
 
 
 __all__ = ('edit',)
 
 
-@find_team(require_staff=True)
+@require_staff
 def edit(request, game, team, id=None):
     if request.method == 'POST':
         form = PuzzleForm(request.POST)

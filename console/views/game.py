@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 
 from console.models import Game, Player, Membership
-from console.utils import find_team, JsonResponse
+from console.utils import find_team, require_staff, JsonResponse
 
 
 __all__ = ('join', 'staff_overview', 'rules', 'about', 'solve')
@@ -20,20 +20,23 @@ def join(request, id=None):
     return redirect('teams')
 
 
-@find_team(require_staff=True)
-def staff_overview(request, game, team):
-    players = Player.objects.all()
-    return TemplateResponse(request, 'console/staff/overview.html', locals())
+@require_staff
+def staff_overview(request, game, team, id):
+    return TemplateResponse(request, 'console/staff/overview.html', {
+        'players': Player.objects.all()
+    })
 
 
 def rules(request):
-    game = Game.current()
-    return TemplateResponse(request, 'console/game/rules.html', locals())
+    return TemplateResponse(request, 'console/game/rules.html', {
+        'game': Game.current()
+    })
 
 
 def about(request):
-    game = Game.current()
-    return TemplateResponse(request, 'console/game/about.html', locals())
+    return TemplateResponse(request, 'console/game/about.html', {
+        'game': Game.current()
+    })
 
 
 @find_team

@@ -1,6 +1,8 @@
 import csv
-from datetime import datetime, timedelta
+from datetime import timedelta
 import os
+
+from django.utils.timezone import now
 
 from console.models import Game, Player, Team, Membership, PuzzleProgress
 
@@ -72,7 +74,7 @@ def playtest_current_game(open_days=7):
             print Membership.objects.create(game=game, player=p, team=team)
 
     # Copy the puzzles and set them to open
-    open = datetime.now()
+    open = now()
     close = open + timedelta(days=open_days)
     for puzzle in puzzles:
         code = puzzle.code

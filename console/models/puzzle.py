@@ -1,6 +1,5 @@
-from datetime import datetime
-
 from django.db import models
+from django.utils.timezone import now
 
 
 class Puzzle(models.Model):
@@ -44,4 +43,4 @@ class Puzzle(models.Model):
         return self.title
 
     def available(self):
-        return self.open <= datetime.now() <= self.close
+        return self.open <= now() <= self.close

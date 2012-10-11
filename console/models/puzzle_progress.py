@@ -1,5 +1,5 @@
-from datetime import datetime
 from django.db import models
+from django.utils.timezone import now
 
 
 class PuzzleProgress(models.Model):
@@ -26,11 +26,14 @@ class PuzzleProgress(models.Model):
         app_label = 'console'
         verbose_name_plural = 'Puzzle Progresses'
 
+    def __unicode__(self):
+        return '%s has %s %s' % (self.team, self.status.lower(), self.puzzle)
+
     def open(self):
         if (self.status != self.CLOSED) or not self.puzzle.available():
             return
         self.status = self.OPENED
-        self.time_opened = datetime.now()
+        self.time_opened = now()
         self.team.log.append(
             'Opened "%s" @ %s.' %
             (self.puzzle.name, self.time_opened))
@@ -43,12 +46,11 @@ class PuzzleProgress(models.Model):
         self.points = points = 500 + 1000 * self.time_remaining()
         self.team.log.append(
             'Solved "%s" @ %s. %s points' %
-            (self.puzzle.name, datetime.now(), points))
+            (self.puzzle.name, now(), points))
         self.save()
 
     def time_remaining(self):
-        now = datetime.now()
-        opened = self.time_opened if self.time_opened else now
+        opened = self.time_opened if self.time_opened else now()
         window = (self.puzzle.close - opened).seconds
-        remaining = (self.puzzle.close - now).seconds
+        remaining = (self.puzzle.close - now()).seconds
         return (100 * remaining) / window

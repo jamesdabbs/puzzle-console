@@ -4,7 +4,6 @@ from .models import Game, Team, Player, Membership, Puzzle, UniqueRandom, \
                     PuzzleProgress
 
 
-# TODO: make list_displays be links when possible
 class GameAdmin(admin.ModelAdmin):
     list_display = ('name', 'start', 'end')
 admin.site.register(Game, GameAdmin)

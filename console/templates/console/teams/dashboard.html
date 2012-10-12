@@ -22,11 +22,12 @@ About {{ game.name }}
             <h3>{{ p.number }}. {{ p.title }} <small>{{ prog.get_status_display }}</small></h3>
             <p>{{ p.description|markdown }}</p>
             {% if prog.status == prog.OPENED %}
-                {{ prog.time_remaining }}
-                <h5>Time remaining <small>60% | 2hr 29min</small></h5>
+                {% with prog.time_remaining as tr %}
+                <h5>Time remaining <small>{{ tr.1 }}% | {{ tr.0 }}</small></h5>
                 <div class="progress">
-                    <div class="bar" style="width: 60%;"></div>
+                    <div class="bar" style="width: {{ tr.1 }}%;"></div>
                 </div>
+                {% endwith %}
             {% else %}
                 <h5>Closes @ {{ p.close|time }} <small>in {{ p.close|timeuntil }}</small></h5>
                 <form action="{% url 'unlock_puzzle' id=p.id %}" method="POST">

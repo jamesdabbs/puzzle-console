@@ -55,7 +55,7 @@ def setup_puzzle_patrol_2():
         print Team.objects.create(name='Team {}'.format(i + 1), game=game)
 
 
-def playtest_current_game(open_days=7):
+def playtest_current_game(open_days=1):
     game = Game.current()
     teams = list(game.teams.filter(staff=True))
     puzzles = list(game.puzzles.all())

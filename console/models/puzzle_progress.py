@@ -1,4 +1,5 @@
 from django.db import models
+from django.template.defaultfilters import timeuntil
 from django.utils.timezone import now
 
 
@@ -53,7 +54,10 @@ class PuzzleProgress(models.Model):
         self.save()
 
     def time_remaining(self):
-        opened = self.time_opened if self.time_opened else now()
-        window = (self.puzzle.close - opened).seconds
-        remaining = (self.puzzle.close - now()).seconds
-        return (100 * remaining) / window
+        _now = now()
+        opened = self.time_opened if self.time_opened else _now
+        close = self.puzzle.close
+        window = (close - opened).seconds
+        remaining = timeuntil(close, _now)
+        percentage = (100 * (close - _now).seconds) / window
+        return remaining, percentage

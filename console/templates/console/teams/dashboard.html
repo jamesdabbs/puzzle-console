@@ -1,5 +1,6 @@
 {% extends 'console/base.html' %}
 {% load markup %}
+{% load url from future %}
 
 {% block title %}
 About {{ game.name }}
@@ -15,16 +16,26 @@ About {{ game.name }}
 
 <div class="row">
     <div class="span8">
-        {% for p in team.visible_puzzles %}
+        {% for prog in team.puzzleprogress_set.all %}
+        {% with prog.puzzle as p %}
         <div class="well well-large">
-            <h3>Puzzle {{ p.number }}: {{ p.name }} <small>{{ p.status }}</small></h3>
-            <p>{{ puzzle.description|markdown }}</p>
-            {# TODO: time handling #}
-            <h5>Time remaining <small>60% | 2hr 29min</small></h5>
-            <div class="progress">
-                <div class="bar" style="width: 60%;"></div>
-            </div>
+            <h3>{{ p.number }}. {{ p.title }} <small>{{ prog.get_status_display }}</small></h3>
+            <p>{{ p.description|markdown }}</p>
+            {% if prog.status == prog.OPENED %}
+                {{ prog.time_remaining }}
+                <h5>Time remaining <small>60% | 2hr 29min</small></h5>
+                <div class="progress">
+                    <div class="bar" style="width: 60%;"></div>
+                </div>
+            {% else %}
+                <h5>Closes @ {{ p.close|time }} <small>in {{ p.close|timeuntil }}</small></h5>
+                <form action="{% url 'unlock_puzzle' id=p.id %}" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-success" value="Open">
+                </form>
+            {% endif %}
         </div>
+        {% endwith %}
         {% endfor %}
     </div>
 

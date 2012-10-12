@@ -18,8 +18,11 @@ class Game(models.Model):
 
     @classmethod
     def current(cls):
-        # TODO: add support for multiple active games
-        return cls.objects.get(id=18)
+        default = cls.objects.get(id=18)
+        try:
+            return cls.objects.get(name=default.name + ' (PLAYTEST)')
+        except:
+            return default
 
     def free_players(self):
         """ Gets Players interested in this Game who have not signed up for a
@@ -38,4 +41,4 @@ class Game(models.Model):
         raise NotImplementedError()
 
     def team_for(self, user):
-        return self.team_set.get(membership__player__user=user)
+        return self.teams.get(membership__player__user=user)

@@ -3,12 +3,12 @@ from django.utils.timezone import now
 
 
 class PuzzleProgress(models.Model):
-    CLOSED = 'C'
+    UNOPENED = 'U'
     OPENED = 'O'
     SOLVED = 'S'
     FAILED = 'F'
     STATUS_CHOICES = (
-        (CLOSED, 'Closed'),
+        (UNOPENED, 'Unopened'),
         (OPENED, 'Opened'),
         (SOLVED, 'Solved'),
         (FAILED, 'Failed')
@@ -16,7 +16,8 @@ class PuzzleProgress(models.Model):
 
     team = models.ForeignKey('console.Team')
     puzzle = models.ForeignKey('console.Puzzle')
-    status = models.CharField(max_length=1, default=CLOSED)
+    status = models.CharField(max_length=1,
+        choices=STATUS_CHOICES, default=UNOPENED)
     time_opened = models.DateTimeField(null=True, blank=True)
     time_solved = models.DateTimeField(null=True, blank=True)
     points = models.IntegerField(default=0)
@@ -27,26 +28,28 @@ class PuzzleProgress(models.Model):
         verbose_name_plural = 'Puzzle Progresses'
 
     def __unicode__(self):
-        return '%s has %s %s' % (self.team, self.status.lower(), self.puzzle)
+        return '%s has %s %s' % (self.team,
+            self.get_status_display().lower(), self.puzzle)
 
     def open(self):
-        if (self.status != self.CLOSED) or not self.puzzle.available():
+        if (self.status != self.UNOPENED) or not self.puzzle.available():
             return
         self.status = self.OPENED
         self.time_opened = now()
         self.team.log.append(
             'Opened "%s" @ %s.' %
-            (self.puzzle.name, self.time_opened))
+            (self.puzzle.title, self.time_opened))
         self.save()
 
     def solve(self):
         if (self.status != self.OPENED) or not self.puzzle.available():
             return
         self.status = self.SOLVED
+        self.time_solved = now()
         self.points = points = 500 + 1000 * self.time_remaining()
         self.team.log.append(
             'Solved "%s" @ %s. %s points' %
-            (self.puzzle.name, now(), points))
+            (self.puzzle.title, self.time_solved, points))
         self.save()
 
     def time_remaining(self):

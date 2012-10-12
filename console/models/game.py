@@ -43,7 +43,7 @@ class Game(models.Model):
 
     def team_for(self, user):
         if not user.is_authenticated():
-            import Team
+            from console.models import Team
             raise Team.DoesNotExist
         return self.teams.get(membership__player__user_id=user.id)
 

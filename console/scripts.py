@@ -1,10 +1,7 @@
 import csv
-from datetime import timedelta
 import os
 
-from django.utils.timezone import now
-
-from console.models import Game, Player, Team, Membership, PuzzleProgress
+from console.models import Game, Player, Team, PuzzleProgress
 
 
 DATA_ROOT = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
@@ -53,42 +50,6 @@ def setup_puzzle_patrol_2():
     teams = Team.objects.filter(game=game).count()
     for i in range(teams, 10):
         print Team.objects.create(name='Team {}'.format(i + 1), game=game)
-
-
-def playtest_current_game(open_days=1):
-    game = Game.current()
-    teams = list(game.teams.filter(staff=True))
-    puzzles = list(game.puzzles.all())
-    game.name += ' (PLAYTEST)'
-    game.pk = None
-    game.save()
-
-    # Copy the staff teams
-    for team in teams:
-        players = list(team.players.all())
-        team.pk = None
-        team.game = game
-        print team.save()
-
-        for p in players:
-            print Membership.objects.create(game=game, player=p, team=team)
-
-    # Copy the puzzles and set them to open
-    open = now()
-    close = open + timedelta(days=open_days)
-    for puzzle in puzzles:
-        code = puzzle.code
-        code.pk = None
-        code.save()
-        puzzle.game = game
-        puzzle.code = code
-        puzzle.open = open
-        puzzle.close = close
-        puzzle.pk = None
-        print puzzle.save()
-
-    verify_puzzle_progresses(game)
-    print "Created %s with id %s" % (game.name, game.id)
 
 
 def verify_puzzle_progresses(game):

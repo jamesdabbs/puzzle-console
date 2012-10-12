@@ -42,7 +42,7 @@ class Game(models.Model):
         raise NotImplementedError()
 
     def team_for(self, user):
-        return self.teams.get(membership__player__user=user)
+        return self.teams.get(membership__player__user_id=user.id)
 
     def finished(self):
         return not self.puzzles.filter(close__gte=now()).exists()

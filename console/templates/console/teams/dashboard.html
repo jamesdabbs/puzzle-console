@@ -38,8 +38,8 @@ About {{ game.name }}
         <div class="well" id="achievements" style="height:300px;overflow:auto">
             <h4>Achievements</h4>
             {% for a in team.log|slice:":5" %}
+            <hr>
             <p>{{ a }}</p>
-            <hr />
             {% empty %}
             <p>Nothing yet. Get to puzzling!</p>
             {% endfor %}

@@ -23,7 +23,8 @@ def join(request, id=None):
 @require_staff
 def staff_overview(request, game, team, id):
     return TemplateResponse(request, 'console/staff/overview.html', {
-        'players': Player.objects.all()
+        'players': Player.objects.all(),
+        'game': Game.current()
     })
 
 

@@ -11,15 +11,16 @@ __all__ = ('edit', 'unlock')
 
 
 @require_staff
-def edit(request, game, team, id=None):
+def edit(request, game, team, puzzle_id=None, **kwargs):
     if request.method == 'POST':
         form = PuzzleForm(request.POST)
         if form.is_valid() and form.puzzle.game == game:
             form.save()
-    elif id is None:
+    elif puzzle_id is None:
         form = PuzzleForm()
     else:
-        form = PuzzleForm(instance=get_object_or_404(Puzzle, game=game, id=id))
+        form = PuzzleForm(instance=get_object_or_404(Puzzle,
+            game=game, id=puzzle_id))
     return TemplateResponse(request, 'console/staff/puzzle.html', locals())
 
 

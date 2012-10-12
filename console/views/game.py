@@ -3,10 +3,10 @@ from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 
 from console.models import Game, Player, Membership
-from console.utils import find_team, require_staff, JsonResponse
+from console.utils import require_staff
 
 
-__all__ = ('join', 'staff_overview', 'rules', 'about', 'solve')
+__all__ = ('join', 'staff_overview', 'rules', 'about')
 
 
 @login_required
@@ -38,13 +38,3 @@ def about(request):
     return TemplateResponse(request, 'console/game/about.html', {
         'game': Game.current()
     })
-
-
-@find_team
-def solve(request, game, team):
-    code = request.POST.get('code', '')
-    response = team.solve(code)
-
-    if request.is_ajax():
-        return JsonResponse(response)
-    return redirect('dashboard')

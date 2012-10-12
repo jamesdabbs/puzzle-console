@@ -16,6 +16,10 @@
     <h1>{{ game }} Staff Overview</h1>
 </div>
 
+{% if user.is_staff %}
+    <a href="/admin/">Django admin</a>
+{% endif %}
+
 <h2>The Puzzles</h2>
 
 <p>Here are a list of the puzzles for {{ game }}.</p>

@@ -122,7 +122,7 @@ class Team(models.Model):
 
     def solve(self, code):
         try:
-            puzzle = self.game.puzzles.get(code=code)
+            puzzle = self.game.puzzles.get(code__code=code)
             puzzle.puzzleprogress_set.get(team=self).solve()
             return 0
         except Puzzle.DoesNotExist:

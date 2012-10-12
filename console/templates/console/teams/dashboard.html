@@ -41,10 +41,12 @@ About {{ game.name }}
     </div>
 
     <div class="span4">
-        <div>
+        <form action="{% url 'solve_puzzle' %}" method="POST">
+            {% csrf_token %}
             <p>Enter code:</p>
-            <p style="text-align:center"><input type="text" class="span2" /></p>
-        </div>
+            <p style="text-align:center"><input type="text" name="code" class="span2" /></p>
+            <input type="submit" class="btn" value="Submit">
+        </form>
         <div class="well well-small">
             <b>Points</b><br />
             {{ team.points }}

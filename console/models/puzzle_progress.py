@@ -47,7 +47,7 @@ class PuzzleProgress(models.Model):
             return
         self.status = self.SOLVED
         self.time_solved = now()
-        self.points = points = 500 + 1000 * self.time_remaining()
+        self.points = points = 500 + 10 * self.time_remaining()[1]
         self.team.log.append(
             'Solved "%s" @ %s. %s points' %
             (self.puzzle.title, self.time_solved, points))

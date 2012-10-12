@@ -26,6 +26,7 @@ urlpatterns += patterns('console.views.puzzle',
 
 urlpatterns += patterns('console.views.team',
     url(r'^dashboard/$', 'dashboard', name='dashboard'),
+    url(r'^solve/$', 'solve', name='solve_puzzle'),
     url(r'^teams/$', 'index', name='teams'),
     url(r'^teams/(?P<id>\d+)/$', 'show', name='team'),
     url(r'^teams/(?P<id>\d+)/claim/$', 'claim', name='claim_team'),

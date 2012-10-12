@@ -1,14 +1,15 @@
-from datetime import datetime
 from django.db import models
+from django.template.defaultfilters import timeuntil
+from django.utils.timezone import now
 
 
 class PuzzleProgress(models.Model):
-    CLOSED = 'C'
+    UNOPENED = 'U'
     OPENED = 'O'
     SOLVED = 'S'
     FAILED = 'F'
     STATUS_CHOICES = (
-        (CLOSED, 'Closed'),
+        (UNOPENED, 'Unopened'),
         (OPENED, 'Opened'),
         (SOLVED, 'Solved'),
         (FAILED, 'Failed')
@@ -16,6 +17,8 @@ class PuzzleProgress(models.Model):
 
     team = models.ForeignKey('console.Team')
     puzzle = models.ForeignKey('console.Puzzle')
+    status = models.CharField(max_length=1,
+        choices=STATUS_CHOICES, default=UNOPENED)
     time_opened = models.DateTimeField(null=True, blank=True)
     time_solved = models.DateTimeField(null=True, blank=True)
     points = models.IntegerField(default=0)
@@ -23,26 +26,43 @@ class PuzzleProgress(models.Model):
 
     class Meta:
         app_label = 'console'
+        verbose_name_plural = 'Puzzle Progresses'
+
+    def __unicode__(self):
+        return '%s has %s %s' % (self.team,
+            self.get_status_display().lower(), self.puzzle)
 
     def open(self):
-        if (self.status != self.CLOSED) or not self.puzzle.available(): return
+        if (self.status != self.UNOPENED) or not self.puzzle.available():
+            return
         self.status = self.OPENED
-        self.time_opened = datetime.now()
-        self.team.log.append(
-            'Opened "%s" @ %s.' % 
-            (self.puzzle.name, self.time_opened))
+        self.time_opened = now()
+        self.team.log.insert(0,
+            'Opened "%s" @ %s.' %
+            (self.puzzle.title, self.time_opened))
+        self.team.save()
         self.save()
 
     def solve(self):
-        if (self.status != self.OPENED) or not self.puzzle.available(): return
+        if (self.status != self.OPENED) or not self.puzzle.available():
+            return
         self.status = self.SOLVED
-        self.points = points = 500 + 1000 * self.time_remaining()
-        self.team.log.append(
-            'Solved "%s" @ %s. %s points' % 
-            (self.puzzle.name, datetime.now(), points))
+        self.time_solved = now()
+        self.points = points = 500 + 10 * self.time_remaining()[1]
+        self.team.log.insert(0,
+            'Solved "%s" @ %s. %s points' %
+            (self.puzzle.title, self.time_solved, points))
+        self.team.save()
         self.save()
 
     def time_remaining(self):
-        window = (self.puzzle.close - self.time_opened).seconds
-        elapsed = (datetime.now() - self.time_opened).seconds
-        return (100 * elapsed) / window
+        _now = now()
+        opened = self.time_opened if self.time_opened else _now
+        close = self.puzzle.close
+        window = (close - opened).seconds
+        remaining = timeuntil(close, _now)
+        percentage = (100 * (close - _now).seconds) / window
+        return remaining, percentage
+
+    def include_template(self):
+        return "console/puzzles/%s.html" % self.get_status_display().lower()

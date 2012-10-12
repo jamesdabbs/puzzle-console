@@ -2,14 +2,13 @@
 {% load bootstrap_tags %}
 {% load markup %}
 
-{% comment %}
-Variables required:
-
-game = Game to describe
-players = All players registered on the site
-{% endcomment %}
-
 {% block title %}{{ game }} Staff Overview{% endblock %}
+
+{% block extra_styles %}
+<style type="text/css">
+    .puzzle-link { margin: 3px; }
+</style>
+{% endblock %}
 
 {% block content %}
 
@@ -17,14 +16,19 @@ players = All players registered on the site
     <h1>{{ game }} Staff Overview</h1>
 </div>
 
+{% if user.is_staff %}
+    <a href="/admin/">Django admin</a>
+{% endif %}
+
 <h2>The Puzzles</h2>
 
 <p>Here are a list of the puzzles for {{ game }}.</p>
 
-{% for puzzle in game.puzzle_set.all %}
+{% for puzzle in game.puzzles.all %}
 <section id="puzzle-{{ puzzle.number }}" style="padding-top:50px">
 <div class="well">
-    <a href="#puzzle-{{ puzzle.number }}" class="pull-right">Link</a>
+    <a href="{% url puzzle_edit game_id=game.id puzzle_id=puzzle.id %}" class="pull-right puzzle-link">Edit</a>
+    <a href="#puzzle-{{ puzzle.number }}" class="pull-right puzzle-link">Link</a>
     <h3>Puzzle {{ puzzle.number }}: {{ puzzle }} <small>{{ puzzle.get_completion_display }}</small></h3>
     
     <hr />

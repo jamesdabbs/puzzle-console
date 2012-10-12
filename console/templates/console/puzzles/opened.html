@@ -1,0 +1,7 @@
+{% with prog.time_remaining as tr %}
+<a href="{{ p.attachment_url }}">Attachment</a>
+<h5>Time remaining <small>{{ tr.0 }}</small></h5>
+<div class="progress">
+    <div class="bar" style="width: {{ tr.1 }}%;"></div>
+</div>
+{% endwith %}

@@ -1,5 +1,5 @@
 {% extends 'console/base.html' %}
-{% load markup %}
+{% load url from future %}
 
 {% block title %}
 About {{ game.name }}
@@ -15,33 +15,31 @@ About {{ game.name }}
 
 <div class="row">
     <div class="span8">
-        {% for p in team.visible_puzzles %}
-        <div class="well well-large">
-            <h3>Puzzle {{ p.number }}: {{ p.name }} <small>{{ p.status }}</small></h3>
-            <p>{{ puzzle.description|markdown }}</p>
-            {# TODO: time handling #}
-            <h5>Time remaining <small>60% | 2hr 29min</small></h5>
-            <div class="progress">
-                <div class="bar" style="width: 60%;"></div>
-            </div>
-        </div>
-        {% endfor %}
+        {% if game.finished %}
+            <p>All puzzles are now closed. Thanks for playing!</p>
+        {% else %}
+            {% for prog in team.puzzleprogress_set.all %}
+            {% include 'console/puzzles/base.html' %}
+            {% endfor %}
+        {% endif %}
     </div>
 
     <div class="span4">
-        <div>
+        <form action="{% url 'solve_puzzle' %}" method="POST">
+            {% csrf_token %}
             <p>Enter code:</p>
-            <p style="text-align:center"><input type="text" class="span2" /></p>
-        </div>
+            <p style="text-align:center"><input type="text" name="code" class="span2" /></p>
+            <input type="submit" class="btn" value="Submit">
+        </form>
         <div class="well well-small">
             <b>Points</b><br />
             {{ team.points }}
         </div>
         <div class="well" id="achievements" style="height:300px;overflow:auto">
             <h4>Achievements</h4>
-            {% for a in team.achievements|slice:":5" %}
-            <p>{{ a.description }}</p>
-            <hr />
+            {% for a in team.log|slice:":5" %}
+            <hr>
+            <p>{{ a }}</p>
             {% empty %}
             <p>Nothing yet. Get to puzzling!</p>
             {% endfor %}

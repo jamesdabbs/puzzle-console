@@ -21,7 +21,7 @@
         <div class="navbar-inner">
             <div class="container">
                 <a class="brand" href="{% url 'home' %}">
-                    {{ current_game }}
+                    {{ game }}
                 </a>
                 {% block navlinks %}
                 <ul class="nav">
@@ -31,8 +31,8 @@
                     {% if request.user.is_authenticated %}
                     <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
                     {% endif %}
-                    {% if request.user.player in current_game.staffers %}
-                    <li><a href="{% url 'staff_overview' current_game.id %}">Staff Page</a></li>
+                    {% if request.user.player in game.staffers %}
+                    <li><a href="{% url 'staff_overview' game.id %}">Staff Page</a></li>
                     {% endif %}
                 </ul>
                 {% endblock %}

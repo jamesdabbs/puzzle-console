@@ -9,7 +9,7 @@ class Membership(models.Model):
     class Meta:
         app_label = 'console'
         unique_together = (('game', 'player', 'team'),)
-    
+
     def __unicode__(self):
         return "%s on %s for %s" % (self.player, self.team, self.game)
 

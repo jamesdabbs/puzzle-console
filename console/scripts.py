@@ -1,7 +1,7 @@
 import csv
 import os
 
-from console.models import Game, Player, Team
+from console.models import Game, Player, Team, PuzzleProgress
 
 
 DATA_ROOT = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
@@ -23,7 +23,7 @@ def add_players():
             action = 'Created' if created else 'Found'
             print '{} game: {}'.format(action, game)
             return game
-        games = map(get_game, reader.next())
+        map(get_game, reader.next())
 
         for row in reader:
             last, first, plays = row[0].strip(), row[1].strip(), row[2:]
@@ -49,4 +49,12 @@ def setup_puzzle_patrol_2():
     # Create 10 teams
     teams = Team.objects.filter(game=game).count()
     for i in range(teams, 10):
-        print Team.objects.create(name='Team {}'.format(i+1), game=game)
+        print Team.objects.create(name='Team {}'.format(i + 1), game=game)
+
+
+def verify_puzzle_progresses(game):
+    teams = list(game.teams.all())
+    for puzzle in game.puzzles.all():
+        for team in teams:
+            print PuzzleProgress.objects.get_or_create(
+                puzzle=puzzle, team=team)[0]

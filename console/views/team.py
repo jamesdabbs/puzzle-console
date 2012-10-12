@@ -3,24 +3,26 @@ from django.contrib.auth.decorators import login_required
 from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
+from django.views.decorators.http import require_POST
 
 from console.exceptions import TeamBuildingException
 from console.forms import TeamUpdateForm
 from console.models import Game, Membership, Player, Team
-from console.utils import find_team
+from console.utils import find_team, JsonResponse
 
 
-__all__ = ('index', 'show', 'claim', 'dashboard')
+__all__ = ('index', 'show', 'claim', 'dashboard', 'solve')
 
 
 def index(request):
     """ Displays a list of all teams """
     game = Game.current()
-    teams = Team.objects.filter(game=game, staff=False)
-    staff_teams = Team.objects.filter(game=game, staff=True)
-    joined = request.user.is_authenticated() and Membership.objects.filter(
-        player__user=request.user, game=game).exists()
-    return TemplateResponse(request, 'console/teams/teams.html', locals())
+    return TemplateResponse(request, 'console/teams/teams.html', {
+        'teams': Team.objects.filter(game=game, staff=False),
+        'staff_teams': Team.objects.filter(game=game, staff=True),
+        'joined': request.user.is_authenticated() and Membership.objects\
+            .filter(player__user=request.user, game=game).exists()
+    })
 
 
 def show(request, id):
@@ -39,7 +41,7 @@ def show(request, id):
                 return redirect(team)
         else:
             form = TeamUpdateForm(instance=team)
-    
+
     return TemplateResponse(request, 'console/teams/team.html', locals())
 
 
@@ -63,3 +65,14 @@ def claim(request, id):
 @find_team
 def dashboard(request, game, team):
     return TemplateResponse(request, 'console/teams/dashboard.html', locals())
+
+
+@require_POST
+@find_team
+def solve(request, game, team):
+    code = request.POST.get('code', '')
+    response = team.solve(code)
+
+    if request.is_ajax():
+        return JsonResponse(response)
+    return redirect('dashboard')

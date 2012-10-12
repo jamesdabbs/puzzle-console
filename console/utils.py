@@ -13,7 +13,7 @@ class JsonResponse(HttpResponse):
             json.dumps(data), mimetype='application/json')
 
 
-def find_team(require_staff=False):
+def _find_team(require_staff=False):
     def decorator(view):
         def _wrapped_view(request, *args, **kwargs):
             game = Game.current()
@@ -28,3 +28,6 @@ def find_team(require_staff=False):
             return view(request, *args, **kwargs)
         return _wrapped_view
     return decorator
+
+find_team = _find_team()
+require_staff = _find_team(True)

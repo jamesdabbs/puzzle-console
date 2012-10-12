@@ -18,7 +18,7 @@ class Player(models.Model):
     plays = models.IntegerField(default=0)
     wins = models.IntegerField(default=0)
     organizations = models.IntegerField(default=0)
-        
+
     class Meta:
         app_label = 'console'
         ordering = ['name']
@@ -36,11 +36,11 @@ class Player(models.Model):
             0: 'Rookie',
             1: 'Hero'
         }.get(self.wins, 'Legend - %s wins' % self.wins)
-    
+
     @property
     def is_claimed(self):
         return User.objects.filter(player=self).exists()
-    
+
     @property
     def email(self):
         if self.is_claimed:

@@ -21,11 +21,10 @@ staff_teams = teams in the current game marked as staff
             <h1>Auburn Puzzle Party 5 <small>Puzzle Patrol II</small></h1>
             <h2>Team List</h2>
         </div>
-        <p>
-            Teams for APP5 are subject to the following Team-building rules:
-        </p>
         <div class="row"><div class="offset1 span10"><div class="alert alert-block alert-success">
-            {% include "console/teams/rules.html" %}
+        <p>
+            Team membership for APP5 is subject to the Team-building rules listed on the <a href="{% url 'rules' %}">Rules</a> page.
+        </p>
         </div></div></div>
     </div>
 </div>
@@ -42,6 +41,10 @@ staff_teams = teams in the current game marked as staff
             <li><em>(none at the moment!)</em></li>
             {% endfor %}
         </ul>
+        <p>
+            If you'd like to be added to or removed from this list, contact the game organizer.
+        </p>
+        {% comment %}
         {% if not joined %}
         <h5>You haven't joined yet!</h5>
         <p>
@@ -49,6 +52,7 @@ staff_teams = teams in the current game marked as staff
             so you'll receive updates on the event!
         </p>
         {% endif %}
+        {% endcomment %}
     </div>
     {% for team in teams %}
         {% if forloop.counter0|divisibleby:"2" %}{# begin row #}

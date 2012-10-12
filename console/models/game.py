@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.timezone import now
 
 from .player import Player
 
@@ -42,3 +43,6 @@ class Game(models.Model):
 
     def team_for(self, user):
         return self.teams.get(membership__player__user=user)
+
+    def finished(self):
+        return not self.puzzles.filter(close__gte=now()).exists()

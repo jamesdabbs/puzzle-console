@@ -15,9 +15,13 @@ About {{ game.name }}
 
 <div class="row">
     <div class="span8">
-        {% for prog in team.puzzleprogress_set.all %}
-        {% include 'console/puzzles/base.html' %}
-        {% endfor %}
+        {% if game.finished %}
+            <p>All puzzles are now closed. Thanks for playing!</p>
+        {% else %}
+            {% for prog in team.puzzleprogress_set.all %}
+            {% include 'console/puzzles/base.html' %}
+            {% endfor %}
+        {% endif %}
     </div>
 
     <div class="span4">

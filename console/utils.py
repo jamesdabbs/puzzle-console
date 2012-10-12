@@ -20,7 +20,7 @@ def _find_team(require_staff=False):
             try:
                 team = game.team_for(request.user)
             except Team.DoesNotExist:
-                messages.error(request, 'You must join a team to participate.')
+                messages.error(request, 'You must be on a team to participate.')
                 return redirect('teams')
             if require_staff and not team.staff:
                 raise Http404

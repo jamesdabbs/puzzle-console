@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
+from django.views.decorators.http import require_POST
 
 from console.forms import PuzzleForm
 from console.models import Puzzle, PuzzleProgress
@@ -24,6 +25,7 @@ def edit(request, game, team, puzzle_id=None, **kwargs):
     return TemplateResponse(request, 'console/staff/puzzle.html', locals())
 
 
+@require_POST
 @find_team
 def unlock(request, game, team, id):
     if request.method == 'POST':

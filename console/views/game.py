@@ -24,17 +24,12 @@ def join(request, id=None):
 def staff_overview(request, game, team, id):
     return TemplateResponse(request, 'console/staff/overview.html', {
         'players': Player.objects.all(),
-        'game': Game.current()
     })
 
 
 def rules(request):
-    return TemplateResponse(request, 'console/game/rules.html', {
-        'game': Game.current()
-    })
+    return TemplateResponse(request, 'console/game/rules.html')
 
 
 def about(request):
-    return TemplateResponse(request, 'console/game/about.html', {
-        'game': Game.current()
-    })
+    return TemplateResponse(request, 'console/game/about.html')

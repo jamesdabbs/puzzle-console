@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
+from django.views.decorators.http import require_POST
 
 from console.exceptions import TeamBuildingException
 from console.forms import TeamUpdateForm
@@ -66,6 +67,7 @@ def dashboard(request, game, team):
     return TemplateResponse(request, 'console/teams/dashboard.html', locals())
 
 
+@require_POST
 @find_team
 def solve(request, game, team):
     code = request.POST.get('code', '')

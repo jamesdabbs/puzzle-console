@@ -9,6 +9,7 @@ from console.forms import UserRegistrationForm, PlayerAssignmentForm
 
 __all__ = ('register',)
 
+
 def register(request):
     """ Allows a user to register and associate a pre-existing Player """
     if request.method == 'POST':

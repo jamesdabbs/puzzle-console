@@ -1,0 +1,7 @@
+{% load url from future %}
+
+<h5>Closes @ {{ p.close|time }} <small>in {{ p.close|timeuntil }}</small></h5>
+<form action="{% url 'unlock_puzzle' id=p.id %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" class="btn btn-success" value="Open">
+</form>

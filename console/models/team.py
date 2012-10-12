@@ -126,7 +126,8 @@ class Team(models.Model):
             puzzle.puzzleprogress_set.get(team=self).solve()
             return 0
         except Puzzle.DoesNotExist:
-            self.log.append('Tried invalid code: %s' % code)
+            self.log.insert(0, 'Tried invalid code: %s' % code)
+            self.save()
             return 1
 
     def points(self):

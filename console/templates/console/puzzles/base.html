@@ -4,8 +4,13 @@
 
 {% with item.puzzle as p %}
 <div class="well well-large">
-    <h3>{{ p.number }}. {{ p.title }} {% status item %}</h3>
-    <p>{{ p.description|markdown }}</p>
-    {% include item.include_template %}
+    {% if p.available %}
+      <h3>{{ p.number }}. {{ p.title }} {% status item %}</h3>
+      <p>{{ p.description|markdown }}</p>
+      {% include item.include_template %}
+    {% else %}
+      <h3>{{ p.number }}. {{ p.title }}</h3>
+      <p>Available from <strong>{{ p.open }}</strong> to <strong>{{ p.close }}</strong></p>
+    {% endif %}
 </div>
 {% endwith %}

@@ -39,9 +39,9 @@
 
                 <ul class="nav pull-right">
                     {% if user.is_authenticated %}
-                    <li><a href="{% url 'logout' %}?next={{ request.path }}">Logout</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
                     {% else %}
-                    <li><a href="{% url 'login' %}?next={{ request.path }}">Login</a></li>
+                    <li><a href="{% url 'login' %}">Login</a></li>
                     <li><a href="{% url 'register_player' %}">Register</a></li>
                     {% endif %}
                 </ul>

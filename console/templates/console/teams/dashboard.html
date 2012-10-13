@@ -6,37 +6,40 @@ About {{ game.name }}
 {% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <h1>{{ game.name|default:"Unknown Game" }}</h1>
-    <h3>Dashboard</h3>
-</div>
-
-<section>
 
 <div class="row">
     <div class="span8">
-        {% if game.finished %}
-            <p>All puzzles are now closed. Thanks for playing!</p>
-        {% else %}
-            {% for prog in team.puzzleprogress_set.all %}
-            {% include 'console/puzzles/base.html' %}
-            {% endfor %}
-        {% endif %}
-    </div>
-
+        <div class="page-header">
+            <h3>Dashboard</h3>
+        </div>
+        
+        <section>
+                {% if game.finished %}
+                    <p>All puzzles are now closed. Thanks for playing!</p>
+                {% else %}
+                    {% for prog in team.puzzleprogress_set.all %}
+                    {% include 'console/puzzles/base.html' %}
+                    {% endfor %}
+                {% endif %}
+        </section>  
+    </div>  
     <div class="span4">
         <form action="{% url 'solve_puzzle' %}" method="POST">
             {% csrf_token %}
-            <p>Enter code:</p>
-            <p style="text-align:center"><input type="text" name="code" class="span2" /></p>
-            <input type="submit" class="btn" value="Submit">
+            <div class="row" style="padding-top:20px">
+                <div class="span1" style="text-align:right; font-size:18px; line-height:28px;">Code:</div>
+                <div class="span2"><input type="text" name="code" class="span2" style="text-align:center; text-transform:uppercase" maxlength="6" /></div>
+                <div class="span1"><input type="submit" class="btn btn-primary" value="&rarr;"></div>
+            </div>
         </form>
-        <div class="well well-small">
-            <b>Points</b><br />
-            {{ team.points }}
-        </div>
+        <p>
+            <div class="row" style="padding-bottom:20px">
+                <div class="span1" style="text-align:right; font-size:18px; line-height:28px;">Points:</div>
+                <div class="span3" style="font-size:18px; line-height:28px;">{{ team.points }}</div>
+            </div>
+        </p>
         <div class="well" id="achievements" style="height:300px;overflow:auto">
-            <h4>Achievements</h4>
+            <h4>Activity</h4>
             {% for a in team.log|slice:":5" %}
             <hr>
             <p>{{ a }}</p>
@@ -46,6 +49,7 @@ About {{ game.name }}
         </div>
     </div>
 </div>
+        
 
 </section>
 {% endblock %}

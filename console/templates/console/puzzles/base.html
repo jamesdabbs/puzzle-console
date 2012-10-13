@@ -1,9 +1,10 @@
 {% load markup %}
+{% load status %}
 {% load url from future %}
 
 {% with item.puzzle as p %}
 <div class="well well-large">
-    <h3>{{ p.number }}. {{ p.title }} <small>{{ item.get_status_display }}</small></h3>
+    <h3>{{ p.number }}. {{ p.title }} {% status item %}</h3>
     <p>{{ p.description|markdown }}</p>
     {% include item.include_template %}
 </div>

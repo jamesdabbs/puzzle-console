@@ -1,3 +1,4 @@
+{% load markup %}
 {% load url from future %}
 
 <h5>Closes @ {{ p.close|time }} <small>in {{ p.close|timeuntil }}</small></h5>
@@ -5,3 +6,15 @@
     {% csrf_token %}
     <input type="submit" class="btn btn-success" value="Open">
 </form>
+
+{% if p.unlocked_description %}
+    {{ p.unlocked_description|markdown }}
+{% endif %}
+
+{% if item.visible_clues %}
+    <h5>Clues</h5>
+    {% for clue in item.visible_clues %}
+    <div>{{ clue|markdown }}</div>
+    {% endfor %}
+    </ul>
+{% endif %}

@@ -14,7 +14,8 @@ class Achievement(models.Model):
         app_label = 'console'
 
     def __unicode__(self):
-        result = '%s @ %s' % (self.title, self.time)
+        result = '%s @ %s' % (
+            self.title, self.time.strftime("%I:%M %p").lower())
         if self.points:
             result += ' (%s points)' % self.points
         return result

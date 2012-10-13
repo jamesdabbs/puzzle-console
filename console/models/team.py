@@ -1,9 +1,9 @@
 from django.db import models
 from django.db.models.aggregates import Sum
+from django.utils.timezone import now
 
 from console.exceptions import TeamBuildingException
 
-from .fields import ListField
 from .game import Game
 from .membership import Membership
 from .player import Player
@@ -20,7 +20,6 @@ class Team(models.Model):
     competitive = models.BooleanField()
 
     puzzles = models.ManyToManyField('console.Puzzle', through='console.PuzzleProgress')
-    log = ListField(default=[])
     extra_points = models.IntegerField(default=0)
 
     class Meta:
@@ -126,13 +125,21 @@ class Team(models.Model):
             puzzle.puzzleprogress_set.get(team=self).solve()
             return 0
         except Puzzle.DoesNotExist:
-            self.log.insert(0, 'Tried invalid code: %s' % code)
-            self.save()
+            self.achievements.create(title='Tried invalid code: %s' % code,
+                time=now(), action='Invalid')
             return 1
 
     def points(self):
-        agg = self.puzzleprogress_set.all().aggregate(Sum('points'))
+        agg = self.achievements.all().aggregate(Sum('points'))
         return self.extra_points + (agg.get('points__sum') or 0)
 
     def status_hash(self):
         return hash('%s|%s' % (self.points, self.status.join('|')))
+
+    def timeline(self):
+        return sorted(list(self.puzzleprogress_set.all()) +
+                      list(self.game.videos.all()),
+                      key=lambda obj: obj.timeline_key())
+
+    def recent_activity(self, count=15):
+        return self.achievements.order_by('-time')[:count]

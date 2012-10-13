@@ -1,10 +1,10 @@
 {% load markup %}
 {% load url from future %}
 
-{% with prog.puzzle as p %}
+{% with item.puzzle as p %}
 <div class="well well-large">
-    <h3>{{ p.number }}. {{ p.title }} <small>{{ prog.get_status_display }}</small></h3>
+    <h3>{{ p.number }}. {{ p.title }} <small>{{ item.get_status_display }}</small></h3>
     <p>{{ p.description|markdown }}</p>
-    {% include prog.include_template %}
+    {% include item.include_template %}
 </div>
 {% endwith %}

@@ -9,7 +9,7 @@ class PuzzleProgress(models.Model):
     SOLVED = 'S'
     FAILED = 'F'
     STATUS_CHOICES = (
-        (UNOPENED, 'Unopened'),
+        (UNOPENED, 'Unlocked'),
         (OPENED, 'Opened'),
         (SOLVED, 'Solved'),
         (FAILED, 'Failed')
@@ -21,7 +21,6 @@ class PuzzleProgress(models.Model):
         choices=STATUS_CHOICES, default=UNOPENED)
     time_opened = models.DateTimeField(null=True, blank=True)
     time_solved = models.DateTimeField(null=True, blank=True)
-    points = models.IntegerField(default=0)
     last_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -37,23 +36,21 @@ class PuzzleProgress(models.Model):
             return
         self.status = self.OPENED
         self.time_opened = now()
-        self.team.log.insert(0,
-            'Opened "%s" @ %s.' %
-            (self.puzzle.title, self.time_opened))
-        self.team.save()
         self.save()
+        self.team.achievements.create(
+            title='Opened "%s"' % self.puzzle.title, time=self.time_opened,
+            target=self.puzzle, action='Opened')
 
     def solve(self):
         if (self.status != self.OPENED) or not self.puzzle.available():
             return
         self.status = self.SOLVED
         self.time_solved = now()
-        self.points = points = 500 + 10 * self.time_remaining()[1]
-        self.team.log.insert(0,
-            'Solved "%s" @ %s. %s points' %
-            (self.puzzle.title, self.time_solved, points))
-        self.team.save()
         self.save()
+        self.team.achievements.create(
+            title='Solved "%s"' % self.puzzle.title, time=self.time_solved,
+            target=self.puzzle, action='Solved',
+            points=500 + 10 * self.time_remaining()[1])
 
     def time_remaining(self):
         _now = now()
@@ -66,3 +63,9 @@ class PuzzleProgress(models.Model):
 
     def include_template(self):
         return "console/puzzles/%s.html" % self.get_status_display().lower()
+
+    def timeline_key(self):
+        return self.puzzle.open, self.puzzle.number
+
+    def timeline_template(self):
+        return 'console/puzzles/base.html'

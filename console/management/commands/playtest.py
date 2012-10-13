@@ -37,6 +37,7 @@ class Command(BaseCommand):
             print "===================================================="
             teams = list(game.teams.filter(staff=True))
             puzzles = list(game.puzzles.all())
+            videos = list(game.videos.all())
             game.name += ' (PLAYTEST)'
             game.pk = None
             game.save()
@@ -67,6 +68,13 @@ class Command(BaseCommand):
                 puzzle.pk = None
                 puzzle.save()
                 print puzzle
+
+            print "\nCopying videos -----------------------------------"
+            for video in videos:
+                video.game = game
+                video.pk = None
+                video.save()
+                print video
 
             print "\nInitializing team progress trackers --------------"
             verify_puzzle_progresses(game)

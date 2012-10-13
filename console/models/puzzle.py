@@ -23,6 +23,7 @@ class Puzzle(models.Model):
 
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
+    locked_description = models.TextField(blank=True)
     attachment_url = models.URLField(null=True, blank=True)
     solution = models.TextField(blank=True)
     code = models.OneToOneField('console.UniqueRandom')

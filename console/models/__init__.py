@@ -5,3 +5,6 @@ from .game import Game
 from .puzzle import Puzzle
 from .team import Team
 from .unique_random import UniqueRandom
+from .videos import Video
+from .achievements import Achievement
+from .clues import Clue

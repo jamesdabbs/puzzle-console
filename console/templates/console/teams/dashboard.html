@@ -14,13 +14,13 @@ About {{ game.name }}
         </div>
         
         <section>
-                {% if game.finished %}
-                    <p>All puzzles are now closed. Thanks for playing!</p>
-                {% else %}
-                    {% for prog in team.puzzleprogress_set.all %}
-                    {% include 'console/puzzles/base.html' %}
-                    {% endfor %}
-                {% endif %}
+            {% if game.finished %}
+                <p>All puzzles are now closed. Thanks for playing!</p>
+            {% else %}
+                {% for item in team.timeline %}
+                {% include item.timeline_template %}
+                {% endfor %}
+            {% endif %}
         </section>  
     </div>
     <div class="offset8 span4" style="position:fixed;">
@@ -41,9 +41,9 @@ About {{ game.name }}
                 <div class="span3" style="font-size:18px; line-height:28px;">{{ team.points }}</div>
             </div>
         </p>
-        <div class="well" id="achievements" style="height:300px;overflow:auto">
-            <h4>Activity</h4>
-            {% for a in team.log|slice:":5" %}
+        <div class="well" id="achievements">
+            <h4>Recent Activity</h4>
+            {% for a in team.recent_activity %}
             <hr>
             <p>{{ a }}</p>
             {% empty %}

@@ -16,7 +16,7 @@
     {# bootstrap js #}
     <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.1.0/js/bootstrap.min.js"></script>
 </head>
-<body style="padding:50px">{# Padding to work with fixed navbar #}
+<body style="padding:60px">{# Padding to work with fixed navbar #}
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container">
@@ -32,14 +32,13 @@
                     <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
                     {% endif %}
                     {% if request.user.player in game.staffers %}
-                    <li><a href="{% url 'staff_overview' game.id %}">Staff Page</a></li>
+                    <li><a href="{% url 'staff_overview' game.id %}">Staff</a></li>
                     {% endif %}
                 </ul>
                 {% endblock %}
 
                 <ul class="nav pull-right">
                     {% if user.is_authenticated %}
-                    <li><a href="{% url 'login' %}">{{ user }}</a></li>
                     <li><a href="{% url 'logout' %}?next={{ request.path }}">Logout</a></li>
                     {% else %}
                     <li><a href="{% url 'login' %}?next={{ request.path }}">Login</a></li>

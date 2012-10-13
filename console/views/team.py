@@ -7,8 +7,8 @@ from django.views.decorators.http import require_POST
 
 from console.exceptions import TeamBuildingException
 from console.forms import TeamUpdateForm
-from console.models import Game, Membership, Player, Team
-from console.utils import find_team, JsonResponse
+from console.models import Game, Membership, Player, PuzzleProgress, Team
+from console.utils import find_team
 
 
 __all__ = ('index', 'show', 'claim', 'dashboard', 'solve')
@@ -64,7 +64,10 @@ def claim(request, id):
 
 @find_team
 def dashboard(request, game, team):
-    return TemplateResponse(request, 'console/teams/dashboard.html', locals())
+    return TemplateResponse(request, 'console/teams/dashboard.html', {
+        'team': team,
+        'STATUS_CHOICES': PuzzleProgress.STATUS_CHOICES
+    })
 
 
 @require_POST

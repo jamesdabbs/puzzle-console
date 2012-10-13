@@ -2,6 +2,8 @@ from django.db import models
 from django.template.defaultfilters import timeuntil
 from django.utils.timezone import now
 
+from .puzzle import Puzzle
+
 
 class PuzzleProgress(models.Model):
     UNOPENED = 'U'
@@ -33,7 +35,7 @@ class PuzzleProgress(models.Model):
 
     def open(self):
         if (self.status != self.UNOPENED) or not self.puzzle.available():
-            return
+            raise Puzzle.DoesNotExist
         self.status = self.OPENED
         self.time_opened = now()
         self.save()
@@ -43,7 +45,7 @@ class PuzzleProgress(models.Model):
 
     def solve(self):
         if (self.status != self.OPENED) or not self.puzzle.available():
-            return
+            raise Puzzle.DoesNotExist
         self.status = self.SOLVED
         self.time_solved = now()
         self.save()

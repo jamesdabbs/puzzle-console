@@ -9,13 +9,15 @@ About {{ game.name }}
 
 <div class="row">
     <div class="span8">
-        <section>
+        <section id="timeline">
             {% if game.finished %}
                 <p>All puzzles are now closed. Thanks for playing!</p>
             {% else %}
                 {% for item in team.timeline %}
-                <a name="{{ item.timeline_anchor }}"></a>
-                {% include item.timeline_template %}
+                <div class="timeline-item" id="{{ item.timeline_anchor }}">
+                    <a name="{{ item.timeline_anchor }}"></a>
+                    {% include item.timeline_template %}
+                </div>
                 {% endfor %}
             {% endif %}
         </section>  
@@ -52,9 +54,37 @@ About {{ game.name }}
 {% endblock %}
 
 {% block extra_scripts %}
+
 <script type="text/javascript">
 $(function() {
+    // Find the existing labels on the page
+    var labels = {};
+    $('#timeline .timeline-item').each(function() {
+        var label = $(this).find('.label');
+        labels[label.text()] = label;
+    })
+    // Add filter buttons up top for each label
+    var filters = $('<div id="timeline-filters"/>');
+    $('#timeline').prepend(filters);
+    for(k in labels) {
+        var label = labels[k].clone().click(function() {
+            $('#timeline .timeline-item').hide();
+            var cls = $(this).attr('class').replace(' ','.');
+            $('#timeline .' + cls).each(function() {
+                $(this).closest('.timeline-item').show();
+            });
+        })
+        filters.prepend(label);
+    }
+    // Add a "show all" button as well
+    var all = $('<span class="label label-inverse">All</span>');
+    all.click(function() {
+        $('#timeline .timeline-item').show();
+    });
+    filters.prepend(all);
 
+    {% comment %}
+    // Better not leave TODOs in code visible to end users ...
     var update_time_remaining = function() {
         // TODO
     };
@@ -78,7 +108,7 @@ $(function() {
     var status_update = function() {
         // TODO: alert message? or jQuery.load in stuff?
     }
-
+    {% endcomment %}
 });
 </script>
 {% endblock %}

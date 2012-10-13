@@ -42,6 +42,9 @@ class Game(models.Model):
         raise NotImplementedError()
 
     def team_for(self, user):
+        if not user.is_authenticated():
+            from console.models import Team
+            raise Team.DoesNotExist
         return self.teams.get(membership__player__user_id=user.id)
 
     def finished(self):

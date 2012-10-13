@@ -10,7 +10,7 @@ About {{ game.name }}
 <div class="row">
     <div class="span8">
         <div class="page-header">
-            <h3>Dashboard</h3>
+            <h3>Dashboard <small>Team {{ team.number}} | {{ team.name }}</small></h3>
         </div>
         
         <section>
@@ -22,14 +22,17 @@ About {{ game.name }}
                     {% endfor %}
                 {% endif %}
         </section>  
-    </div>  
-    <div class="span4">
+    </div>
+    <div class="offset8 span4" style="position:fixed;">
         <form action="{% url 'solve_puzzle' %}" method="POST">
             {% csrf_token %}
             <div class="row" style="padding-top:20px">
                 <div class="span1" style="text-align:right; font-size:18px; line-height:28px;">Code:</div>
-                <div class="span2"><input type="text" name="code" class="span2" style="text-align:center; text-transform:uppercase" maxlength="6" /></div>
-                <div class="span1"><input type="submit" class="btn btn-primary" value="&rarr;"></div>
+                <div class="span3">
+                <div class="input-append">
+                    <input type="text" name="code" class="span2" style="text-align:center; text-transform:uppercase" maxlength="6" /> <input type="submit" class="btn btn-primary" value="&rarr;">
+                </div>
+                </div>
             </div>
         </form>
         <p>

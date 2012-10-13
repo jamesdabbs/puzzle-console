@@ -1,3 +1,5 @@
+{% load markup %}
+
 {% with item.time_remaining as tr %}
 <a href="{{ p.attachment_url }}">Attachment</a>
 <h5>Time remaining <small>{{ tr.0 }}</small></h5>
@@ -5,3 +7,15 @@
     <div class="bar" style="width: {{ tr.1 }}%;"></div>
 </div>
 {% endwith %}
+
+{% if p.unlocked_description %}
+    {{ p.unlocked_description|markdown }}
+{% endif %}
+
+{% if item.visible_clues %}
+    <h5>Clues</h5>
+    {% for clue in item.visible_clues %}
+    <div>{{ clue.text|markdown }}</div>
+    {% endfor %}
+    </ul>
+{% endif %}

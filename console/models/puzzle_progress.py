@@ -74,3 +74,6 @@ class PuzzleProgress(models.Model):
 
     def timeline_anchor(self):
         return 'puzzle-%s' % self.puzzle.number
+
+    def visible_clues(self):
+        return self.puzzle.clues.filter(show_at__gte=self.time_remaining()[1])

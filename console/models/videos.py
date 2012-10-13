@@ -16,3 +16,9 @@ class Video(models.Model):
 
     def timeline_key(self):
         return self.open, self.number
+
+    def timeline_template(self):
+        raise NotImplementedError
+
+    def timeline_anchor(self):
+        return "video-%s" % self.number

@@ -69,3 +69,6 @@ class PuzzleProgress(models.Model):
 
     def timeline_template(self):
         return 'console/puzzles/base.html'
+
+    def timeline_anchor(self):
+        return 'puzzle-%s' % self.puzzle.number

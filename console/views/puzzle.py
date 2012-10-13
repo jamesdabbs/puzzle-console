@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.views.decorators.http import require_POST
@@ -28,8 +29,8 @@ def edit(request, game, team, puzzle_id=None, **kwargs):
 @require_POST
 @find_team
 def unlock(request, game, team, id):
-    if request.method == 'POST':
-        progress = get_object_or_404(PuzzleProgress, team=team, puzzle__id=id)
-        progress.open()
-        messages.success(request, 'Puzzle unlocked')
-    return redirect('dashboard')
+    progress = get_object_or_404(PuzzleProgress, team=team, puzzle__id=id)
+    progress.open()
+    messages.success(request, 'Puzzle unlocked')
+    return redirect('%s#%s' % (
+        reverse('dashboard'), progress.timeline_anchor()))

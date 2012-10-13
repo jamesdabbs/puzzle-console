@@ -14,6 +14,7 @@ About {{ game.name }}
                 <p>All puzzles are now closed. Thanks for playing!</p>
             {% else %}
                 {% for item in team.timeline %}
+                <a name="{{ item.timeline_anchor }}"></a>
                 {% include item.timeline_template %}
                 {% endfor %}
             {% endif %}

@@ -122,12 +122,12 @@ class Team(models.Model):
     def solve(self, code):
         try:
             puzzle = self.game.puzzles.get(code__code=code)
-            puzzle.puzzleprogress_set.get(team=self).solve()
-            return 0
+            progress = puzzle.puzzleprogress_set.get(team=self)
+            progress.solve()
+            return progress
         except Puzzle.DoesNotExist:
             self.achievements.create(title='Tried invalid code: %s' % code,
                 time=now(), action='Invalid')
-            return 1
 
     def points(self):
         agg = self.achievements.all().aggregate(Sum('points'))

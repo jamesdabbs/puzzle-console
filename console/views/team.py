@@ -71,8 +71,8 @@ def dashboard(request, game, team):
 @find_team
 def solve(request, game, team):
     code = request.POST.get('code', '')
-    response = team.solve(code)
-
-    if request.is_ajax():
-        return JsonResponse(response)
+    if team.solve(code):
+        messages.success(request, 'Puzzle solved')
+    else:
+        messages.error(request, 'Invalid code')
     return redirect('dashboard')

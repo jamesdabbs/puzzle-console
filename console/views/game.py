@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
@@ -33,3 +35,25 @@ def rules(request):
 
 def about(request):
     return TemplateResponse(request, 'console/game/about.html')
+
+
+@require_staff
+def scoreboard(request, game, team):
+    start = min(p.open for p in game.puzzles.all())
+    stop = min(p.close for p in game.puzzles.all())
+
+    teams = game.teams.all()
+    headers, rows = [''] + [t.name for t in teams], []
+
+    step = start
+    while step < stop:
+        rows.append([step] + [t.points(before=step) for t in teams])
+        step += timedelta(hours=1)
+
+    total = [stop] + [t.points() for t in teams]
+
+    return TemplateResponse(request, 'console/game/scoreboard.html', {
+        'headers': headers,
+        'rows': rows,
+        'total': total
+    })

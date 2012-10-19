@@ -26,6 +26,7 @@ class Puzzle(models.Model):
     # locked_description = models.TextField(blank=True)
     attachment_url = models.URLField(null=True, blank=True)
     solution = models.TextField(blank=True)
+    solution_location = models.CharField(max_length=100, blank=True)
     code = models.OneToOneField('console.UniqueRandom')
 
     designers = models.ManyToManyField('console.Player',

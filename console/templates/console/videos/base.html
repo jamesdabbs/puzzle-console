@@ -1,0 +1,10 @@
+{% load markup %}
+{% load status %}
+{% load url from future %}
+
+{% with item as v %}
+<div class="well well-large">
+      <h3>Scene {{ v.number }}</h3>
+      <p>{{ v.url }}</p>
+</div>
+{% endwith %}

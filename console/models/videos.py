@@ -18,7 +18,7 @@ class Video(models.Model):
         return self.open, self.number
 
     def timeline_template(self):
-        raise NotImplementedError
+        return 'console/videos/base.html'
 
     def timeline_anchor(self):
         return "video-%s" % self.number

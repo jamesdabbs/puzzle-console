@@ -5,7 +5,7 @@
 {% with item.puzzle as p %}
 <div class="well well-large">
     {% if p.available %}
-      <h3>{{ p.number }}. {{ p.title }} {% status item %}</h3>
+      <h3>Puzzle {{ p.number }}: {{ p.title }} {% status item %}</h3>
       <p>{{ p.description|markdown }}</p>
       {% include item.include_template %}
     {% else %}

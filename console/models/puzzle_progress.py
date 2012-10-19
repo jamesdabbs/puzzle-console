@@ -64,7 +64,12 @@ class PuzzleProgress(models.Model):
         return remaining, percentage
 
     def include_template(self):
-        return "console/puzzles/%s.html" % self.get_status_display().lower()
+        if now() < self.puzzle.open:
+            return "console/puzzles/locked.html"
+        elif now() > self.puzzle.close and self.status != self.SOLVED:
+            return "console/puzzles/failed.html"
+        else:
+            return "console/puzzles/%s.html" % self.get_status_display().lower()
 
     def timeline_key(self):
         return self.puzzle.open, self.puzzle.number

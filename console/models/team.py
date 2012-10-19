@@ -121,7 +121,7 @@ class Team(models.Model):
 
     def solve(self, code):
         try:
-            puzzle = self.game.puzzles.get(code__code=code)
+            puzzle = self.game.puzzles.get(code__code__iexact=code)
             progress = puzzle.puzzleprogress_set.get(team=self)
             progress.solve()
             return progress

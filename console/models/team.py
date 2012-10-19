@@ -121,7 +121,7 @@ class Team(models.Model):
 
     def solve(self, code):
         try:
-            puzzle = self.game.puzzles.get(code__code=code)
+            puzzle = self.game.puzzles.get(code__code__iexact=code)
             progress = puzzle.puzzleprogress_set.get(team=self)
             progress.solve()
             return progress
@@ -129,9 +129,13 @@ class Team(models.Model):
             self.achievements.create(title='Tried invalid code: %s' % code,
                 time=now(), action='Invalid')
 
-    def points(self):
-        agg = self.achievements.all().aggregate(Sum('points'))
-        return self.extra_points + (agg.get('points__sum') or 0)
+    def points(self, before=None):
+        if before:
+            achs = self.achievements.filter(time__lte=before)
+        else:
+            achs = self.achievements.all()
+        base = achs.aggregate(Sum('points')).get('points__sum') or 0
+        return self.extra_points + base
 
     def status_hash(self):
         return hash('%s|%s' % (self.points, self.status.join('|')))

@@ -1,0 +1,33 @@
+{% extends 'console/base.html' %}
+
+{% block title %}Scoreboard{% endblock %}
+
+{% block content %}
+<table>
+    <thead>
+        <tr>
+            <th>Time</th>
+            {% for h in headers %}
+            <th>{{ h }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in rows %}
+        <tr>
+            {% for cell in row %}
+            <td>{{ cell }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>Final</td>
+            {% for t in total %}
+            <td>{{ t }}</td>
+            {% endfor %}
+        </tr>
+    </tfoot>
+</table>
+{% endblock %}

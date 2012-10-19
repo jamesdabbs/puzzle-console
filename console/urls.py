@@ -11,7 +11,8 @@ urlpatterns += patterns('console.views.game',
     url(r'^join/$', 'join', name='join_game'),
     url(r'^about/$', 'about', name='about'),
     url(r'^rules/$', 'rules', name='rules'),
-    url(r'^staff/(?P<id>\d+)/$', 'staff_overview', name='staff_overview')
+    url(r'^staff/(?P<id>\d+)/$', 'staff_overview', name='staff_overview'),
+    url(r'^staff/scoreboard/$', 'scoreboard')
 )
 
 urlpatterns += patterns('console.views.player',
@@ -27,6 +28,7 @@ urlpatterns += patterns('console.views.puzzle',
 urlpatterns += patterns('console.views.team',
     url(r'^dashboard/$', 'dashboard', name='dashboard'),
     url(r'^solve/$', 'solve', name='solve_puzzle'),
+    url(r'^code/(?P<code>\w+)/$', 'solve'),
     url(r'^teams/$', 'index', name='teams'),
     url(r'^teams/(?P<id>\d+)/$', 'show', name='team'),
     url(r'^teams/(?P<id>\d+)/claim/$', 'claim', name='claim_team'),

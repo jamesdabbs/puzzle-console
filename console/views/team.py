@@ -72,8 +72,8 @@ def dashboard(request, game, team):
 
 @require_POST
 @find_team
-def solve(request, game, team):
-    code = request.POST.get('code', '')
+def solve(request, game, team, code=None):
+    code = code or request.POST.get('code', '')
     if team.solve(code):
         messages.success(request, 'Puzzle solved')
     else:

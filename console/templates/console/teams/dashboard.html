@@ -22,7 +22,7 @@ About {{ game.name }}
             {% endif %}
         </section>  
     </div>  
-    <div class="span4">
+    <div class="offset8 span4" style="position:fixed">
         <form action="{% url 'solve_puzzle' %}" method="POST">
             {% csrf_token %}
             <div class="row" style="padding-top:20px">
@@ -63,7 +63,7 @@ $(function() {
         labels[label.text()] = label;
     })
     // Add filter buttons up top for each label
-    var filters = $('<div id="timeline-filters"/>');
+    var filters = $('<p id="timeline-filters"/>');
     $('#timeline').prepend(filters);
     for(k in labels) {
         var label = labels[k].clone().click(function() {

@@ -1,4 +1,4 @@
-from datetime import timedelta
+from collections import defaultdict
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
@@ -39,21 +39,25 @@ def about(request):
 
 @require_staff
 def scoreboard(request, game, team):
-    start = min(p.open for p in game.puzzles.all())
-    stop = min(p.close for p in game.puzzles.all())
+    results, hours = {}, {}
+    teams = list(game.teams.all())
+    for t in teams:
+        team_results = defaultdict(int)
+        for a in t.achievements.filter(points__gte=0):
+            hour = int((a.time - game.start).total_seconds() / (60))
+            hours[hour] = 'exists'
+            team_results[hour] += a.points
+        results[team.id] = team_results
 
-    teams = game.teams.all()
-    headers, rows = [''] + [t.name for t in teams], []
+    def score_at(team, hour):
+        return sum(results[team.id][i] for i in range(0, hour + 1))
 
-    step = start
-    while step < stop:
-        rows.append([step] + [t.points(before=step) for t in teams])
-        step += timedelta(hours=1)
-
-    total = [stop] + [t.points() for t in teams]
-
+    header = [''] + teams
+    rows = []
+    for hour in range(0, max(hours.keys()) + 1):
+        row = [hour] + [score_at(t, hour) for t in teams]
+        rows.append(row)
     return TemplateResponse(request, 'console/game/scoreboard.html', {
-        'headers': headers,
-        'rows': rows,
-        'total': total
+        'header': header,
+        'rows': rows
     })

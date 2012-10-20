@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 
 
@@ -13,6 +15,11 @@ class Video(models.Model):
 
     def __unicode__(self):
         return self.url
+
+    def available(self):
+        o = self.open or self.game.start
+        c = self.close or self.game.end
+        return o <= datetime.now() <= c
 
     def timeline_key(self):
         return self.open, self.number

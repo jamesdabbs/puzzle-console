@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from console.exceptions import TeamBuildingException
@@ -70,7 +71,8 @@ def dashboard(request, game, team):
     })
 
 
-@require_POST
+@csrf_exempt
+@login_required
 @find_team
 def solve(request, game, team, code=None):
     code = code or request.POST.get('code', '')

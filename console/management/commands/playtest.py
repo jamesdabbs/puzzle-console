@@ -5,7 +5,6 @@ from django.core.management.base import BaseCommand
 from django.utils.timezone import now
 
 from console.models import Game, Membership
-from console.scripts import verify_puzzle_progresses
 
 
 class Command(BaseCommand):
@@ -48,9 +47,9 @@ class Command(BaseCommand):
             new_start = now()
 
             def to_playtest_time(time):
-                old_duration = (stop - start).seconds
+                old_duration = (stop - start).total_seconds()
                 new_duration = options.get('duration', 1) * 60 * 60
-                progress = float((time - start).seconds) / old_duration
+                progress = float((time - start).total_seconds()) / old_duration
                 return new_start + timedelta(seconds=progress * new_duration)
 
             print "\nCopying staff teams ------------------------------"
@@ -77,26 +76,26 @@ class Command(BaseCommand):
                 puzzle.close = to_playtest_time(puzzle.close)
                 puzzle.pk = None
                 puzzle.save()
-
+                print "\n"
+                print "%s ~~~~~~~~~~" % puzzle
+                print "\nHints:"
                 for clue in clues:
                     clue.puzzle = puzzle
                     clue.pk = None
                     clue.save()
-                    print "Hint @ %s: %s" % (clue.show_at, clue.text)
-                print puzzle
+                    print "  @ %s: %s" % (clue.show_at, clue.text)
+                print ""
 
             print "\nCopying videos -----------------------------------"
             for video in videos:
                 video.game = game
-                video.open = to_playtest_time(video.open)
-                video.close = to_playtest_time(video.close)
+                video.open = to_playtest_time(video.open or game.start)
+                video.close = to_playtest_time(video.close or game.end)
                 video.pk = None
                 video.save()
                 print video
 
-            print "\nInitializing team progress trackers --------------"
-            verify_puzzle_progresses(game)
-
             print "\nNew default game %s created with id %s" % (game, game.id)
-            print "Game will be open from %s to %s\n" % (new_start,
+            print "Game will be open from %s to %s" % (new_start,
                 new_start + timedelta(hours=options.get('duration', 1)))
+            print "Be sure to unlock a team to start playtesting\n"

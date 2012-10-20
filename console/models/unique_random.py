@@ -3,8 +3,6 @@ from random import randrange
 
 from django.db import models
 
-from .puzzle import Puzzle
-
 # Example set is Crockford's encoding:
 # http://www.crockford.com/wrmg/base32.html
 UR_CHARSET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ'

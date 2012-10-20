@@ -42,7 +42,7 @@ def scoreboard(request, game, team):
         'message': a.message,
         'points': a.points,
         'time': a.time,
-        'target': a.target.id,
+        'target': getattr(a.target, 'id', None),
         'action': a.action,
         'team': a.team.number
     } for a in Achievement.objects.filter(team__game=game)])

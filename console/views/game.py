@@ -1,11 +1,13 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 
+from console.forms import SurveyForm
 from console.models import Game, Player, Membership, Achievement
-from console.utils import require_staff, JsonResponse
+from console.utils import require_staff, JsonResponse, find_team
 
 
 __all__ = ('join', 'staff_overview', 'rules', 'about')
@@ -70,3 +72,18 @@ def scoreboard_dump(request, game, team):
         'action': a.action,
         'team': a.team.number
     } for a in Achievement.objects.filter(team__game=game)])
+
+
+@find_team
+def survey(request, game, team):
+    finished = team.puzzleprogress_set.filter(puzzle__close__lte=datetime.now())
+    if request.method == 'POST':
+        forms = [SurveyForm(request.POST, instance=pp, prefix=pp.id) for pp in finished]
+        if all(form.valid() for form in forms):
+            messages.success(request, 'Your feedback is appreciated')
+            return redirect('survey')
+    else:
+        forms = [SurveyForm(instance=pp, prefix=pp.id) for pp in finished]
+    return TemplateResponse(request, 'console/game/survey.html', {
+        'forms': forms
+    })

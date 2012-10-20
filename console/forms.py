@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
 from .exceptions import TeamBuildingException
-from .models import Player, Team, Puzzle
+from .models import Player, Team, Puzzle, PuzzleProgress
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -21,7 +21,7 @@ class PlayerAssignmentForm(forms.ModelForm):
     existing_player = forms.ModelChoiceField(
         queryset=Player.objects.filter(user=None),
         required=False,
-        label = "Existing Player"
+        label="Existing Player"
     )
     name = forms.CharField(
         max_length=255,
@@ -43,7 +43,6 @@ class PlayerAssignmentForm(forms.ModelForm):
             raise forms.ValidationError('You cannot both select an existing player and write a name for a new player.'.format(old))
         return data
 
-
     def save(self, user):
         player = self.cleaned_data.get('existing_player', None)
         assert player is None, "Tried to claim existing player during a puzzle party"
@@ -51,7 +50,6 @@ class PlayerAssignmentForm(forms.ModelForm):
             player = Player(name=self.cleaned_data.get('name'))
         player.user = user
         player.save()
-
 
 
 class TeamUpdateForm(forms.ModelForm):
@@ -80,7 +78,7 @@ class TeamUpdateForm(forms.ModelForm):
     def new_players(self):
         # TODO: can we hook in the new players with the pre-save form validation?
         #       Imagine a new team saving 3 existing legends and 2 new rookies
-        return [v for k,v in self.cleaned_data.items() if v and k.startswith('new_player_')]
+        return [v for k, v in self.cleaned_data.items() if v and k.startswith('new_player_')]
 
     def clean(self):
         data = self.cleaned_data
@@ -104,3 +102,8 @@ class TeamUpdateForm(forms.ModelForm):
 class PuzzleForm(forms.ModelForm):
     class Meta:
         model = Puzzle
+
+
+class SurveyForm(forms.ModelForm):
+    class Meta:
+        model = PuzzleProgress

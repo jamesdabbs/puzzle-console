@@ -25,6 +25,12 @@ class PuzzleProgress(models.Model):
     time_solved = models.DateTimeField(null=True, blank=True)
     last_updated = models.DateTimeField(auto_now=True)
 
+    # Survey info
+    INT_CHOICES = [(n, n) for n in range(1, 11)]
+    difficulty = models.IntegerField(choices=INT_CHOICES, null=True, blank=True)
+    enjoyability = models.IntegerField(choices=INT_CHOICES, null=True, blank=True)
+    comments = models.TextField(blank=True)
+
     class Meta:
         app_label = 'console'
         verbose_name_plural = 'Puzzle Progresses'

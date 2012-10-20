@@ -8,7 +8,7 @@
       <h3>Puzzle {{ p.number }}: {{ p.title }} {% status item %}</h3>
       <p>{{ p.description|markdown }}</p>
     {% else %}
-      <h3>{{ p.number }}. {{ p.title }}</h3>
+      <h3>Puzzle {{ p.number }}</h3>
       <p>Available from <strong>{{ p.open }}</strong> to <strong>{{ p.close }}</strong></p>
     {% endif %}
     {% include item.include_template %}

@@ -8,3 +8,4 @@ class Clue(models.Model):
 
     class Meta:
         app_label = 'console'
+        ordering = ['puzzle', 'show_at']

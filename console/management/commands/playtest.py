@@ -78,7 +78,7 @@ class Command(BaseCommand):
                 puzzle.pk = None
                 puzzle.save()
                 print "\n"
-                print puzzle
+                print "%s ~~~~~~~~~~" % puzzle
                 print "\nHints:"
                 for clue in clues:
                     clue.puzzle = puzzle

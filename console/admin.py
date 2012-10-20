@@ -42,7 +42,8 @@ admin.site.register(Membership, MembershipAdmin)
 
 
 class PuzzleAdmin(admin.ModelAdmin):
-    list_display = ('game', 'number', 'title', 'code', 'open', 'close')
+    list_display = ('game', 'number', 'title', 'code', 'open', 'close',
+            'solution_location')
     list_filter = ('game',)
 admin.site.register(Puzzle, PuzzleAdmin)
 

@@ -44,7 +44,7 @@ def scoreboard(request, game, team):
     for t in teams:
         team_results = defaultdict(int)
         for a in t.achievements.filter(points__gte=0):
-            hour = int((a.time - game.start).total_seconds() / (60))
+            hour = int((a.time - game.start).total_seconds() / (60 * 60))
             hours[hour] = 'exists'
             team_results[hour] += a.points
         results[team.id] = team_results

@@ -4,7 +4,6 @@ from django.db.utils import IntegrityError
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
 
 from console.exceptions import TeamBuildingException
 from console.forms import TeamUpdateForm

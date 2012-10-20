@@ -43,13 +43,13 @@ class PuzzleProgress(models.Model):
             title='Opened "%s"' % self.puzzle.title, time=self.time_opened,
             target=self.puzzle, action='Opened')
 
-    def solve(self, points=None):
+    def solve(self):
         if (self.status != self.OPENED) or not self.puzzle.available():
             raise Puzzle.DoesNotExist
         self.status = self.SOLVED
         self.time_solved = now()
         self.save()
-        points = points or 500 + 10 * self.time_remaining()[1]
+        points = self.puzzle.base_points + self.puzzle.decay_points * self.time_remaining()[1]
         self.team.achievements.create(
             title='Solved "%s"' % self.puzzle.title, time=self.time_solved,
             target=self.puzzle, action='Solved',

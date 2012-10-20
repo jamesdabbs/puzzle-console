@@ -122,15 +122,8 @@ class Team(models.Model):
     def solve(self, code):
         try:
             puzzle = self.game.puzzles.get(code__code__iexact=code)
-            # This is a terrible hack. TODO: remove
-            if puzzle.game.id == self.game.id:
-                progress = puzzle.puzzleprogress_set.get(team=self)
-                progress.solve()
-            else:  # Only true of the hidden puzzle
-                from console.models import PuzzleProgress
-                progress = PuzzleProgress(puzzle=puzzle, team=self)
-                progress.save()
-                progress.solve(points=2000)
+            progress = puzzle.puzzleprogress_set.get(team=self)
+            progress.solve()
             return progress
         except Puzzle.DoesNotExist:
             self.achievements.create(title='Tried invalid code: %s' % code,

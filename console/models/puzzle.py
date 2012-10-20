@@ -29,6 +29,11 @@ class Puzzle(models.Model):
     solution_location = models.CharField(max_length=100, blank=True)
     code = models.OneToOneField('console.UniqueRandom')
 
+    # Hacks for the hidden puzzle
+    base_points = models.IntegerField(default=500)
+    decay_rate = models.IntegerField(default=10)  # Points per percent-of-time
+    hidden = models.BooleanField(default=False)
+
     designers = models.ManyToManyField('console.Player',
         related_name='puzzles_designed')
     playtesters = models.ManyToManyField('console.Player',

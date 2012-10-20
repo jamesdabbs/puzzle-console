@@ -8,7 +8,7 @@
     {% if v.available %}
         <p><a href="{{ v.url }}" target="_blank">{{ v.url }}</a></p>
     {% else %}
-        <p>Available at <strong>{{ p.open }}</strong></p>
+        <p>Available at <strong>{{ v.open }}</strong></p>
     {% endif %}
 </div>
 {% endwith %}

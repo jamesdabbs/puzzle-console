@@ -5,7 +5,6 @@ from django.core.management.base import BaseCommand
 from django.utils.timezone import now
 
 from console.models import Game, Membership
-from console.scripts import verify_puzzle_progresses
 
 
 class Command(BaseCommand):
@@ -90,8 +89,8 @@ class Command(BaseCommand):
             print "\nCopying videos -----------------------------------"
             for video in videos:
                 video.game = game
-                video.open = to_playtest_time(video.open)
-                video.close = to_playtest_time(video.close)
+                video.open = to_playtest_time(video.open or game.start)
+                video.close = to_playtest_time(video.close or game.end)
                 video.pk = None
                 video.save()
                 print video

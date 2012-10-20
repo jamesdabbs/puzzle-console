@@ -6,8 +6,9 @@
 <table>
     <thead>
         <tr>
-            {% for cell in header %}
-            <th>{{ cell }}</th>
+            <th>Time</th>
+            {% for h in headers %}
+            <th>{{ h }}</th>
             {% endfor %}
         </tr>
     </thead>
@@ -20,7 +21,13 @@
         </tr>
         {% endfor %}
     </tbody>
+    <tfoot>
+        <tr>
+            <td>Final</td>
+            {% for t in total %}
+            <td>{{ t }}</td>
+            {% endfor %}
+        </tr>
+    </tfoot>
 </table>
-
-<div>Rows: {{ rows }}</div>
 {% endblock %}

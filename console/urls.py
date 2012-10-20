@@ -12,7 +12,8 @@ urlpatterns += patterns('console.views.game',
     url(r'^about/$', 'about', name='about'),
     url(r'^rules/$', 'rules', name='rules'),
     url(r'^staff/(?P<id>\d+)/$', 'staff_overview', name='staff_overview'),
-    url(r'^staff/scoreboard/$', 'scoreboard')
+    url(r'^staff/scoreboard/$', 'scoreboard'),
+    url(r'^staff/scoreboard/dump/$', 'scoreboard_dump')
 )
 
 urlpatterns += patterns('console.views.player',

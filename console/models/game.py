@@ -48,4 +48,4 @@ class Game(models.Model):
         return self.teams.get(membership__player__user_id=user.id)
 
     def finished(self):
-        return self.end > now()
+        return not self.puzzles.filter(close__gte=now()).exists()

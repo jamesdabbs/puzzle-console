@@ -30,7 +30,10 @@ def edit(request, game, team, puzzle_id=None, **kwargs):
 @find_team
 def unlock(request, game, team, id):
     progress = get_object_or_404(PuzzleProgress, team=team, puzzle__id=id)
-    progress.open()
-    messages.success(request, 'Puzzle unlocked')
+    try:
+        progress.open()
+        messages.success(request, 'Puzzle unlocked')
+    except:
+        messages.warning(request, "Couldn't open puzzle. (If it isn't already unlocked, please contact a staff member)")
     return redirect('%s#%s' % (
         reverse('dashboard'), progress.timeline_anchor()))

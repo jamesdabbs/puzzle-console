@@ -39,21 +39,17 @@ def about(request):
 
 @require_staff
 def scoreboard(request, game, team):
-    start = min(p.open for p in game.puzzles.all())
-    stop = min(p.close for p in game.puzzles.all())
-
-    teams = game.teams.all()
-    headers, rows = [''] + [t.name for t in teams], []
-
-    step = start
-    while step < stop:
-        rows.append([step] + [t.points(before=step) for t in teams])
-        step += timedelta(hours=1)
-
-    total = [stop] + [t.points() for t in teams]
+    results = {}
+    for t in game.teams.all():
+        team_results = {}
+        for a in t.achievements.filter(points__gte=0):
+            hour = int((a.time - game.start).total_seconds() / (60 * 60))
+            if hour in team_results:
+                team_results[hour] += a.points
+            else:
+                team_results[hour] = a.points
+        results[team] = team_results
 
     return TemplateResponse(request, 'console/game/scoreboard.html', {
-        'headers': headers,
-        'rows': rows,
-        'total': total
+        'results': results
     })

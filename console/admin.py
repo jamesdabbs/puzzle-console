@@ -22,7 +22,7 @@ admin.site.register(Game, GameAdmin)
 
 
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('game', 'number', 'staff', 'captain', 'competitive', 'points')
+    list_display = ('game', 'number', 'name', 'staff', 'captain', 'competitive', 'points')
     list_filter = ('game',)
 admin.site.register(Team, TeamAdmin)
 

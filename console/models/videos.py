@@ -1,4 +1,4 @@
-from datetime.datetime import now
+from datetime import datetime
 
 from django.db import models
 
@@ -19,7 +19,7 @@ class Video(models.Model):
     def available(self):
         o = self.open or self.game.start
         c = self.close or self.game.end
-        return o <= now() <= c
+        return o <= datetime.now() <= c
 
     def timeline_key(self):
         return self.open, self.number

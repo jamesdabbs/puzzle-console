@@ -65,6 +65,6 @@ admin.site.register(UniqueRandom, UniqueRandomAdmin)
 
 
 class VideoAdmin(admin.ModelAdmin):
-    list_display = ('game', 'url', 'open')
+    list_display = ('game', 'number', 'url', 'open')
     list_filter = ('game',)
 admin.site.register(Video, VideoAdmin)

@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.db import models
 from django.db.models.aggregates import Sum
 from django.utils.timezone import now
@@ -126,8 +127,13 @@ class Team(models.Model):
             progress.solve()
             return progress
         except Puzzle.DoesNotExist:
-            self.achievements.create(title='Tried invalid code: %s' % code,
-                time=now(), action='Invalid')
+            from .unique_random import UniqueRandom
+            if UniqueRandom.objects.filter(code__iexact=code).exists():
+                self.achievements.create(title='You defused the bomb!',
+                    time=now(), action='Solved', points=2000)
+            else:
+                self.achievements.create(title='Tried invalid code: %s' % code,
+                    time=now(), action='Invalid')
 
     def points(self, before=None):
         if before:

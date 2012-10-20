@@ -45,4 +45,6 @@ class Puzzle(models.Model):
         return self.title
 
     def available(self):
-        return self.open <= now() <= self.close
+        o = self.open or self.game.start
+        c = self.close or self.game.end
+        return o <= now() <= c

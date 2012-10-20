@@ -49,7 +49,7 @@ class PuzzleProgress(models.Model):
         self.status = self.SOLVED
         self.time_solved = now()
         self.save()
-        points = self.puzzle.base_points + self.puzzle.decay_points * self.time_remaining()[1]
+        points = self.puzzle.base_points + self.puzzle.decay_rate * self.time_remaining()[1]
         self.team.achievements.create(
             title='Solved "%s"' % self.puzzle.title, time=self.time_solved,
             target=self.puzzle, action='Solved',

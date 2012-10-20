@@ -23,7 +23,6 @@ About {{ game.name }}
                 <p>All puzzles are now closed. Thanks for playing!</p>
             {% else %}
                 {% for item in team.timeline %}
-                {{ item }}
                 {% if not item.hidden %}
                 <div class="timeline-item" id="{{ item.timeline_anchor }}">
                     <a name="{{ item.timeline_anchor }}"></a>

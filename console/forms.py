@@ -107,3 +107,4 @@ class PuzzleForm(forms.ModelForm):
 class SurveyForm(forms.ModelForm):
     class Meta:
         model = PuzzleProgress
+        fields = ('difficulty', 'enjoyability', 'comments')

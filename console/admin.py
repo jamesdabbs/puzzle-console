@@ -57,7 +57,7 @@ admin.site.register(Puzzle, PuzzleAdmin)
 
 class PuzzleProgressAdmin(admin.ModelAdmin):
     list_display = ('team', 'puzzle', 'status', 'time_opened', 'time_solved',
-                    'time_remaining')
+                    'time_remaining', 'difficulty', 'enjoyability')
     list_filter = ('puzzle__game', 'team')
 admin.site.register(PuzzleProgress, PuzzleProgressAdmin)
 

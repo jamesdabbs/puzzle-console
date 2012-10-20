@@ -1,0 +1,30 @@
+{% extends 'console/teams/dashboard.html' %}
+{% load markup %}
+
+{% block title %}Survey{% endblock %}
+
+{% block content %}
+<form action="" method="POST">
+    {% csrf_token %}
+    {% for form in forms %}
+    {% with form.instance.puzzle as p %}
+    <div class="well row">
+        <div class="span6">
+            <h3>Puzzle {{ p.number }}</h3>
+            <h5>Description</h5>
+            <p>{{ p.description|markdown }}</p>
+            <p><a href="{{ p.attachment_url }}">{{ p.attachment_url }}</a></p>
+            <h5>Solution</h5>
+            <p>{{ p.solution|markdown }}</p>
+            <h5>Designed by</h5>
+            <p>{{ p.designers.all|join:", " }}
+        </div>
+        <div class="span2">
+            {{ form }}
+        </div>
+    </div>
+    {% endwith %}
+    {% endfor %}
+    <input type="submit" class="btn btn-primary" value="Save"/>
+</form>
+{% endblock %}

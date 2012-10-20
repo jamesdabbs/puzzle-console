@@ -26,9 +26,10 @@ class PuzzleProgress(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
 
     # Survey info
-    INT_CHOICES = [(n, n) for n in range(1, 11)]
-    difficulty = models.IntegerField(choices=INT_CHOICES, null=True, blank=True)
-    enjoyability = models.IntegerField(choices=INT_CHOICES, null=True, blank=True)
+    DIF_CHOICES = [(1, "1 (Easy)")] + [(n, n) for n in range(2, 10)] + [(10, "10 (Hard)")]
+    ENJ_CHOICES = [(n, n) for n in range(1, 11)]
+    difficulty = models.IntegerField(choices=DIF_CHOICES, null=True, blank=True)
+    enjoyability = models.IntegerField(choices=ENJ_CHOICES, null=True, blank=True)
     comments = models.TextField(blank=True)
 
     class Meta:

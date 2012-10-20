@@ -76,11 +76,13 @@ def scoreboard_dump(request, game, team):
 
 @find_team
 def survey(request, game, team):
-    finished = team.puzzleprogress_set.filter(puzzle__close__lte=datetime.now())
+    finished = team.puzzleprogress_set.filter(puzzle__close__lte=datetime.now()).order_by('puzzle__number')
     if request.method == 'POST':
         forms = [SurveyForm(request.POST, instance=pp, prefix=pp.id) for pp in finished]
-        if all(form.valid() for form in forms):
+        if all(form.is_valid() for form in forms):
             messages.success(request, 'Your feedback is appreciated')
+            for form in forms:
+                form.save()
             return redirect('survey')
     else:
         forms = [SurveyForm(instance=pp, prefix=pp.id) for pp in finished]

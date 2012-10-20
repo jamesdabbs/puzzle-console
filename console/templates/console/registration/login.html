@@ -11,6 +11,12 @@
 {% if not request.user.is_authenticated %}
     <p>Don't have an account? <a href="{% url 'register_player' %}?next={{ next }}">Register now</a>.</p>
     <form action="" method="POST" class="form form-horizontal">
+        {% if form.errors %}
+            <div class="alert alert-error">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>Login Error.</strong> Please check your username and password.
+            </div>
+        {% endif %}
         {% csrf_token %}
         {{ form|bootstrap }}
         <div class="form-actions">

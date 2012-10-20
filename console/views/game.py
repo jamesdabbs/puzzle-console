@@ -1,11 +1,9 @@
-from collections import defaultdict
-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 
-from console.models import Game, Player, Membership
-from console.utils import require_staff
+from console.models import Game, Player, Membership, Achievement
+from console.utils import require_staff, JsonResponse
 
 
 __all__ = ('join', 'staff_overview', 'rules', 'about')
@@ -39,25 +37,12 @@ def about(request):
 
 @require_staff
 def scoreboard(request, game, team):
-    results, hours = {}, {}
-    teams = list(game.teams.all())
-    for t in teams:
-        team_results = defaultdict(int)
-        for a in t.achievements.filter(points__gte=0):
-            hour = int((a.time - game.start).total_seconds() / (60 * 60))
-            hours[hour] = 'exists'
-            team_results[hour] += a.points
-        results[team.id] = team_results
-
-    def score_at(team, hour):
-        return sum(results[team.id][i] for i in range(0, hour + 1))
-
-    header = [''] + teams
-    rows = []
-    for hour in range(0, max(hours.keys()) + 1):
-        row = [hour] + [score_at(t, hour) for t in teams]
-        rows.append(row)
-    return TemplateResponse(request, 'console/game/scoreboard.html', {
-        'header': header,
-        'rows': rows
-    })
+    return JsonResponse([{
+        'title': a.title,
+        'message': a.message,
+        'points': a.points,
+        'time': a.time,
+        'target': a.target.id,
+        'action': a.action,
+        'team': a.team.number
+    } for a in Achievement.objects.filter(team__game=game)])

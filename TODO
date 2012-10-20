@@ -1,6 +1,16 @@
+TODOs:
+======
+Failed / closed state messages
+
+To tests:
+=========
+Youtube templates
+Video urls shown before they are visible
+Flash message on secret puzzle
+Hide hidden puzzle
+
+Maybes (but probably nots):
+===========================
 JS timer countdown (compute tick length server side)
 Hash for update notifications
 Open and unlocked filter
-
-Failed / closed state messages
-Youtube templates

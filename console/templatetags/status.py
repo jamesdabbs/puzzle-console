@@ -15,3 +15,9 @@ def status(item):
     }.get(item.status)
     text = item.get_status_display()
     return mark_safe('<span class="label label-%s">%s</span>' % (cls, text))
+
+
+@register.simple_tag
+def youtube(url):
+    frag = url.split('=')[-1]
+    return mark_safe('<div><iframe width="560" height="315" src="http://www.youtube.com/embed/%s" frameborder="0" allowfullscreen></iframe>' % frag)

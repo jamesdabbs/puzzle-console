@@ -4,7 +4,12 @@
 
 {% with item as v %}
 <div class="well well-large">
-      <h3>Scene {{ v.number }}</h3>
-      <p>{{ v.url }}</p>
+    <h3>Scene {{ v.number }}</h3>
+    {% if v.available %}
+        {% youtube url %}
+        <p><a href="{{ v.url }}">{{ v.url }}</a></p>
+    {% else %}
+        <p>Available at <strong>{{ p.open }}</strong></p>
+    {% end %}
 </div>
 {% endwith %}

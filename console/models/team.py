@@ -1,4 +1,3 @@
-from django.contrib import messages
 from django.db import models
 from django.db.models.aggregates import Sum
 from django.utils.timezone import now
@@ -122,17 +121,19 @@ class Team(models.Model):
 
     def solve(self, code):
         try:
-            puzzle = self.game.puzzles.get(game=self.game, code__code__iexact=code)
-            progress = puzzle.puzzleprogress_set.get(team=self)
-            progress.solve()
+            puzzle = self.game.puzzles.get(code__code__iexact=code)
+            # This is a terrible hack. TODO: remove
+            if puzzle.game.id == self.game.id:
+                progress = puzzle.puzzleprogress_set.get(team=self)
+                progress.solve()
+            else:  # Only true of the hidden puzzle
+                from console.models import PuzzleProgress
+                progress = PuzzleProgress(puzzle=puzzle, team=self)
+                progress.save()
+                progress.solve(points=2000)
             return progress
         except Puzzle.DoesNotExist:
-            from .unique_random import UniqueRandom
-            if UniqueRandom.objects.filter(code__iexact=code).exists():
-                self.achievements.create(title='You defused the bomb!',
-                    time=now(), action='Solved', points=2000)
-            else:
-                self.achievements.create(title='Tried invalid code: %s' % code,
+            self.achievements.create(title='Tried invalid code: %s' % code,
                     time=now(), action='Invalid')
 
     def points(self, before=None):

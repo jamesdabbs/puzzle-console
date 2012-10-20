@@ -26,6 +26,9 @@ class Command(BaseCommand):
             raise ValueError('You must provide a number or name')
 
         for puzzle in game.puzzles.all():
-            print PuzzleProgress.objects.get_or_create(puzzle=puzzle,
+            p = PuzzleProgress.objects.get_or_create(puzzle=puzzle,
                 team=team)[0]
+            if puzzle.hidden:
+                p.open()
+            print p
         print "Done\n"

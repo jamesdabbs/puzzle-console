@@ -7,9 +7,9 @@
     <h3>Scene {{ v.number }}</h3>
     {% if v.available %}
         {% youtube url %}
-        <p><a href="{{ v.url }}">{{ v.url }}</a></p>
+        <p>Link: <a href="{{ v.url }}" target="_blank">{{ v.url }}</a></p>
     {% else %}
         <p>Available at <strong>{{ p.open }}</strong></p>
-    {% end %}
+    {% endif %}
 </div>
 {% endwith %}

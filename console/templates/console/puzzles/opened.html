@@ -1,7 +1,7 @@
 {% load markup %}
 
 {% with item.time_remaining as tr %}
-<h6>Attachment: <a href="{{ p.attachment_url }}">{{ p.attachment_url }}</a></h6>
+<h6>Attachment: <a href="{{ p.attachment_url }}" target="_blank">{{ p.attachment_url }}</a></h6>
 <h5>Time remaining <small>{{ tr.0 }} | {{ tr.1 }}%</small></h5>
 <div class="progress">
     <div class="bar" style="width: {{ tr.1 }}%;"></div>

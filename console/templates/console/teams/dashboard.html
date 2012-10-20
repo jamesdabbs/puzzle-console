@@ -5,6 +5,15 @@
 About {{ game.name }}
 {% endblock %}
 
+{% block extra_styles %}
+<style type="text/css">
+    #timeline-filters .label {
+        cursor: pointer;
+        margin: 2px;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 
 <div class="row">

@@ -4,12 +4,18 @@
 
 {% block content %}
 <table>
-    <tbody>
-        {% for team, tr in results %}
+    <thead>
         <tr>
-            <th>{{ team }}</th>
-            {% for time, points in tr %}
-            <td>{{ points }}</td>
+            {% for cell in header %}
+            <th>{{ cell }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in rows %}
+        <tr>
+            {% for cell in row %}
+            <td>{{ cell }}</td>
             {% endfor %}
         </tr>
         {% endfor %}

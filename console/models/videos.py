@@ -29,3 +29,6 @@ class Video(models.Model):
 
     def timeline_anchor(self):
         return "video-%s" % self.number
+
+    def hidden(self):
+        False

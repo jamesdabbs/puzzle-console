@@ -141,7 +141,7 @@ class Team(models.Model):
         return hash('%s|%s' % (self.points, self.status.join('|')))
 
     def timeline(self):
-        return sorted(list(self.puzzleprogress_set.all()) +
+        return sorted(list(self.puzzleprogress_set.filter(puzzle__hidden=False)) +
                       list(self.game.videos.all()),
                       key=lambda obj: obj.timeline_key())
 

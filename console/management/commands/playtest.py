@@ -48,9 +48,9 @@ class Command(BaseCommand):
             new_start = now()
 
             def to_playtest_time(time):
-                old_duration = (stop - start).seconds
+                old_duration = (stop - start).total_seconds()
                 new_duration = options.get('duration', 1) * 60 * 60
-                progress = float((time - start).seconds) / old_duration
+                progress = float((time - start).total_seconds()) / old_duration
                 return new_start + timedelta(seconds=progress * new_duration)
 
             print "\nCopying staff teams ------------------------------"
@@ -77,13 +77,15 @@ class Command(BaseCommand):
                 puzzle.close = to_playtest_time(puzzle.close)
                 puzzle.pk = None
                 puzzle.save()
-
+                print "\n"
+                print puzzle
+                print "\nHints:"
                 for clue in clues:
                     clue.puzzle = puzzle
                     clue.pk = None
                     clue.save()
-                    print "Hint @ %s: %s" % (clue.show_at, clue.text)
-                print puzzle
+                    print "  @ %s: %s" % (clue.show_at, clue.text)
+                print ""
 
             print "\nCopying videos -----------------------------------"
             for video in videos:

@@ -11,7 +11,7 @@ admin.site.register(Achievement, AchievementAdmin)
 
 
 class ClueAdmin(admin.ModelAdmin):
-    list_display = ('puzzle', 'puzzle_number', 'puzzle_game', 'show_at')
+    list_display = ('puzzle', 'puzzle_number', 'puzzle_game', '-show_at')
     list_filter = ('puzzle__game',)
     def puzzle_number(self, obj):
         return obj.puzzle.number

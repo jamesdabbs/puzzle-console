@@ -96,9 +96,7 @@ class Command(BaseCommand):
                 video.save()
                 print video
 
-            print "\nInitializing team progress trackers --------------"
-            verify_puzzle_progresses(game)
-
             print "\nNew default game %s created with id %s" % (game, game.id)
-            print "Game will be open from %s to %s\n" % (new_start,
+            print "Game will be open from %s to %s" % (new_start,
                 new_start + timedelta(hours=options.get('duration', 1)))
+            print "Be sure to unlock a team to start playtesting\n"

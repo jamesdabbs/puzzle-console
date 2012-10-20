@@ -72,7 +72,7 @@ class PuzzleProgress(models.Model):
             return "console/puzzles/%s.html" % self.get_status_display().lower()
 
     def timeline_key(self):
-        return self.puzzle.open, self.puzzle.number
+        return self.puzzle.open, 2, self.puzzle.number
 
     def timeline_template(self):
         return 'console/puzzles/base.html'

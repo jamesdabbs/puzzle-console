@@ -128,7 +128,7 @@ class Team(models.Model):
             return progress
         except Puzzle.DoesNotExist:
             from .unique_random import UniqueRandom
-            if UniqueRandom.objects.filter(game=self.game, code__iexact=code).exists():
+            if UniqueRandom.objects.filter(code__iexact=code).exists():
                 self.achievements.create(title='You defused the bomb!',
                     time=now(), action='Solved', points=2000)
             else:

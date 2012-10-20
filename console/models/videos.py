@@ -22,7 +22,7 @@ class Video(models.Model):
         return o <= datetime.now() <= c
 
     def timeline_key(self):
-        return self.open, self.number
+        return self.open, 1, self.number
 
     def timeline_template(self):
         return 'console/videos/base.html'

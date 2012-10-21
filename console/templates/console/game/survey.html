@@ -10,7 +10,7 @@
     {% with form.instance.puzzle as p %}
     <div class="well row">
         <div class="span6">
-            <h3>Puzzle {{ p.number }}</h3>
+            <h3>Puzzle {{ p.number }}. {{ p.title }}</h3>
             <h5>Description</h5>
             <p>{{ p.description|markdown }}</p>
             <p><a href="{{ p.attachment_url }}">{{ p.attachment_url }}</a></p>

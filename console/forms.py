@@ -45,7 +45,6 @@ class PlayerAssignmentForm(forms.ModelForm):
 
     def save(self, user):
         player = self.cleaned_data.get('existing_player', None)
-        assert player is None, "Tried to claim existing player during a puzzle party"
         if not player:
             player = Player(name=self.cleaned_data.get('name'))
         player.user = user
